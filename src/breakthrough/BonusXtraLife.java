@@ -9,9 +9,16 @@ package breakthrough;
  */
 public class BonusXtraLife implements Bonus {
 	
+	private String imagePath = BreakWallData.brickXtraLifeImg;
+	
 	@Override
 	public void activate() {
-		System.out.println("Add extra life");		
+		// System.out.println("Add extra life");		
+	}
+
+	@Override
+	public String getImage() {
+		return this.imagePath;
 	}
 
 }

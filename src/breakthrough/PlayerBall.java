@@ -8,25 +8,21 @@ import javax.swing.ImageIcon;
  * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
-public class PlayerBall implements Runnable {
+public class PlayerBall {
 	
 	private String imagePath = BreakWallData.ballImg;
 	private int xCoord = BreakWallData.initialBallX;
 	private int yCoord = BreakWallData.initialBallY;
-	private int speed = BreakWallData.initialBallSpeed;
+	private int speed = BreakWallData.ballSpeed;
 	private int width;
 	private int height;
-	private boolean isMoving = false;
-
-	public PlayerBall() {
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);		
-	}
+	private boolean isMoving = false;	
+	private int directionX = BreakWallData.initialBallXDir * speed;
+	private int directionY = BreakWallData.initialBallYDir * speed;
 	
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-
+	public PlayerBall() {		
+		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
+		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
 	
 	/**
@@ -34,7 +30,8 @@ public class PlayerBall implements Runnable {
 	 */
 	
 	public void moveBall() {
-
+		setXCoord(xCoord + directionX);
+		setYCoord(yCoord + directionY);		
 	}
 	
 	/**
@@ -94,11 +91,29 @@ public class PlayerBall implements Runnable {
 	
 	public void setSpeed(int speed) {
 		this.speed =speed;
+		setDirX(directionX * speed);
+		setDirY(directionY * speed);
 	}
 	
 	public int getSpeed() {
 		return this.speed;
 	}
+	
+	public void setDirX(int directionX) {
+		this.directionX = directionX;
+	}
+	
+	public int getDirX() {
+		return this.directionX;
+	}
+	
+	public void setDirY(int directionY) {
+		this.directionY = directionY;
+	}
+	
+	public int getDirY() {
+		return this.directionY;
+	}	
 	
 	public boolean getState() {
 		return this.isMoving;

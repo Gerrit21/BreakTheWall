@@ -8,35 +8,39 @@ package breakthrough;
  */
 public class BreakWallData {
 	/*
-	 *  Variablen f�r das gesamte Spielfeld
-	 */
-	public static final String bgImagePath = "img/bg_1.png";
+	 *  Variablen für das gesamte Spielfeld
+	 */	
 	public static final String title = "Break The Wall";
 	public static final int gameFieldWidth = 600;
-	public static final int gameFieldHeight = 520;
-	public static final int offsetWidth = gameFieldWidth - 69;
-	public static final int offsetHeight = 500;
+	public static final int gameFieldHeight = 478;
+	public static final int offsetWidth = gameFieldWidth;
+	public static final int offsetHeight = 455;
 	public static final int wallWidth = 540;
 	public static final int wallHeight = 150; 
 	
 	/*
-	 *  Variablen f�r Spiel-Elemente
+	 *  Variablen für Spiel-Elemente
 	 */
 	
 	// Paddle-Variablen
 	public static final String paddleImg = "img/paddle.png";
 	public static final int initialPaddleX = 300;
-	public static final int initialPaddleY = 350;
-	public static final int initialPaddleSpeed = 5;
+	public static final int initialPaddleY = 430;
+	public static final int paddleOffsetTop = 7;
+	public static int paddleSpeed = 5;
 	
 	// Ball-Variablen
 	public static final String ballImg = "img/ball.png";
 	public static final int initialBallX = 320;
-	public static final int initialBallY = 335;
-	public static final int initialBallSpeed = 5;
+	public static final int initialBallY = initialPaddleY - 15;
+	public static final int initialBallXDir = 1;
+	public static final int initialBallYDir = -2;	
+	public static int ballSpeed = 1;
 	
 	// Brick-Variablen
-	public static final String brickImg = "img/brick_n.png";
+	public static final String brickImgNormal = "img/brick_n.png";
+	public static final String brickImgHard = "img/brick_h.png";
+	public static final String brickXtraLifeImg = "img/Ice_cream.png";
 	public static final int stabilityNormal = 1;
 	public static final int stabilityHard = 3;
 	
@@ -46,8 +50,13 @@ public class BreakWallData {
 	 * 
 	 */
 	
-	// Wahrscheinlichkeiten f�r Brick-Varianten in Prozent	
-	public static final int bonusPossible = 5;
-	public static final int hardPossible = 5;
-	public static final int normalPossible = 100 - (hardPossible + bonusPossible);
+	// Leben
+	public static int lifeCount = 3;
+	// Bilder	
+	public static final String bgImagePath = "img/bg_1.png";
+	
+	// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
+	public static int bonusPossible = 20;
+	public static int hardPossible = 5;
+	public static int normalPossible = 100 - (hardPossible + bonusPossible);
 }

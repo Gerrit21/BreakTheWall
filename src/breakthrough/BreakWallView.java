@@ -72,6 +72,19 @@ public class BreakWallView extends JFrame {
 		layerCount++;		
 	}
 	
+	public int getLayer() {
+		return this.layerCount;
+	}
+	
+	public void removeElementFromGameField(String imgPath) {
+		// JPanel removeElement = gameElements.get(imgPath);
+		int removeIndex = gamePane.getIndexOf(gameElements.get(imgPath));
+		System.out.println(gamePane.getLayer(gameElements.get(imgPath)));
+		//gamePane.remove(removeIndex);
+		// gamePane.revalidate();
+		// gamePane.repaint();
+	}
+	
 	/**
 	 * Ver�ndert die Position eines vorhandenen Elements auf dem Spielfeld.
 	 * 
@@ -82,8 +95,8 @@ public class BreakWallView extends JFrame {
 	
 	public void redrawElement(String imgPath, int xCoord, int yCoord) {
 		JPanel redrawnElement = gameElements.get(imgPath);
-		redrawnElement.setLocation(xCoord, yCoord);
-		
+		redrawnElement.setLayout(null);
+		redrawnElement.setLocation(xCoord, yCoord);		
 	}
 	
 	/**

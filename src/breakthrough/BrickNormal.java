@@ -16,7 +16,9 @@ public class BrickNormal implements Brick {
 	private int yCoord;
 	private int height;
 	private int width;
-	private String imagePath = BreakWallData.brickImg;
+
+
+	private String imagePath;
 	private int stability = BreakWallData.stabilityNormal;
 
 	/**
@@ -24,6 +26,7 @@ public class BrickNormal implements Brick {
 	 *  @param stability Für den Brick zu setzende Stabilität
 	 */
 	public BrickNormal(int stability) {
+		imagePath = BreakWallData.brickImgHard;
 		this.stability = stability;
 		System.out.println("Härte: " + stability);
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
@@ -34,6 +37,7 @@ public class BrickNormal implements Brick {
 	 *  Konstruktor für normal harte Bricks mit einer stability von 1 (siehe BreakWallData).
 	 */
 	public BrickNormal() {
+		imagePath = BreakWallData.brickImgNormal;
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
@@ -98,6 +102,12 @@ public class BrickNormal implements Brick {
 	@Override
 	public String getImage() {
 		return this.imagePath;
+	}
+
+	@Override
+	public void activateBonusObject() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

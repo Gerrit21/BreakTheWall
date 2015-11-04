@@ -8,6 +8,8 @@ package breakthrough;
  */
 public interface Brick {
 	
+	public void activateBonusObject();
+	
 	public int getXCoord();
 	
 	public void setXCoord(int xCoord);

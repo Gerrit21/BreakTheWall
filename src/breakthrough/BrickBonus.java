@@ -17,7 +17,7 @@ public class BrickBonus implements Brick {
 	private int yCoord;
 	private int height;
 	private int width;
-	private String imagePath = BreakWallData.brickImg;
+	private String imagePath;
 	private int stability = BreakWallData.stabilityNormal;
 	
 	private Bonus randomBonus;
@@ -26,9 +26,10 @@ public class BrickBonus implements Brick {
 	 * Bei Konstruktoraufruf wird dem Bonus-Brick ein zufälliger Bonus hinzugefügt
 	 */
 	public BrickBonus() {
+		setRandomBonus();
+		imagePath = getBonusObject().getImage();
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
-		setRandomBonus();
 	}
 	
 	/**

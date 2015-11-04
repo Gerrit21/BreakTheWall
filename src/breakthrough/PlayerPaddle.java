@@ -13,7 +13,7 @@ public class PlayerPaddle implements Runnable {
 	private String imagePath = BreakWallData.paddleImg;
 	private int xCoord = BreakWallData.initialPaddleX;
 	private int yCoord = BreakWallData.initialPaddleY;
-	private int speed = BreakWallData.initialPaddleSpeed;
+	private int speed = BreakWallData.paddleSpeed;
 	private int width;
 	private int height;
 
@@ -37,7 +37,7 @@ public class PlayerPaddle implements Runnable {
 		int currentX = getXCoord(); 
 		if((direction == "left") && (currentX > 0)) {			
 			setXCoord(currentX - getSpeed());
-		} else if((direction == "right") && (currentX < BreakWallData.offsetWidth)) {
+		} else if((direction == "right") && (currentX < (BreakWallData.offsetWidth - getWidth()))) {
 			setXCoord(currentX + getSpeed());
 		}
 	}

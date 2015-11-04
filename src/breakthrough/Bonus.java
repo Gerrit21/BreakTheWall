@@ -12,4 +12,6 @@ public interface Bonus {
 	 * Alle Bonus-Typen müssen aktiviert werden können.
 	 */
 	public void activate();
+	
+	public String getImage();
 }
