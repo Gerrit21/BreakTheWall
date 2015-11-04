@@ -1,7 +1,8 @@
-package breakthrough;
+﻿package breakthrough;
 
 /**
  * Klasse zur Erstellung einer Brick-Wand, bestehend aus verschiedenen Brick-Typen.
+ * TEST
  * 
  * @author Mareike R�ncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
