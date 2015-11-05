@@ -33,5 +33,9 @@ public interface Brick {
 	public void setImage(String imagePath);
 	
 	public String getImage();
+	
+	public String getId();
+	
+	public void setId(String id);
 
 }

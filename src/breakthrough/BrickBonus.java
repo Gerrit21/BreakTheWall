@@ -18,6 +18,7 @@ public class BrickBonus implements Brick {
 	private int height;
 	private int width;
 	private String imagePath;
+	private String id = "";
 	private int stability = BreakWallData.stabilityNormal;
 	
 	private Bonus randomBonus;
@@ -119,6 +120,16 @@ public class BrickBonus implements Brick {
 	@Override
 	public String getImage() {
 		return this.imagePath;
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

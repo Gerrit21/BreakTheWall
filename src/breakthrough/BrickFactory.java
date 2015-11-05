@@ -1,5 +1,7 @@
 ﻿package breakthrough;
 
+import java.util.ArrayList;
+
 /**
  * Klasse zur Erstellung einer Brick-Wand, bestehend aus verschiedenen Brick-Typen.
  * 
@@ -9,7 +11,8 @@
 public class BrickFactory {
 	
 	private BreakWallView gameField;
-	Brick randomBrick;
+	private Brick randomBrick;
+	private ArrayList<Brick> brickList;
 	private int wallWidth = BreakWallData.wallWidth;
 	private int wallHeight = BreakWallData.wallHeight;
 	private int brickX = 30;
@@ -21,7 +24,8 @@ public class BrickFactory {
 	 */
 	
 	public BrickFactory(BreakWallView gameField) {
-		this.gameField = gameField;
+		this.gameField = gameField;		
+		brickList = new ArrayList<Brick>();
 		buildWall();
 	}
 	
@@ -36,7 +40,11 @@ public class BrickFactory {
 		while(getBrickY() < wallHeight) {			
 			while(getBrickX() < wallWidth) {
 				randomBrick = getRandomBrick();
-				gameField.addElementToGameField(randomBrick.getImage(), getBrickX(), getBrickY(), randomBrick.getWidth(), randomBrick.getHeight());
+				randomBrick.setXCoord(getBrickX());
+				randomBrick.setYCoord(getBrickY());				
+				randomBrick.setId(Integer.toString(getBrickX()) + Integer.toString(getBrickY()));
+				brickList.add(randomBrick);
+				gameField.addElementToGameField(randomBrick.getImage(), randomBrick.getId(), getBrickX(), getBrickY(), randomBrick.getWidth(), randomBrick.getHeight());
 				setBrickX(getBrickX() + randomBrick.getWidth() + 10);
 			}
 			setBrickY(getBrickY() + randomBrick.getHeight() + 10);
@@ -67,6 +75,14 @@ public class BrickFactory {
 	private Brick getRandomBrick() {
 		setRandomBrick();
 		return this.randomBrick;
+	}
+	
+	public ArrayList<Brick> getBrickList() {
+		return this.brickList;
+	}
+	
+	public void removeFromBrickList(Brick removeBrick) {
+		this.brickList.remove(removeBrick);
 	}
 	
 	public void setBrickX(int x) {

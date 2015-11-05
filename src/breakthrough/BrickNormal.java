@@ -16,9 +16,8 @@ public class BrickNormal implements Brick {
 	private int yCoord;
 	private int height;
 	private int width;
-
-
 	private String imagePath;
+	private String id = "";
 	private int stability = BreakWallData.stabilityNormal;
 
 	/**
@@ -108,6 +107,16 @@ public class BrickNormal implements Brick {
 	public void activateBonusObject() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

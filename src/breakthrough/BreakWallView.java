@@ -38,7 +38,7 @@ public class BreakWallView extends JFrame {
 		this.add(gamePane, BorderLayout.CENTER);
 		gamePane.setBounds(0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		// f�gt eine Hintergrundbild hinzu
-		addElementToGameField(BreakWallData.bgImagePath, 0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
+		addElementToGameField(BreakWallData.bgImagePath, "", 0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
 		this.setTitle(BreakWallData.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,14 +58,19 @@ public class BreakWallView extends JFrame {
 	 * @param width Breite des zu zeichnenden Elements
 	 * @param height H�he des zu zeichnenden Elements
 	 */
-	public void addElementToGameField(String imgPath, int xCoord, int yCoord, int width, int height) {
+	public void addElementToGameField(String imgPath, String optionalId, int xCoord, int yCoord, int width, int height) {
 		JPanel newPanel = new JPanel();
 		newPanel.setLayout(null);
 		ImgPanel newImage = new ImgPanel(imgPath);		
 		newPanel.add(newImage);
 		newPanel.setBounds(xCoord, yCoord, width, height);
 		newPanel.setOpaque(false);
-		gameElements.put(imgPath, newPanel);
+		// optionale Id oder Bildpfad als Referenz benutzen
+		if(optionalId == "") {
+			gameElements.put(imgPath, newPanel);
+		} else {
+			gameElements.put(optionalId, newPanel);
+		}
 		// layerCount: Bildebene des Elements
 		// der Hintergrund hat die Ebene 0
 		gamePane.add(newPanel, new Integer(layerCount), 0);
@@ -76,13 +81,11 @@ public class BreakWallView extends JFrame {
 		return this.layerCount;
 	}
 	
-	public void removeElementFromGameField(String imgPath) {
-		// JPanel removeElement = gameElements.get(imgPath);
-		int removeIndex = gamePane.getIndexOf(gameElements.get(imgPath));
-		System.out.println(gamePane.getLayer(gameElements.get(imgPath)));
-		//gamePane.remove(removeIndex);
-		// gamePane.revalidate();
-		// gamePane.repaint();
+	public void removeElementFromGameField(String elementId) {
+		int removeIndex = gamePane.getIndexOf(gameElements.get(elementId));
+		gamePane.remove(removeIndex);
+		gamePane.revalidate();
+		gamePane.repaint();
 	}
 	
 	/**
@@ -93,8 +96,8 @@ public class BreakWallView extends JFrame {
 	 * @param yCoord neue y-Position des Elements
 	 */
 	
-	public void redrawElement(String imgPath, int xCoord, int yCoord) {
-		JPanel redrawnElement = gameElements.get(imgPath);
+	public void redrawElement(String elementId, int xCoord, int yCoord) {
+		JPanel redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
 		redrawnElement.setLocation(xCoord, yCoord);		
 	}
