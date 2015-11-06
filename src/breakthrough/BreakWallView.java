@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -45,12 +46,22 @@ public class BreakWallView extends JFrame {
 		this.setTitle(BreakWallData.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
+		this.setFocusable(true);
 		this.setVisible(true);
-		
+
 		panelbar = new NavigationBar();
-		this.add(panelbar);
-		
-		
+		addPanelToGameField(panelbar, 0, 0, BreakWallData.barWidth, BreakWallData.barHeight);
+
+	}
+	
+	public void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
+		newComp.setBounds(xCoord, yCoord, width, height);
+		newComp.setOpaque(true);
+		// layerCount: Bildebene des Elements
+		// der Hintergrund hat die Ebene 0
+		gamePane.add(newComp, new Integer(layerCount), 0);
+		layerCount++;
+		gamePane.validate();
 	}
 	
 	/**
@@ -81,11 +92,8 @@ public class BreakWallView extends JFrame {
 		// layerCount: Bildebene des Elements
 		// der Hintergrund hat die Ebene 0
 		gamePane.add(newPanel, new Integer(layerCount), 0);
-		layerCount++;		
-	}
-	
-	public int getLayer() {
-		return this.layerCount;
+		layerCount++;
+		gamePane.validate();
 	}
 	
 	public void removeElementFromGameField(String elementId) {
@@ -103,10 +111,16 @@ public class BreakWallView extends JFrame {
 	 * @param yCoord neue y-Position des Elements
 	 */
 	
-	public void redrawElement(String elementId, int xCoord, int yCoord) {
+	public void relocateElement(String elementId, int xCoord, int yCoord) {
 		JPanel redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
-		redrawnElement.setLocation(xCoord, yCoord);		
+		redrawnElement.setLocation(xCoord, yCoord);
+	}
+	
+	public void redrawElement(String elementId, int xCoord, int yCoord, int width, int height) {
+		JPanel redrawnElement = gameElements.get(elementId);
+		redrawnElement.setLayout(null);
+		redrawnElement.setBounds(xCoord, yCoord, width, height);
 	}
 	
 	/**

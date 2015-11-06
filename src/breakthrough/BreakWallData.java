@@ -15,12 +15,13 @@ public class BreakWallData {
 	public static final int gameFieldHeight = 498;
 	public static final int offsetWidth = gameFieldWidth;
 	public static final int offsetHeight = 495;
-	public static final int wallWidth = gameFieldWidth - 260;
-	public static final int wallHeight = 150; 
+	public static final int wallWidth = gameFieldWidth - 60;
+	public static final int wallHeight = 150;
+	public static final int barWidth = 590;
 	public static final int barHeight = 40;
 	
 	/*
-	 *  Variablen für Spiel-Elemente
+	 *  Variablen fÃ¼r Spiel-Elemente
 	 */
 	
 	// Paddle-Variablen
@@ -28,7 +29,7 @@ public class BreakWallData {
 	public static final int initialPaddleX = 300;
 	public static final int initialPaddleY = 430;
 	public static final int paddleOffsetTop = 4;
-	public static int paddleSpeed = 30;
+	public static int paddleSpeed = 10;
 	
 	// Ball-Variablen
 	public static final String ballImg = "img/ball.png";
@@ -50,17 +51,33 @@ public class BreakWallData {
 	
 	/*
 	 * Level-Schwierigkeiten
-	 * Level 1
 	 * 
 	 */
 	
 	// Leben
-	public static int lifeCount = 3;
+	public static int lifeCount;
 	// Bilder	
-	public static final String bgImagePath = "img/bg_1.png";
+	public static String bgImagePath;
 	
-	// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
-	public static int bonusPossible = 20;
-	public static int hardPossible = 5;
-	public static int normalPossible = 100 - (hardPossible + bonusPossible);
+	// Wahrscheinlichkeiten fÃ¼r Brick-Varianten in Prozent	
+	public static int bonusPossible;
+	public static int hardPossible;
+	public static int normalPossible;
+	
+	// hier können Variablen für levelabhängige Einstellungen gesetzt werden
+	// to do: die Einstellungen sollen möglichst aus einer XML-Datei eingelesen werden
+	public static void setLevelDifficulty(int level) {
+		if(level == 1) {
+			// Leben
+			lifeCount = 3;
+			// Bilder	
+			bgImagePath = "img/bg_1.png";
+			
+			// Wahrscheinlichkeiten fÃ¼r Brick-Varianten in Prozent	
+			bonusPossible = 10;
+			hardPossible = 20;
+			normalPossible = 100 - (hardPossible + bonusPossible);			
+		}
+	}
+
 }

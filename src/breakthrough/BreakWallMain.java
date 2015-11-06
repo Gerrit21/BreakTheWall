@@ -9,7 +9,7 @@ package breakthrough;
 public class BreakWallMain {
 
 	public static void main(String[] args) {
-		new BreakWall();
+		new BreakWall(1);
 
 	}
 

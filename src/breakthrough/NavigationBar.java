@@ -25,15 +25,12 @@ public class NavigationBar extends JPanel  {
 	
 	
 	public NavigationBar() {
-		
-	
-		
-		p= new JPanel ();
+				
+		p = new JPanel();
 		p.setBackground(Color.GRAY);
         p.setPreferredSize(new Dimension(590, 40));
-        p.setVisible( true );
-        p.setOpaque(false);
-		
+        p.setVisible(true);
+        p.setOpaque(false);	
 		
 		lab1 = new JLabel ("Score");
 		lab2 = new JLabel ("Level");
@@ -44,9 +41,12 @@ public class NavigationBar extends JPanel  {
 		b4= new JButton ("Exit");
 		scorecount = new TextField(" 1234 ");
 		scorecount.setEditable(false);
+		scorecount.setFocusable(false);
 		levelcount = new TextField(" 1 ");
+		levelcount.setFocusable(false);
 		levelcount.setEditable(false);
 		lifecount = new TextField(" 2 ");
+		lifecount.setFocusable(false);
 		lifecount.setEditable(false);
 		
 		
@@ -61,17 +61,10 @@ public class NavigationBar extends JPanel  {
 		p.add(b3);
 		p.add(b4);
 				
-		add(p,BorderLayout.NORTH);
-		
-	
-		 
-		
+		add(p,BorderLayout.NORTH);	
 	
 	}
-	
-	
-	
-	
+
 	
 	public int setCurrentCounter(int zahl) {
 		counter = zahl;

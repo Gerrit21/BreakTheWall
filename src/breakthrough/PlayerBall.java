@@ -20,7 +20,7 @@ public class PlayerBall {
 	private int directionX = BreakWallData.initialBallXDir * speed;
 	private int directionY = BreakWallData.initialBallYDir * speed;
 	
-	public PlayerBall() {		
+	public PlayerBall() {
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}

@@ -1,7 +1,6 @@
 package breakthrough;
 
 import javax.swing.ImageIcon;
-import java.lang.reflect.*;
 import java.util.Random;
 
 /**
@@ -51,13 +50,8 @@ public class BrickBonus implements Brick {
 		return randomBonus;
 	}
 	
-	/**
-	 * Wenn ein Bonus-Brick zerstört wurde, kann über diese Methode
-	 * die Eigenschaft des Bonus-Objekts freigesetzt werden,
-	 * z.B. ein Leben hinzufügen, Geschwindigkeit des Balls erhöhen usw.
-	 */
-	public void activateBonusObject() {
-		getBonusObject().activate();
+	public boolean hasBonusObject() {
+		return true;
 	}
 	
 	@Override

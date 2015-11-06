@@ -18,7 +18,7 @@ public class BrickNormal implements Brick {
 	private int width;
 	private String imagePath;
 	private String id = "";
-	private int stability = BreakWallData.stabilityNormal;
+	private int stability;
 
 	/**
 	 *  Konstruktor für variierend harte Bricks.
@@ -26,8 +26,8 @@ public class BrickNormal implements Brick {
 	 */
 	public BrickNormal(int stability) {
 		imagePath = BreakWallData.brickImgHard;
-		this.stability = stability;
-		System.out.println("Härte: " + stability);
+		this.stability = BreakWallData.stabilityHard;
+		// System.out.println("Härte: " + stability);
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
@@ -37,8 +37,13 @@ public class BrickNormal implements Brick {
 	 */
 	public BrickNormal() {
 		imagePath = BreakWallData.brickImgNormal;
+		this.stability = BreakWallData.stabilityNormal;
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
+	}
+	
+	public boolean hasBonusObject() {
+		return false;
 	}
 
 	@Override
@@ -104,12 +109,6 @@ public class BrickNormal implements Brick {
 	}
 
 	@Override
-	public void activateBonusObject() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public String getId() {
 		return id;
 	}
@@ -117,6 +116,11 @@ public class BrickNormal implements Brick {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public Bonus getBonusObject() {
+		return null;
 	}
 
 }

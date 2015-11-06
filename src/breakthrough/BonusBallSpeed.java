@@ -11,10 +11,12 @@ public class BonusBallSpeed implements Bonus {
 	
 	private String imagePath = BreakWallData.brickImgNormal;
 	
-	@Override
-	public void activate() {
-		System.out.println("Change ball speed");
-		
+	public String getBonusType() {
+		return this.getClass().getSimpleName();
+	}
+	
+	public int setBallSpeed(int acceleration) {
+		return acceleration * 2;
 	}
 
 	@Override

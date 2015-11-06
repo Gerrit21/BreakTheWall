@@ -10,16 +10,21 @@ package breakthrough;
 public class BonusPaddleWidth implements Bonus {
 
 	private String imagePath = BreakWallData.brickImgNormal;
+	private int tempSize;
 	
-	@Override
-	public void activate() {
-		System.out.println("Shorten or widen paddle");
-		
+	public int changePaddleSize(int paddleWidth) {
+		tempSize = BreakWall.randomFromRange((paddleWidth/2), (paddleWidth*2));
+		return tempSize;
 	}
 
 	@Override
 	public String getImage() {
 		return this.imagePath;
+	}
+
+	@Override
+	public String getBonusType() {
+		return this.getClass().getSimpleName();
 	}
 
 }

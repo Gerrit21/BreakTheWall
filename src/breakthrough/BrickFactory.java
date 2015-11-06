@@ -64,8 +64,7 @@ public class BrickFactory {
 			randomBrick = new BrickNormal();
 		} else if(randomInt > BreakWallData.normalPossible) {
 			if(randomInt < (BreakWallData.bonusPossible + BreakWallData.normalPossible)) {
-				randomBrick = new BrickBonus();
-				((BrickBonus) randomBrick).getBonusObject().activate();
+				randomBrick = new BrickBonus();				
 			} else if(randomInt >= (BreakWallData.bonusPossible + BreakWallData.normalPossible)) {
 				randomBrick = new BrickNormal(BreakWallData.stabilityHard);
 			}
