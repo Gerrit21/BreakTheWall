@@ -16,7 +16,7 @@ public class BrickFactory {
 	private int wallWidth = BreakWallData.wallWidth;
 	private int wallHeight = BreakWallData.wallHeight;
 	private int brickX = 30;
-	private int brickY = 30;
+	private int brickY = 30 + BreakWallData.barHeight;
 	
 	/*
 	 * Konstruktor ruft die Methode zur Erzeugung der Brick-Wand auf.

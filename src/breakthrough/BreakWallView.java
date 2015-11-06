@@ -25,6 +25,8 @@ public class BreakWallView extends JFrame {
 	private JLayeredPane gamePane;
 	Map<String, JPanel> gameElements;
 	private int layerCount = 0;
+	private NavigationBar panelbar;
+	
 	
 	/*
 	 * Konstruktoraufruf initialisiert das Spielfenster
@@ -38,12 +40,17 @@ public class BreakWallView extends JFrame {
 		this.add(gamePane, BorderLayout.CENTER);
 		gamePane.setBounds(0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		// f�gt eine Hintergrundbild hinzu
-		addElementToGameField(BreakWallData.bgImagePath, "", 0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
+		addElementToGameField(BreakWallData.bgImagePath, "", 0, 40, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
 		this.setTitle(BreakWallData.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setVisible(true);
+		
+		panelbar = new NavigationBar();
+		this.add(panelbar);
+		
+		
 	}
 	
 	/**

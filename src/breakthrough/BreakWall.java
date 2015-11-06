@@ -11,7 +11,7 @@ import java.util.TimerTask;
 /**
  * Klasse zur Koordinierung der verschiedenen Break-The-Wall-Spielelemente.
  * 
- * @author Mareike Röncke, Gerrit Schulte
+ * @author Mareike Rï¿½ncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BreakWall {
@@ -37,7 +37,7 @@ public class BreakWall {
 	/**
 	 * Klasse erzeugt Objekte aller initial spielrelevanten Elemente,
 	 * also Spielfeld, Paddle, Ball und Brick-Wand
-	 * und zeichnet diese auf die Spielfläche.
+	 * und zeichnet diese auf die Spielflï¿½che.
 	 */
 	private void initGameElements() {
 		// Spielelemente erzeugen
@@ -47,10 +47,10 @@ public class BreakWall {
 		
 		gameBall = new PlayerBall();
 		
-		// Elemente zum Spielfeld hinzufügen
+		// Elemente zum Spielfeld hinzufï¿½gen
 		gameField.addElementToGameField(gamePaddle.getImage(), "", gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight());		
 		gameField.addElementToGameField(gameBall.getImage(), "", gameBall.getXCoord(), gameBall.getYCoord(), gameBall.getWidth(), gameBall.getHeight());
-		// Brick-Wand zum Spielfeld hinzufügen
+		// Brick-Wand zum Spielfeld hinzufï¿½gen
 		gameWall = new BrickFactory(gameField);
 				
 	}
@@ -58,7 +58,7 @@ public class BreakWall {
 	private void collisionDetection() {
     	
 		// die Punkte sind definiert als Mitte Oben, Mitte Rechts, Mitte Unten, Mitte Links des Balls
-		// werden für die Kollisionsdetektion an verschiedenen Stellen benötigt
+		// werden fï¿½r die Kollisionsdetektion an verschiedenen Stellen benï¿½tigt
 		ballTop = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), gameBall.getYCoord() + BreakWallData.ballOffset);
 		ballBottom = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), (gameBall.getYCoord() - BreakWallData.ballOffset + gameBall.getHeight()));
 		ballLeft = new Point(gameBall.getXCoord() +  BreakWallData.ballOffset, (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
@@ -66,18 +66,18 @@ public class BreakWall {
 				
 		// der Ball befindet sich innerhalb der linken und rechten Begrenzung des Spielfeldes
 		if((ballLeft.getX() > 0) && (ballRight.getX() < BreakWallData.offsetWidth)) {
-	    // der Ball berührt oder überschreitet die linke und rechte Begrenzung des Spielfeldes
+	    // der Ball berï¿½hrt oder ï¿½berschreitet die linke und rechte Begrenzung des Spielfeldes
 		// die X-Richtung wird umgekehrt	
 		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallData.offsetWidth)) {
 			gameBall.setDirX(-1 * gameBall.getDirX());
 		}		
 		// der Ball befindet sich innerhalb der oberen und unteren Begrenzung des Spielfeldes
-		if((ballTop.getY() > 0) && (ballBottom.getY() < BreakWallData.offsetHeight)) { 
-		// der Ball berührt oder überschreitet die obere Begrenzung des Spielfeldes
+		if((ballTop.getY() > BreakWallData.barHeight) && (ballBottom.getY() < BreakWallData.offsetHeight)) { 
+		// der Ball berï¿½hrt oder ï¿½berschreitet die obere Begrenzung des Spielfeldes
 	    // die Y-Richtung wird umgekehrt
-		} else if((ballTop.getY() <= 0)) {
+		} else if((ballTop.getY() <= BreakWallData.barHeight)) {
 			gameBall.setDirY(-1 * gameBall.getDirY());
-		// der Ball berührt oder unterschreitet die untere Begrenzung des Spielfeldes
+		// der Ball berï¿½hrt oder unterschreitet die untere Begrenzung des Spielfeldes
 		// Spieler verliert ein Leben oder verliert das Spiel	
 		} else if(ballBottom.getY() > BreakWallData.offsetHeight) {
 			System.out.println("You failed!");
@@ -99,12 +99,12 @@ public class BreakWall {
 	
 	private void detectPaddleCollision() {
 		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallData.paddleOffsetTop);
-		// Ball stößt Paddle von oben an
+		// Ball stï¿½ï¿½t Paddle von oben an
 		if(paddleRect.contains(ballBottom)) {					
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			return;
-		// Ball stößt Paddle von links oder rechts
-		// lässt den Ball wieder nach oben fliegen	
+		// Ball stï¿½ï¿½t Paddle von links oder rechts
+		// lï¿½sst den Ball wieder nach oben fliegen	
 		} else if((paddleRect.contains(ballLeft)) || (paddleRect.contains(ballRight))) {				    
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			gameBall.setDirX(-1 * gameBall.getDirX());
@@ -118,13 +118,13 @@ public class BreakWall {
 			Brick currentBrick = currentBrickList.get(j);
 			Rectangle brickRect = new Rectangle(currentBrick.getXCoord(), currentBrick.getYCoord(), currentBrick.getWidth(), currentBrick.getHeight());
 
-			// Ball stößt Brick von unten oder oben an
+			// Ball stï¿½ï¿½t Brick von unten oder oben an
 			if((brickRect.contains(ballTop)) || (brickRect.contains(ballBottom))) {					
 					gameField.removeElementFromGameField(currentBrick.getId());
 					gameWall.removeFromBrickList(currentBrick);
 					gameBall.setDirY(-1 * gameBall.getDirY());
 					return;
-			// Ball stößt Brick von links oder rechts		
+			// Ball stï¿½ï¿½t Brick von links oder rechts		
 			} else if((brickRect.contains(ballLeft)) || (brickRect.contains(ballRight))) {				    
 					gameField.removeElementFromGameField(currentBrick.getId());
 					gameWall.removeFromBrickList(currentBrick);
@@ -138,11 +138,11 @@ public class BreakWall {
 	/**
 	 * Statische Klasse zur Erzeugung einer Zufallszahl
 	 * innerhalb einer Ober- und Untergrenze.
-	 * Ober- und Untergrenze dienen hauptsächlich dazu,
-	 * die 0 als mögliches Ergebnis auszuschließen.
+	 * Ober- und Untergrenze dienen hauptsï¿½chlich dazu,
+	 * die 0 als mï¿½gliches Ergebnis auszuschlieï¿½en.
 	 * 
-	 * @param min Untergrenze der möglichen Zufallszahl
-	 * @param max Obergrenze der möglichen Zufallszahl
+	 * @param min Untergrenze der mï¿½glichen Zufallszahl
+	 * @param max Obergrenze der mï¿½glichen Zufallszahl
 	 * @return randomNum die Zufallszahl innerhalb der Grenzen
 	 */
 	public static int randomFromRange(int min, int max) {
@@ -154,7 +154,7 @@ public class BreakWall {
 	/**
 	 * Private Klasse zur Reaktion auf Tastendruck
 	 * 
-	 * @author Mareike Röncke, Gerrit Schulte
+	 * @author Mareike Rï¿½ncke, Gerrit Schulte
 	 *
 	 */	
 	private class KeyboardEvents implements KeyListener {
@@ -190,12 +190,12 @@ public class BreakWall {
 	 * Private Klasse zum Scheduling des Game-Loops
 	 * Aktualisiert die Position von Spielelementen in einem festgelegten Zeitrahmen 
 	 * 
-	 * @author Mareike Röncke, Gerrit Schulte
+	 * @author Mareike Rï¿½ncke, Gerrit Schulte
 	 *
 	 */
     class GameLoopScheduler extends TimerTask {
     	
-    	// bewegt den Ball und prüft auf Kollision
+    	// bewegt den Ball und prï¿½ft auf Kollision
         public void run() {      	
         	gameBall.moveBall();
         	gameField.redrawElement(gameBall.getImage(), gameBall.getXCoord(), gameBall.getYCoord());
