@@ -18,7 +18,7 @@ public class BreakWallData {
 	public static final int wallWidth = gameFieldWidth - 60;
 	public static final int wallHeight = 150;
 	public static final int barWidth = 590;
-	public static final int barHeight = 40;
+	public static final int barHeight = 45;
 	
 	/*
 	 *  Variablen fÃ¼r Spiel-Elemente
@@ -29,7 +29,7 @@ public class BreakWallData {
 	public static final int initialPaddleX = 300;
 	public static final int initialPaddleY = 430;
 	public static final int paddleOffsetTop = 4;
-	public static int paddleSpeed = 10;
+	public static int paddleSpeed = 30;
 	
 	// Ball-Variablen
 	public static final String ballImg = "img/ball.png";
@@ -79,5 +79,5 @@ public class BreakWallData {
 			normalPossible = 100 - (hardPossible + bonusPossible);			
 		}
 	}
-
+	
 }

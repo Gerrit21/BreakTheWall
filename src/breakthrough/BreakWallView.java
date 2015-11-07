@@ -26,7 +26,7 @@ public class BreakWallView extends JFrame {
 	private JLayeredPane gamePane;
 	Map<String, JPanel> gameElements;
 	private int layerCount = 0;
-	private NavigationBar panelbar;
+
 	
 	
 	/*
@@ -41,7 +41,7 @@ public class BreakWallView extends JFrame {
 		this.add(gamePane, BorderLayout.CENTER);
 		gamePane.setBounds(0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		// f�gt eine Hintergrundbild hinzu
-		addElementToGameField(BreakWallData.bgImagePath, "", 0, 40, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
+		addElementToGameField(BreakWallData.bgImagePath, "", 0, BreakWallData.barHeight, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
 		this.setTitle(BreakWallData.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,8 +49,7 @@ public class BreakWallView extends JFrame {
 		this.setFocusable(true);
 		this.setVisible(true);
 
-		panelbar = new NavigationBar();
-		addPanelToGameField(panelbar, 0, 0, BreakWallData.barWidth, BreakWallData.barHeight);
+	
 
 	}
 	
@@ -94,6 +93,7 @@ public class BreakWallView extends JFrame {
 		gamePane.add(newPanel, new Integer(layerCount), 0);
 		layerCount++;
 		gamePane.validate();
+		
 	}
 	
 	public void removeElementFromGameField(String elementId) {

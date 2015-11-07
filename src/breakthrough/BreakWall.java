@@ -27,6 +27,7 @@ public class BreakWall {
 	private String tempBrick = "";
 	private Timer timer;
 	private int constantPaddleWidth;
+	private NavigationBar panelbar;
 	
 	/**
 	 * Konstruktoraufruf initiiert die Erzeugung der Spielelemente
@@ -37,7 +38,12 @@ public class BreakWall {
 		BreakWallData.setLevelDifficulty(initialLevel);
 		initGameElements();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);		
+        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);
+        
+        MVCBreakWallModel model = new MVCBreakWallModel();
+		panelbar = new NavigationBar(model);
+		gameField.addPanelToGameField(panelbar, 0, 0, BreakWallData.barWidth, BreakWallData.barHeight);
+		model.zeitmessung();
 	}
 
 	/**
@@ -61,7 +67,10 @@ public class BreakWall {
 		gameField.addElementToGameField(gameBall.getImage(), "", gameBall.getXCoord(), gameBall.getYCoord(), gameBall.getWidth(), gameBall.getHeight());
 		// Brick-Wand zum Spielfeld hinzufügen
 		gameWall = new BrickFactory(gameField);
-				
+		
+		
+		
+		
 	}
 	
 	private void collisionDetection() {
@@ -245,7 +254,9 @@ public class BreakWall {
         	collisionDetection();
         }
     }
-
+    
+    
+    
     public void stopGame() {
         timer.cancel();
     }	

@@ -3,20 +3,25 @@ package breakthrough;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 
 
 
-public class NavigationBar extends JPanel  {
+public class NavigationBar extends JPanel implements Observer, MVCIView  {
 	
+	
+	private MVCIModel model = null;
+	private MVCData data = null;
 	private JPanel p;
-	private JButton b1;
-	private JButton b2;
-	private JButton b3;
-	private JButton b4;
-	private JLabel lab1;
-	private JLabel lab2;
-	private JLabel lab3;
+	private JButton buttonPlay;
+	private JButton buttonPause;
+	private JButton buttonSave;
+	private JButton buttonExit;
+	private JLabel labuttonPlay;
+	private JLabel labuttonPause;
+	private JLabel labuttonSave;
 	
 	private TextField scorecount;
 	private TextField levelcount;
@@ -24,22 +29,26 @@ public class NavigationBar extends JPanel  {
 	private int counter = 0;
 	
 	
-	public NavigationBar() {
-				
+	public NavigationBar(MVCIModel o) {
+
+		model = o;
+		((Observable) model).addObserver(this);
+		
+		
 		p = new JPanel();
 		p.setBackground(Color.GRAY);
-        p.setPreferredSize(new Dimension(590, 40));
+        p.setPreferredSize(new Dimension(590, BreakWallData.barHeight));
         p.setVisible(true);
         p.setOpaque(false);	
 		
-		lab1 = new JLabel ("Score");
-		lab2 = new JLabel ("Level");
-		lab3 = new JLabel ("Life");
-		b1= new JButton ("Play");
-		b2= new JButton ("Pause");
-		b3= new JButton ("Save");
-		b4= new JButton ("Exit");
-		scorecount = new TextField(" 1234 ");
+		labuttonPlay = new JLabel ("Score");
+		labuttonPause = new JLabel ("Level");
+		labuttonSave = new JLabel ("Life");
+		buttonPlay= new JButton ("Play");
+		buttonPause= new JButton ("Pause");
+		buttonSave= new JButton ("Save");
+		buttonExit= new JButton ("Exit");
+		scorecount = new TextField(4);
 		scorecount.setEditable(false);
 		scorecount.setFocusable(false);
 		levelcount = new TextField(" 1 ");
@@ -49,19 +58,28 @@ public class NavigationBar extends JPanel  {
 		lifecount.setFocusable(false);
 		lifecount.setEditable(false);
 		
+		buttonPause.setEnabled(false);
+		buttonPlay.addActionListener(new MVCControllerBreakWallScore(model, this));
+		buttonPause.addActionListener(new MVCControllerBreakWallScore(model, this));
+		buttonExit.addActionListener(new MVCControllerBreakWallScore(model, this));
 		
-		p.add(lab1);
+		
+		p.add(labuttonPlay);
 		p.add(scorecount);
-		p.add(lab2);
+		p.add(labuttonPause);
 		p.add(levelcount);
-		p.add(lab3);
+		p.add(labuttonSave);
 		p.add(lifecount);
-		p.add(b1);
-		p.add(b2);
-		p.add(b3);
-		p.add(b4);
+		p.add(buttonPlay);
+		p.add(buttonPause);
+		p.add(buttonSave);
+		p.add(buttonExit);
 				
 		add(p,BorderLayout.NORTH);	
+		
+		setScorecount(getCurrentCounter());
+		
+		
 	
 	}
 
@@ -75,6 +93,52 @@ public class NavigationBar extends JPanel  {
 		return counter;
 	}
 	
+	public void update(Observable o, Object arg) {
+		// Bei dieser Signatur benoetigt man kein getData.		
+		System.out.println("TICK");
+		setCurrentCounter(getCurrentCounter() - 1);
+		setScorecount(getCurrentCounter());		
+	} // update
 	
+	public void setScorecount(int currentTime) {
+		String s = new String();
+		s = new String();
+		s += currentTime;	
+		scorecount.setText(s);
+	}
+	
+	/**
+	 * Reagieren auf MVCController
+	 * @param s
+	 */
+	public void change(String s) {
+		if (s.equals("Pause")) {
+			System.out.println("+++ PauseUhrMVC: Pause");
+			buttonPause.setEnabled(false);
+			buttonPlay.setEnabled(true);
+		} // if
+		if (s.equals("Play")) {
+			System.out.println("+++ PauseUhrMVC: Play");
+			buttonPause.setEnabled(true);
+			buttonPlay.setEnabled(false);
+		} // if
+		if (s.equals("Reset")) {
+			System.out.println("+++ PauseUhrMVC: RESET");
+			setCurrentCounter(0);
+			setScorecount(getCurrentCounter());
+			buttonPause.setEnabled(false);
+			buttonPlay.setEnabled(true);
+		} // if		
+		if (s.equals("Exit")) {
+			System.out.println("+++ Exit");
+			setCurrentCounter(0);
+			setScorecount(getCurrentCounter());
+			System.exit(0);
+			
+		} // if		
+		
+		
+		
+	} // change
 	
 }
