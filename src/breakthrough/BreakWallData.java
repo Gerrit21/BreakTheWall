@@ -1,4 +1,4 @@
-package breakthrough;
+package breakthewall;
 
 /**
  * Klasse zur Kapselung global ben�tigter Spielvariablen.
@@ -18,10 +18,10 @@ public class BreakWallData {
 	public static final int wallWidth = gameFieldWidth - 60;
 	public static final int wallHeight = 150;
 	public static final int barWidth = 590;
-	public static final int barHeight = 45;
+	public static final int barHeight = 40;
 	
 	/*
-	 *  Variablen fÃ¼r Spiel-Elemente
+	 *  Variablen für Spiel-Elemente
 	 */
 	
 	// Paddle-Variablen
@@ -29,12 +29,12 @@ public class BreakWallData {
 	public static final int initialPaddleX = 300;
 	public static final int initialPaddleY = 430;
 	public static final int paddleOffsetTop = 4;
-	public static int paddleSpeed = 30;
+	public static int paddleSpeed = 10;
 	
 	// Ball-Variablen
 	public static final String ballImg = "img/ball.png";
-	// für eventuelle weiße Ränder um das Bild
-	// falls keine Ränder vorhanden, auf 0 setzen
+	// f�r eventuelle wei�e R�nder um das Bild
+	// falls keine R�nder vorhanden, auf 0 setzen
 	public static final int ballOffset = 4;
 	public static final int initialBallX = 320;
 	public static final int initialBallY = initialPaddleY - 16;
@@ -59,13 +59,13 @@ public class BreakWallData {
 	// Bilder	
 	public static String bgImagePath;
 	
-	// Wahrscheinlichkeiten fÃ¼r Brick-Varianten in Prozent	
+	// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
 	public static int bonusPossible;
 	public static int hardPossible;
 	public static int normalPossible;
 	
-	// hier können Variablen für levelabhängige Einstellungen gesetzt werden
-	// to do: die Einstellungen sollen möglichst aus einer XML-Datei eingelesen werden
+	// hier k�nnen Variablen f�r levelabh�ngige Einstellungen gesetzt werden
+	// to do: die Einstellungen sollen m�glichst aus einer XML-Datei eingelesen werden
 	public static void setLevelDifficulty(int level) {
 		if(level == 1) {
 			// Leben
@@ -73,11 +73,11 @@ public class BreakWallData {
 			// Bilder	
 			bgImagePath = "img/bg_1.png";
 			
-			// Wahrscheinlichkeiten fÃ¼r Brick-Varianten in Prozent	
+			// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
 			bonusPossible = 10;
 			hardPossible = 20;
 			normalPossible = 100 - (hardPossible + bonusPossible);			
 		}
 	}
-	
+
 }
