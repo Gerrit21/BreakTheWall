@@ -1,6 +1,6 @@
 package breakthewall.model;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /** 
  * Klasse zur Erzeugung eines Bonus-Objekts, das die Geschwindigkeit des Balls verändert, 
@@ -11,7 +11,7 @@ import breakthewall.BreakWallData;
  */
 public class BonusBallSpeed implements Bonus {
 	
-	private String imagePath = BreakWallData.brickImgNormal;
+	private String imagePath = BreakWallConfig.brickImgNormal;
 	
 	public String getBonusType() {
 		return this.getClass().getSimpleName();

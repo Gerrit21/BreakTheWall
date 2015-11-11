@@ -2,7 +2,7 @@ package breakthewall.model;
 
 import javax.swing.ImageIcon;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Runnable-Klasse zur Erstellung des Paddles.
@@ -12,10 +12,10 @@ import breakthewall.BreakWallData;
  */
 public class PlayerPaddle implements GameElement {
 		
-	private String imagePath = BreakWallData.paddleImg;
-	private int xCoord = BreakWallData.initialPaddleX;
-	private int yCoord = BreakWallData.initialPaddleY;
-	private int speed = BreakWallData.paddleSpeed;
+	private String imagePath = BreakWallConfig.paddleImg;
+	private int xCoord = BreakWallConfig.initialPaddleX;
+	private int yCoord = BreakWallConfig.initialPaddleY;
+	private int speed = BreakWallConfig.paddleSpeed;
 	private int width;
 	private int height;
 	private String id;
@@ -36,7 +36,7 @@ public class PlayerPaddle implements GameElement {
 		int currentX = getXCoord(); 
 		if((direction == "left") && (currentX > 0)) {			
 			setXCoord(currentX - getSpeed());
-		} else if((direction == "right") && (currentX < (BreakWallData.offsetWidth - getWidth()))) {
+		} else if((direction == "right") && (currentX < (BreakWallConfig.offsetWidth - getWidth()))) {
 			setXCoord(currentX + getSpeed());
 		}
 	}

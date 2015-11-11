@@ -2,7 +2,7 @@ package breakthewall.model;
 
 import javax.swing.ImageIcon;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Runnable-Klasse zur Erstellung eines Spielballs.
@@ -12,15 +12,15 @@ import breakthewall.BreakWallData;
  */
 public class PlayerBall implements GameElement {
 	
-	private String imagePath = BreakWallData.ballImg;
-	private int xCoord = BreakWallData.initialBallX;
-	private int yCoord = BreakWallData.initialBallY;
-	private int speed = BreakWallData.ballSpeed;
+	private String imagePath = BreakWallConfig.ballImg;
+	private int xCoord = BreakWallConfig.initialBallX;
+	private int yCoord = BreakWallConfig.initialBallY;
+	private int speed = BreakWallConfig.ballSpeed;
 	private int width;
 	private int height;
 	private boolean isMoving = false;	
-	private int directionX = BreakWallData.initialBallXDir * speed;
-	private int directionY = BreakWallData.initialBallYDir * speed;
+	private int directionX = BreakWallConfig.initialBallXDir * speed;
+	private int directionY = BreakWallConfig.initialBallYDir * speed;
 	private String id;
 	private boolean isDestroyed = false;
 	
@@ -49,7 +49,7 @@ public class PlayerBall implements GameElement {
 		int currentX = getXCoord(); 
 		if((direction == "left") && (currentX > 0)) {			
 			setXCoord(currentX - getSpeed());
-		} else if((direction == "right") && (currentX < BreakWallData.offsetWidth)) {
+		} else if((direction == "right") && (currentX < BreakWallConfig.offsetWidth)) {
 			setXCoord(currentX + getSpeed());
 		}
 	}

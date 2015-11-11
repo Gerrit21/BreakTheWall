@@ -2,12 +2,15 @@ package breakthewall.view;
 
 
 import javax.swing.*;
+
+import breakthewall.controller.BreakWallController;
+
 import java.awt.*;
 
 
 
 
-public class NavigationBar extends JPanel  {
+public class NavigationBarView extends JPanel  {
 	
 	/**
 	 * 
@@ -28,7 +31,7 @@ public class NavigationBar extends JPanel  {
 	private int counter = 0;
 	
 	
-	public NavigationBar() {
+	public NavigationBarView(BreakWallController controller) {
 				
 		p = new JPanel();
 		p.setBackground(Color.GRAY);
@@ -39,10 +42,14 @@ public class NavigationBar extends JPanel  {
 		lab1 = new JLabel ("Score");
 		lab2 = new JLabel ("Level");
 		lab3 = new JLabel ("Life");
-		b1= new JButton ("Play");
-		b2= new JButton ("Pause");
-		b3= new JButton ("Save");
-		b4= new JButton ("Exit");
+		b1 = new JButton ("Play");
+		b1.addActionListener(controller);
+		b2 = new JButton ("Pause");
+		b2.addActionListener(controller);
+		b3 = new JButton ("Save");
+		b3.addActionListener(controller);
+		b4 = new JButton ("Exit");
+		b4.addActionListener(controller);
 		scorecount = new TextField(" 1234 ");
 		scorecount.setEditable(false);
 		scorecount.setFocusable(false);

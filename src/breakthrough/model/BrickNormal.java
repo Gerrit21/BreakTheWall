@@ -2,7 +2,7 @@ package breakthewall.model;
 
 import javax.swing.ImageIcon;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erstellung eines normalen Bricks.
@@ -28,8 +28,8 @@ public class BrickNormal implements GameElement, Brick {
 	 *  @param stability Für den Brick zu setzende Stabilität
 	 */
 	public BrickNormal(int stability) {
-		imagePath = BreakWallData.brickImgHard;
-		this.stability = BreakWallData.stabilityHard;
+		imagePath = BreakWallConfig.brickImgHard;
+		this.stability = BreakWallConfig.stabilityHard;
 		// System.out.println("Härte: " + stability);
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
@@ -39,8 +39,8 @@ public class BrickNormal implements GameElement, Brick {
 	 *  Konstruktor für normal harte Bricks mit einer stability von 1 (siehe BreakWallData).
 	 */
 	public BrickNormal() {
-		imagePath = BreakWallData.brickImgNormal;
-		this.stability = BreakWallData.stabilityNormal;
+		imagePath = BreakWallConfig.brickImgNormal;
+		this.stability = BreakWallConfig.stabilityNormal;
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}

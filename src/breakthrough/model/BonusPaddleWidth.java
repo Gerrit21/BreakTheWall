@@ -1,6 +1,6 @@
 package breakthewall.model;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erzeugung eines Bonus-Objekts, das die Breite des Paddles
@@ -11,7 +11,7 @@ import breakthewall.BreakWallData;
  */
 public class BonusPaddleWidth implements Bonus {
 
-	private String imagePath = BreakWallData.brickImgNormal;
+	private String imagePath = BreakWallConfig.brickImgNormal;
 	private int tempSize;
 	
 	public int changePaddleSize(int paddleWidth) {

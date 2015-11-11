@@ -4,22 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Observable;
+import java.util.EventListener;
 
 import breakthewall.model.BreakWallModel;
 
-public class BreakWallController implements KeyListener {
+public class BreakWallController implements KeyListener, ActionListener {
 	
 	BreakWallModel gameModel;
-	
-	public void removeGameElement(int index) {
-		gameModel.remove(index);
-	}
-	
-	public BreakWallController(BreakWallModel gameData) {
-		this.gameModel = gameData;
-	}
 
+	public BreakWallController(BreakWallModel gameModel) {
+		this.gameModel = gameModel;
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// entspricht der linken Pfeiltaste
@@ -45,6 +41,11 @@ public class BreakWallController implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		gameModel.change(e.getActionCommand());		
 	}
 
 }

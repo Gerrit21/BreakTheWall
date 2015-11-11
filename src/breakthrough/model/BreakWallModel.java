@@ -9,7 +9,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
+import breakthewall.remote.RemoteHighscoreClient;
 import breakthewall.view.BreakWallView;
 
 /**
@@ -20,11 +21,11 @@ import breakthewall.view.BreakWallView;
  */
 public class BreakWallModel extends Observable {
 		
-	private BreakWallView gameField;
 	private PlayerPaddle gamePaddle;
 	private PlayerBall gameBall;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
+	private BreakWallScore gameScore;
 	private ArrayList<GameElement> breakWallElements;
 	private ArrayList<GameElement> currentBrickList;
 	private String struckBrick = "";
@@ -38,7 +39,7 @@ public class BreakWallModel extends Observable {
 	 */
 	public BreakWallModel(int initialLevel) {		
 		// das Level festlegen, mit dem das Spiel starten soll
-		BreakWallData.setLevelDifficulty(initialLevel);
+		BreakWallConfig.setLevelDifficulty(initialLevel);
 		initGameElements();
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);		
@@ -50,6 +51,7 @@ public class BreakWallModel extends Observable {
 	 * und zeichnet diese auf die Spielfläche.
 	 */
 	private void initGameElements() {
+		gameScore = new BreakWallScore(0);
 		breakWallElements = new ArrayList<GameElement>();
 		gamePaddle = new PlayerPaddle();	
 		gameBall = new PlayerBall();
@@ -70,48 +72,72 @@ public class BreakWallModel extends Observable {
 		}
 		if(s.equals("right")) {
 			gamePaddle.movePaddle("right");
+		}
+		if(s.equals("Play")) {
+			setChanged();
+			notifyObservers("focusGameElements");			
+	        timer = new Timer();
+	        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);			
+		}
+		if(s.equals("Pause")) {
+			stopGame();			
 		}		
+		if(s.equals("Save")) {
+			System.out.println("Want to save your highscore? Implement it.");
+			stopGame();
+			// to do: ggf. ins Hauptmenü integrieren
+			RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
+			newHighscore.addEntry(gameScore.getCurrentScore());
+		}
+		if(s.equals("Exit")) {
+			System.out.println("Exit the Game...");
+    		System.exit(0);			
+		}
 	}
 	
 	public void remove(int index) {
 		breakWallElements.remove(index);
 	}
 	
-	private void collisionDetection() {
-    	
+	public ArrayList<GameElement> getElementList() {
+		return this.breakWallElements;
+	}
+	
+	private void collisionDetection() {    	
 		// die Punkte sind definiert als Mitte Oben, Mitte Rechts, Mitte Unten, Mitte Links des Balls
 		// werden für die Kollisionsdetektion an verschiedenen Stellen benötigt
-		ballTop = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), gameBall.getYCoord() + BreakWallData.ballOffset);
-		ballBottom = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), (gameBall.getYCoord() - BreakWallData.ballOffset + gameBall.getHeight()));
-		ballLeft = new Point(gameBall.getXCoord() +  BreakWallData.ballOffset, (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
-		ballRight = new Point((gameBall.getXCoord() - BreakWallData.ballOffset + gameBall.getWidth()), (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
+		ballTop = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), gameBall.getYCoord() + BreakWallConfig.ballOffset);
+		ballBottom = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), (gameBall.getYCoord() - BreakWallConfig.ballOffset + gameBall.getHeight()));
+		ballLeft = new Point(gameBall.getXCoord() +  BreakWallConfig.ballOffset, (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
+		ballRight = new Point((gameBall.getXCoord() - BreakWallConfig.ballOffset + gameBall.getWidth()), (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
 				
 		// der Ball befindet sich innerhalb der linken und rechten Begrenzung des Spielfeldes
-		if((ballLeft.getX() > 0) && (ballRight.getX() < BreakWallData.offsetWidth)) {
+		if((ballLeft.getX() > 0) && (ballRight.getX() < BreakWallConfig.offsetWidth)) {
 	    // der Ball berührt oder überschreitet die linke und rechte Begrenzung des Spielfeldes
 		// die X-Richtung wird umgekehrt	
-		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallData.offsetWidth)) {
+		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallConfig.offsetWidth)) {
 			gameBall.setDirX(-1 * gameBall.getDirX());
 		}		
 		// der Ball befindet sich innerhalb der oberen und unteren Begrenzung des Spielfeldes
-		if((ballTop.getY() > BreakWallData.barHeight) && (ballBottom.getY() < BreakWallData.offsetHeight)) { 
+		if((ballTop.getY() > BreakWallConfig.barHeight) && (ballBottom.getY() < BreakWallConfig.offsetHeight)) { 
 		// der Ball ber?hrt oder ?berschreitet die obere Begrenzung des Spielfeldes
 	    // die Y-Richtung wird umgekehrt
-		} else if((ballTop.getY() <= BreakWallData.barHeight)) {
+		} else if((ballTop.getY() <= BreakWallConfig.barHeight)) {
 			gameBall.setDirY(-1 * gameBall.getDirY());
 		// der Ball berührt oder unterschreitet die untere Begrenzung des Spielfeldes
 		// Spieler verliert ein Leben oder verliert das Spiel	
-		} else if(ballBottom.getY() > BreakWallData.offsetHeight) {
+		} else if(ballBottom.getY() > BreakWallConfig.offsetHeight) {
 			System.out.println("You failed!");
-			if(BreakWallData.lifeCount > 1) {
-				BreakWallData.lifeCount -= 1;			
+			gameScore.subtractPoints(20);
+			if(BreakWallConfig.lifeCount > 1) {
+				BreakWallConfig.lifeCount -= 1;			
 				gameBall.setXCoord(gamePaddle.getXCoord() + (gamePaddle.getWidth() / 2));
 				gameBall.setYCoord(gamePaddle.getYCoord() - gameBall.getHeight());
-				gameBall.setDirY(BreakWallData.initialBallYDir);			
-				gameBall.setDirX(BreakWallData.initialBallXDir);
+				gameBall.setDirY(BreakWallConfig.initialBallYDir);			
+				gameBall.setDirX(BreakWallConfig.initialBallXDir);
 			} else {
 				gameBall.setDestroyedState(true);
-				gameField.removeElementFromGameField(gameBall.getImage());
+				// gameField.removeElementFromGameField(gameBall.getImage());
 				System.out.println("Game Over!");
 				stopGame();
 			}
@@ -121,7 +147,7 @@ public class BreakWallModel extends Observable {
 	}
 	
 	private void detectPaddleCollision() {
-		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallData.paddleOffsetTop);
+		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallConfig.paddleOffsetTop);
 		// Ball stößt Paddle von oben an
 		if(paddleRect.contains(ballBottom)) {					
 			gameBall.setDirY(-1 * gameBall.getDirY());
@@ -151,6 +177,7 @@ public class BreakWallModel extends Observable {
 					Brick tempCurrentBrick = (Brick) currentBrick;
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					if(tempCurrentBrick.getStability() == 0) {
+						gameScore.addPoints(10);
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);
 						if(tempCurrentBrick.hasBonusObject() == true) {
@@ -169,6 +196,7 @@ public class BreakWallModel extends Observable {
 					Brick tempCurrentBrick = (Brick) currentBrick;					
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					if(tempCurrentBrick.getStability() == 0) {
+						gameScore.addPoints(10);
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);						
 					}
@@ -191,7 +219,15 @@ public class BreakWallModel extends Observable {
 			gamePaddle.setWidth(newWidth);
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusXtraLife")) {
 			System.out.println("Add Xtra Life!");
-			BreakWallData.lifeCount++;
+			BreakWallConfig.lifeCount++;
+		}
+	}
+	
+	private void removeDestroyedElements() {
+		for(int i = 0; i < breakWallElements.size(); i++) {
+			if(breakWallElements.get(i).getDestroyedState() == true) {
+				remove(i);
+			}
 		}
 	}
 	
@@ -222,11 +258,15 @@ public class BreakWallModel extends Observable {
     private class GameLoopScheduler extends TimerTask {
     	
     	// bewegt den Ball und prüft auf Kollision
-        public void run() {      	
+    	// informiert die Beobachter von Änderungen der Daten
+    	// entfernt ggf. Elemente aus der Element-Liste des Spiels
+        public void run() {
+        	// System.out.println(gameScore.getCurrentScore());
         	gameBall.moveBall();
         	collisionDetection();
     		setChanged();
-    		notifyObservers(breakWallElements);
+    		notifyObservers("updateGameElements");
+    		removeDestroyedElements();
         	
         }
     }

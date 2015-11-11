@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
 import breakthewall.model.BreakWallModel;
 import breakthewall.model.GameElement;
@@ -30,45 +30,45 @@ import breakthewall.model.GameElement;
  */
 public class BreakWallView extends JFrame implements Observer {
 	
-	private Observable gameData = null;
+	private Observable gameModel = null;
 	private BreakWallController controller;
 	private static final long serialVersionUID = 1L;
 	private JLayeredPane gamePane;
 	Map<String, JPanel> gameElements;
+	ArrayList<GameElement> displayableElements;
 	private int layerCount = 0;
-	private NavigationBar panelbar;
+	private NavigationBarView panelbar;
 	
 	
 	/*
 	 * Konstruktoraufruf initialisiert das Spielfenster
 	 */
 	
-	public BreakWallView(Observable gameData) {
-		this.gameData = gameData;
-		gameData.addObserver(this);		
-		BreakWallModel model = (BreakWallModel) gameData;
-		controller = new BreakWallController(model);
+	public BreakWallView(Observable gameModel, BreakWallController controller) {
+		this.gameModel = gameModel;
+		gameModel.addObserver(this);		
+		this.controller = controller;
 		this.addKeyListener(controller);
-		this.setPreferredSize(new Dimension(BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight));
+		this.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
 		this.setResizable(false);
 		gamePane = new JLayeredPane();
 		gameElements = new HashMap<String, JPanel>();
 		this.add(gamePane, BorderLayout.CENTER);
-		gamePane.setBounds(0, 0, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
+		gamePane.setBounds(0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		// f�gt eine Hintergrundbild hinzu
-		addElementToGameField(BreakWallData.bgImagePath, "background", 0, 40, BreakWallData.gameFieldWidth, BreakWallData.gameFieldHeight);
+		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
-		this.setTitle(BreakWallData.title);
+		this.setTitle(BreakWallConfig.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setFocusable(true);
 		this.setVisible(true);
 
-		panelbar = new NavigationBar();
-		addPanelToGameField(panelbar, 0, 0, BreakWallData.barWidth, BreakWallData.barHeight);
+		panelbar = new NavigationBarView(controller);
+		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
 
 	}
-	
+
 	public void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
 		newComp.setBounds(xCoord, yCoord, width, height);
 		newComp.setOpaque(true);
@@ -134,20 +134,25 @@ public class BreakWallView extends JFrame implements Observer {
 	}
 	
 	@Override
-	public void update(Observable game, Object gameObject) {
-		ArrayList<GameElement> test = (ArrayList<GameElement>) gameObject;
-		for(int i = 0; i < test.size(); i++) {			
-			if(gameElements.get(test.get(i).getId()) != null) {
-				if(test.get(i).getDestroyedState() == false) {
-					relocateElement(test.get(i).getId(), test.get(i).getXCoord(), test.get(i).getYCoord());
+	public void update(Observable gameModel, Object gameObject) {
+		if(gameObject.equals("updateGameElements")) {
+			displayableElements = ((BreakWallModel) gameModel).getElementList();
+			for(int i = 0; i < displayableElements.size(); i++) {			
+				if(gameElements.get(displayableElements.get(i).getId()) != null) {
+					if(displayableElements.get(i).getDestroyedState() == false) {
+						relocateElement(displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord());
+					} else {
+						removeElementFromGameField(displayableElements.get(i).getId());
+					}
 				} else {
-					removeElementFromGameField(test.get(i).getId());
-					controller.removeGameElement(i);
+					addElementToGameField(displayableElements.get(i).getImage(), displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
 				}
-			} else {
-				addElementToGameField(test.get(i).getImage(), test.get(i).getId(), test.get(i).getXCoord(), test.get(i).getYCoord(), test.get(i).getWidth(), test.get(i).getHeight());
-			}
 
+			}			
+		}
+		if(gameObject.equals("focusGameElements")) {
+			System.out.println("focus");
+			this.requestFocus();
 		}
 	}
 	

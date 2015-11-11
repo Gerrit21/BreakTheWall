@@ -2,7 +2,7 @@ package breakthewall.model;
 
 import javax.swing.ImageIcon;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 import java.util.Random;
 
@@ -21,7 +21,7 @@ public class BrickBonus implements GameElement, Brick {
 	private int width;
 	private String imagePath;
 	private String id = "";
-	private int stability = BreakWallData.stabilityNormal;
+	private int stability = BreakWallConfig.stabilityNormal;
 	private boolean isDestroyed = false;
 	
 	private Bonus randomBonus;

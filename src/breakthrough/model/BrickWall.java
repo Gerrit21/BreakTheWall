@@ -2,7 +2,7 @@
 
 import java.util.ArrayList;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erstellung einer Brick-Wand, bestehend aus verschiedenen Brick-Typen.
@@ -15,10 +15,10 @@ public class BrickWall {
 	// private BreakWallView gameField;
 	private GameElement randomBrick;
 	private ArrayList<GameElement> brickList;
-	private int wallWidth = BreakWallData.wallWidth;
-	private int wallHeight = BreakWallData.wallHeight;
+	private int wallWidth = BreakWallConfig.wallWidth;
+	private int wallHeight = BreakWallConfig.wallHeight;
 	private int brickX = 30;
-	private int brickY = 30 + BreakWallData.barHeight;
+	private int brickY = 30 + BreakWallConfig.barHeight;
 	
 	/*
 	 * Konstruktor ruft die Methode zur Erzeugung der Brick-Wand auf.
@@ -62,13 +62,13 @@ public class BrickWall {
 	
 	private void setRandomBrick() {
 		int randomInt = BreakWallModel.randomFromRange(1, 100);
-		if(randomInt <= BreakWallData.normalPossible) {
+		if(randomInt <= BreakWallConfig.normalPossible) {
 			randomBrick = new BrickNormal();
-		} else if(randomInt > BreakWallData.normalPossible) {
-			if(randomInt < (BreakWallData.bonusPossible + BreakWallData.normalPossible)) {
+		} else if(randomInt > BreakWallConfig.normalPossible) {
+			if(randomInt < (BreakWallConfig.bonusPossible + BreakWallConfig.normalPossible)) {
 				randomBrick = new BrickBonus();				
-			} else if(randomInt >= (BreakWallData.bonusPossible + BreakWallData.normalPossible)) {
-				randomBrick = new BrickNormal(BreakWallData.stabilityHard);
+			} else if(randomInt >= (BreakWallConfig.bonusPossible + BreakWallConfig.normalPossible)) {
+				randomBrick = new BrickNormal(BreakWallConfig.stabilityHard);
 			}
 		}
 	}

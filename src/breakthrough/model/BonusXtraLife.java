@@ -1,6 +1,6 @@
 package breakthewall.model;
 
-import breakthewall.BreakWallData;
+import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erzeugung eines Bonus-Objekts, dass dem Spieler
@@ -11,7 +11,7 @@ import breakthewall.BreakWallData;
  */
 public class BonusXtraLife implements Bonus {
 	
-	private String imagePath = BreakWallData.brickXtraLifeImg;
+	private String imagePath = BreakWallConfig.brickXtraLifeImg;
 	
 	public int addXtraLife() {
 		return 1;
