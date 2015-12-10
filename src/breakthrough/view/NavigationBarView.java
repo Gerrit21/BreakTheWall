@@ -6,6 +6,7 @@ import javax.swing.*;
 import breakthewall.controller.BreakWallController;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 
@@ -21,6 +22,7 @@ public class NavigationBarView extends JPanel  {
 	private JButton b2;
 	private JButton b3;
 	private JButton b4;
+	private ArrayList<JButton> navigationButtons;
 	private JLabel lab1;
 	private JLabel lab2;
 	private JLabel lab3;
@@ -31,8 +33,9 @@ public class NavigationBarView extends JPanel  {
 	private int counter = 0;
 	
 	
-	public NavigationBarView(BreakWallController controller) {
-				
+	public NavigationBarView() {
+		
+		navigationButtons = new ArrayList<JButton>();
 		p = new JPanel();
 		p.setBackground(Color.GRAY);
         p.setPreferredSize(new Dimension(590, 40));
@@ -42,14 +45,14 @@ public class NavigationBarView extends JPanel  {
 		lab1 = new JLabel ("Score");
 		lab2 = new JLabel ("Level");
 		lab3 = new JLabel ("Life");
-		b1 = new JButton ("Play");
-		b1.addActionListener(controller);
+		b1 = new JButton ("Play");		
+		// b1.addActionListener(controller);
 		b2 = new JButton ("Pause");
-		b2.addActionListener(controller);
+		//b2.addActionListener(controller);
 		b3 = new JButton ("Save");
-		b3.addActionListener(controller);
+		//b3.addActionListener(controller);
 		b4 = new JButton ("Exit");
-		b4.addActionListener(controller);
+		//b4.addActionListener(controller);
 		scorecount = new TextField(" 1234 ");
 		scorecount.setEditable(false);
 		scorecount.setFocusable(false);
@@ -60,6 +63,10 @@ public class NavigationBarView extends JPanel  {
 		lifecount.setFocusable(false);
 		lifecount.setEditable(false);
 		
+		navigationButtons.add(b1);
+		navigationButtons.add(b2);
+		navigationButtons.add(b3);
+		navigationButtons.add(b4);
 		
 		p.add(lab1);
 		p.add(scorecount);
@@ -74,6 +81,10 @@ public class NavigationBarView extends JPanel  {
 				
 		add(p,BorderLayout.NORTH);	
 	
+	}
+	
+	public ArrayList<JButton> getButtonList() {
+		return navigationButtons;
 	}
 
 	
