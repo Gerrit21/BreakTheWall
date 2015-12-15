@@ -1,6 +1,7 @@
 package breakthewall.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,9 +11,12 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -38,6 +42,7 @@ public class BreakWallView extends JFrame implements Observer {
 	ArrayList<GameElement> displayableElements;
 	private int layerCount = 0;
 	private NavigationBarView panelbar;
+	private JLabel gameInfo;
 	
 	
 	/*
@@ -55,20 +60,41 @@ public class BreakWallView extends JFrame implements Observer {
 		gameElements = new HashMap<String, JPanel>();
 		this.add(gamePane, BorderLayout.CENTER);
 		gamePane.setBounds(0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
-		// f�gt eine Hintergrundbild hinzu
-		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
 		this.setTitle(BreakWallConfig.title);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
 		this.setFocusable(true);
 		this.setVisible(true);
-
-		panelbar = new NavigationBarView(controller);
-		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
-
+		buildGameLayout();
 	}
 
+	public void buildGameLayout() {
+		// f�gt eine Hintergrundbild hinzu
+		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
+		panelbar = new NavigationBarView();
+		// add ActionListener to navigation buttons
+		ArrayList<JButton> navigationButtons = panelbar.getButtonList();
+		for(int i = 0; i < navigationButtons.size(); i++) {
+			navigationButtons.get(i).addActionListener(controller);
+		}
+		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
+		gameInfo = new JLabel("Spielhinweise");
+		gameInfo.setBackground(new Color(139, 223, 113));
+		gameInfo.setBorder(BorderFactory.createLineBorder(new Color(100, 158, 82)));
+		addPanelToGameField(gameInfo, 0, (BreakWallConfig.gameFieldHeight - 48), BreakWallConfig.gameFieldWidth, 20);
+	}
+	
+	public void editGameInfo(String newText) {
+		gameInfo.setText(newText);
+	}
+	
+	public void clearGameField() {
+		gamePane.removeAll();
+		gameElements.clear();
+		layerCount = 0;
+	}
+	
 	public void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
 		newComp.setBounds(xCoord, yCoord, width, height);
 		newComp.setOpaque(true);
@@ -77,6 +103,7 @@ public class BreakWallView extends JFrame implements Observer {
 		gamePane.add(newComp, new Integer(layerCount), 0);
 		layerCount++;
 		gamePane.validate();
+	
 	}
 	
 	/**
@@ -136,11 +163,12 @@ public class BreakWallView extends JFrame implements Observer {
 	@Override
 	public void update(Observable gameModel, Object gameObject) {
 		if(gameObject.equals("updateGameElements")) {
-			displayableElements = ((BreakWallModel) gameModel).getElementList();
+			BreakWallModel currentModel = (BreakWallModel) gameModel;
+			displayableElements = currentModel.getElementList();
 			for(int i = 0; i < displayableElements.size(); i++) {			
 				if(gameElements.get(displayableElements.get(i).getId()) != null) {
 					if(displayableElements.get(i).getDestroyedState() == false) {
-						relocateElement(displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord());
+						redrawElement(displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
 					} else {
 						removeElementFromGameField(displayableElements.get(i).getId());
 					}
@@ -148,12 +176,19 @@ public class BreakWallView extends JFrame implements Observer {
 					addElementToGameField(displayableElements.get(i).getImage(), displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
 				}
 
-			}			
+			}
+			editGameInfo(currentModel.getInfoText());
 		}
 		if(gameObject.equals("focusGameElements")) {
-			System.out.println("focus");
 			this.requestFocus();
 		}
+		if(gameObject.equals("initLevel")) {
+			clearGameField();
+			controller.initNewLevel();
+		}
+		if(gameObject.equals("updateLevel")) {
+			buildGameLayout();
+		}		
 	}
 	
 	/**

@@ -16,9 +16,12 @@ public class BreakWallConfig {
 	public static final int offsetWidth = gameFieldWidth;
 	public static final int offsetHeight = 495;
 	public static final int wallWidth = gameFieldWidth - 60;
-	public static final int wallHeight = 150;
 	public static final int barWidth = 590;
 	public static final int barHeight = 40;
+	
+	// Die Anzahl der Spiellevel, die implementiert sind
+	// to do: diese Zahl kann aus einer Level-XML extrahiert werden
+	public static final int levelCount = 3;
 	
 	/*
 	 *  Variablen für Spiel-Elemente
@@ -54,6 +57,7 @@ public class BreakWallConfig {
 	 * 
 	 */
 	
+	public static int wallHeight;
 	// Leben
 	public static int lifeCount;
 	// Bilder	
@@ -72,13 +76,32 @@ public class BreakWallConfig {
 			lifeCount = 3;
 			// Bilder	
 			bgImagePath = "img/bg_1.png";
+			wallHeight = 100;
 			
 			// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
-			bonusPossible = 10;
+			bonusPossible = 20;
+			hardPossible = 10;
+			normalPossible = 100 - (hardPossible + bonusPossible);			
+		}
+		if(level == 2) {
+			// Bilder	
+			bgImagePath = "img/bg_2.png";
+			wallHeight = 120;
+			// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
+			bonusPossible = 30;
 			hardPossible = 20;
 			normalPossible = 100 - (hardPossible + bonusPossible);			
 		}
 		
+		if(level == 3) {
+			// Bilder	
+			bgImagePath = "img/bg_3.png";
+			wallHeight = 150;
+			// Wahrscheinlichkeiten für Brick-Varianten in Prozent	
+			bonusPossible = 40;
+			hardPossible = 30;
+			normalPossible = 100 - (hardPossible + bonusPossible);			
+		}		
 		// to do: Variablen f�r das jeweilige Level aus einer XML-Datei auslesen
 		// Variablen h�ngen vom jeweiligen Level ab
 		// Leben

@@ -23,6 +23,7 @@ public class BreakWallModel extends Observable {
 		
 	private PlayerPaddle gamePaddle;
 	private PlayerBall gameBall;
+	private BreakWallMusic gameMusic;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
 	private BreakWallScore gameScore;
@@ -32,6 +33,10 @@ public class BreakWallModel extends Observable {
 	private String tempBrick = "";
 	private Timer timer;
 	private int constantPaddleWidth;
+	private int currentLevel;
+	private boolean moveBall, changeDir;
+	private boolean updateLevel = false;
+	private String gameInfoText;
 	
 	/**
 	 * Konstruktoraufruf initiiert die Erzeugung der Spielelemente
@@ -39,10 +44,12 @@ public class BreakWallModel extends Observable {
 	 */
 	public BreakWallModel(int initialLevel) {		
 		// das Level festlegen, mit dem das Spiel starten soll
-		BreakWallConfig.setLevelDifficulty(initialLevel);
+		currentLevel = initialLevel;
+		BreakWallConfig.setLevelDifficulty(currentLevel);
+		gameScore = new BreakWallScore(0);
 		initGameElements();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);		
+		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
+		playGame();
 	}
 
 	/**
@@ -51,10 +58,13 @@ public class BreakWallModel extends Observable {
 	 * und zeichnet diese auf die Spielfläche.
 	 */
 	private void initGameElements() {
-		gameScore = new BreakWallScore(0);
+		gameMusic = new BreakWallMusic();
+		gameMusic.start();	
 		breakWallElements = new ArrayList<GameElement>();
 		gamePaddle = new PlayerPaddle();	
 		gameBall = new PlayerBall();
+		moveBall = false;
+		changeDir = true;
 		constantPaddleWidth = gamePaddle.getWidth();
 		breakWallElements.add(gameBall);
 		breakWallElements.add(gamePaddle);
@@ -62,45 +72,106 @@ public class BreakWallModel extends Observable {
 		gameWall = new BrickWall();
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
-		}
-				
+		}				
 	}
 	
-	public void change(String s) {
-		if(s.equals("left")) {
+	public void startNewLevel() {
+		updateLevel = false;
+		currentLevel++;
+		BreakWallConfig.setLevelDifficulty(currentLevel);
+		setChanged();
+		notifyObservers("updateLevel");
+		initGameElements();
+		setInfoText("You've entered Level " + currentLevel + "!");
+		playGame();
+	}
+	
+	/*
+	 * Öffentliche Methoden, um Model-Daten zu ändern
+	 */
+	
+	public void movePaddleLeft() {
+		if(gamePaddle.getXCoord() > 0) {
 			gamePaddle.movePaddle("left");
+			if(moveBall == false) {
+				gameBall.restBall("left", gamePaddle.getSpeed());
+			}
 		}
-		if(s.equals("right")) {
+	}
+	
+	public void movePaddleRight() {
+		if(gamePaddle.getXCoord() < (BreakWallConfig.offsetWidth - gamePaddle.getWidth())) {
 			gamePaddle.movePaddle("right");
+			if(moveBall == false) {
+				gameBall.restBall("right", gamePaddle.getSpeed());
+			}
 		}
-		if(s.equals("Play")) {
-			setChanged();
-			notifyObservers("focusGameElements");			
-	        timer = new Timer();
-	        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);			
-		}
-		if(s.equals("Pause")) {
-			stopGame();			
+	}
+	
+	public void playGame() {
+		setChanged();
+		notifyObservers("focusGameElements");			
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);		
+	}
+	
+	public void pauseGame() {
+		stopGame();
+	}
+	
+	public void saveGame() {
+		setInfoText("Want to save your highscore? Implement it.");
+		stopGame();
+		// to do: ggf. ins Hauptmenü integrieren
+		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
+		newHighscore.addEntry(gameScore.getCurrentScore());		
+	}
+	
+	public void exitGame() {
+		setInfoText("Exit the Game...");
+		System.exit(0);		
+	}
+	
+	public void setBallAction(boolean moveBall) {
+		// Zufällige Ballrichtung beim ersten Wurf festlegen
+		int randomDir = randomFromRange(1, 2);
+		System.out.println(randomDir);
+		if(randomDir == 1) {
+			gameBall.setDirX(gameBall.getDirX() * 1);
+		} else {
+			gameBall.setDirX(gameBall.getDirX() * (-1));
 		}		
-		if(s.equals("Save")) {
-			System.out.println("Want to save your highscore? Implement it.");
-			stopGame();
-			// to do: ggf. ins Hauptmenü integrieren
-			RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
-			newHighscore.addEntry(gameScore.getCurrentScore());
-		}
-		if(s.equals("Exit")) {
-			System.out.println("Exit the Game...");
-    		System.exit(0);			
-		}
+		this.moveBall = moveBall;
+	}
+	
+	public boolean getBallAction() {
+		return this.moveBall;
 	}
 	
 	public void remove(int index) {
 		breakWallElements.remove(index);
 	}
 	
+	// cheat mode: randomly remove bricks to get through levels faster
+	// press 'e' key
+	public void cheat() {
+		if(gameWall.getBrickList().size() > 0) {
+			int randomBrickIndex = randomFromRange(0, gameWall.getBrickList().size() - 1);
+			gameWall.getBrickList().get(randomBrickIndex).setDestroyedState(true);
+			gameWall.removeFromBrickList(gameWall.getBrickList().get(randomBrickIndex));
+		}
+	}
+	
 	public ArrayList<GameElement> getElementList() {
 		return this.breakWallElements;
+	}
+	
+	public void setInfoText(String text) {
+		this.gameInfoText = text;
+	}
+	
+	public String getInfoText() {
+		return this.gameInfoText;
 	}
 	
 	private void collisionDetection() {    	
@@ -117,6 +188,7 @@ public class BreakWallModel extends Observable {
 		// die X-Richtung wird umgekehrt	
 		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallConfig.offsetWidth)) {
 			gameBall.setDirX(-1 * gameBall.getDirX());
+			changeDir = true;
 		}		
 		// der Ball befindet sich innerhalb der oberen und unteren Begrenzung des Spielfeldes
 		if((ballTop.getY() > BreakWallConfig.barHeight) && (ballBottom.getY() < BreakWallConfig.offsetHeight)) { 
@@ -124,10 +196,11 @@ public class BreakWallModel extends Observable {
 	    // die Y-Richtung wird umgekehrt
 		} else if((ballTop.getY() <= BreakWallConfig.barHeight)) {
 			gameBall.setDirY(-1 * gameBall.getDirY());
+			changeDir = true;
 		// der Ball berührt oder unterschreitet die untere Begrenzung des Spielfeldes
 		// Spieler verliert ein Leben oder verliert das Spiel	
 		} else if(ballBottom.getY() > BreakWallConfig.offsetHeight) {
-			System.out.println("You failed!");
+			setInfoText("You've lost a life!");
 			gameScore.subtractPoints(20);
 			if(BreakWallConfig.lifeCount > 1) {
 				BreakWallConfig.lifeCount -= 1;			
@@ -137,8 +210,7 @@ public class BreakWallModel extends Observable {
 				gameBall.setDirX(BreakWallConfig.initialBallXDir);
 			} else {
 				gameBall.setDestroyedState(true);
-				// gameField.removeElementFromGameField(gameBall.getImage());
-				System.out.println("Game Over!");
+				setInfoText("Game Over!");
 				stopGame();
 			}
 		}
@@ -149,14 +221,16 @@ public class BreakWallModel extends Observable {
 	private void detectPaddleCollision() {
 		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallConfig.paddleOffsetTop);
 		// Ball stößt Paddle von oben an
-		if(paddleRect.contains(ballBottom)) {					
+		if((paddleRect.contains(ballBottom)) && (changeDir == true)) {					
 			gameBall.setDirY(-1 * gameBall.getDirY());
+			changeDir = false;
 			return;
 		// Ball stößt Paddle von links oder rechts
 		// lässt den Ball wieder nach oben fliegen	
-		} else if((paddleRect.contains(ballLeft)) || (paddleRect.contains(ballRight))) {				    
+		} else if((changeDir == true) && (paddleRect.contains(ballLeft)) || (paddleRect.contains(ballRight))) {				    
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			gameBall.setDirX(-1 * gameBall.getDirX());
+			changeDir = false;
 			return;	
 		}		
 	}
@@ -186,6 +260,7 @@ public class BreakWallModel extends Observable {
 					}
 				}
 				gameBall.setDirY(-1 * gameBall.getDirY());
+				changeDir = true;
 				struckBrick = tempBrick;
 				return;
 			// Ball stößt Brick von links oder rechts an		
@@ -198,10 +273,14 @@ public class BreakWallModel extends Observable {
 					if(tempCurrentBrick.getStability() == 0) {
 						gameScore.addPoints(10);
 						currentBrick.setDestroyedState(true);
-						gameWall.removeFromBrickList(currentBrick);						
+						gameWall.removeFromBrickList(currentBrick);
+						if(tempCurrentBrick.hasBonusObject() == true) {
+							activateBonus(tempCurrentBrick);
+						}
 					}
 				}
 				gameBall.setDirX(-1 * gameBall.getDirX());
+				changeDir = true;
 				struckBrick = tempBrick;
 				return;
 			}
@@ -212,13 +291,15 @@ public class BreakWallModel extends Observable {
 		if(activeBrick.getBonusObject().getBonusType().equals("BonusBallSpeed")) {
 			BonusBallSpeed tempBonus = (BonusBallSpeed) activeBrick.getBonusObject();
 			int newAccel = tempBonus.setBallSpeed(gameBall.getDirY());
-			gameBall.setDirY(newAccel);;
+			gameBall.setDirY(newAccel);
+			setInfoText("Bonus: Change speed of ball!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusPaddleWidth")) {
 			BonusPaddleWidth tempBonus = (BonusPaddleWidth) activeBrick.getBonusObject();
 			int newWidth = tempBonus.changePaddleSize(constantPaddleWidth/2);
 			gamePaddle.setWidth(newWidth);
+			setInfoText("Bonus: Change paddle width!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusXtraLife")) {
-			System.out.println("Add Xtra Life!");
+			setInfoText("Bonus: Add Xtra Life!");
 			BreakWallConfig.lifeCount++;
 		}
 	}
@@ -261,12 +342,26 @@ public class BreakWallModel extends Observable {
     	// informiert die Beobachter von Änderungen der Daten
     	// entfernt ggf. Elemente aus der Element-Liste des Spiels
         public void run() {
+			if(gameWall.getBrickList().size() == 0) {
+				updateLevel = true;
+			}
         	// System.out.println(gameScore.getCurrentScore());
-        	gameBall.moveBall();
-        	collisionDetection();
+        	if(moveBall == true) {
+            	gameBall.moveBall();
+            	collisionDetection();      		
+        	}
     		setChanged();
-    		notifyObservers("updateGameElements");
-    		removeDestroyedElements();
+    		if(updateLevel == false) {
+        		notifyObservers("updateGameElements");
+        		removeDestroyedElements();    			
+    		} else if(updateLevel == true) {
+    			if(currentLevel < BreakWallConfig.levelCount) {
+        			notifyObservers("initLevel");
+    			} else {
+    				setInfoText("You have archieved " + gameScore.getCurrentScore() + " Points! Congrats!");
+    			}    			
+    			stopGame();
+    		}
         	
         }
     }

@@ -45,12 +45,11 @@ public class PlayerBall implements GameElement {
 	 * Ermöglicht es, denn Ball erst auf Befehl (z.B. Tastendruck) "abzufeuern"
 	 * @param direction Aktuelle Bewegungsrichtung des Paddles
 	 */
-	public void restBall(String direction) {		
-		int currentX = getXCoord(); 
-		if((direction == "left") && (currentX > 0)) {			
-			setXCoord(currentX - getSpeed());
-		} else if((direction == "right") && (currentX < BreakWallConfig.offsetWidth)) {
-			setXCoord(currentX + getSpeed());
+	public void restBall(String direction, int speed) {		 
+		if(direction == "left") {			
+			setXCoord(xCoord - speed);
+		} else if(direction == "right") {
+			setXCoord(xCoord + speed);
 		}
 	}
 
