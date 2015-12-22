@@ -80,7 +80,6 @@ public class BreakWallView extends JFrame implements Observer {
 			navigationButtons.get(i).addActionListener(controller);
 		}
 		
-		
 		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
 
 		gameInfo = new JLabel("Spielhinweise");
@@ -90,17 +89,15 @@ public class BreakWallView extends JFrame implements Observer {
 		
 	}
 	
-	public void buildMenuLayout() {
-		
+	public void buildMenuLayout() {		
 		pauseMenu = new MenuView();
 		// add ActionListener to navigation buttons
 		ArrayList<JButton> navigationMenuButtons = pauseMenu.getButtonList();
 		for(int i = 0; i < navigationMenuButtons.size(); i++) {
 			navigationMenuButtons.get(i).addActionListener(controller);
 		}
-		
-		addPanelToGameField(pauseMenu, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
-		
+		gameElements.put("mainMenu", pauseMenu);
+		addPanelToGameField(pauseMenu, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
 	public void editGameInfo(String newText) {
@@ -214,12 +211,11 @@ public class BreakWallView extends JFrame implements Observer {
 			buildGameLayout();
 		}	
 		if(gameObject.equals("showMenu")) {
-			buildMenuLayout();
-			
+			buildMenuLayout();			
 		}	
-		if(gameObject.equals("quitMenu")) {
 		
-			
+		if(gameObject.equals("quitMenu")) {		
+			removeElementFromGameField("mainMenu");
 		}	
 		
 		if(gameObject.equals("showPlayButton")) {			
