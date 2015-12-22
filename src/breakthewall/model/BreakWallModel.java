@@ -1,8 +1,6 @@
 package breakthewall.model;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -13,9 +11,6 @@ import javax.swing.ImageIcon;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.remote.RemoteHighscoreClient;
-import breakthewall.view.BreakWallView;
-import breakthewall.view.MenuView;
-import breakthewall.view.NavigationBarView;
 
 /**
  * Klasse zur Koordinierung der verschiedenen Break-The-Wall-Spielelemente.
@@ -28,6 +23,7 @@ public class BreakWallModel extends Observable {
 	private PlayerPaddle gamePaddle;
 	private PlayerBall gameBall;
 	private BreakWallMusic musicObj;
+	private Thread musicThread;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
 	private BreakWallScore gameScore;
@@ -71,8 +67,10 @@ public class BreakWallModel extends Observable {
 	private void initGameElements() {
 		// gameMusic = new BreakWallMusic();
 		musicObj = new BreakWallMusic();
-		if(musicIsPlaying == false) {
+		musicThread = new Thread(musicObj);
+		if(!musicIsPlaying) {
 			musicObj.playMusic(true);
+			musicThread.start();
 			musicIsPlaying = true;			
 			
 		}	

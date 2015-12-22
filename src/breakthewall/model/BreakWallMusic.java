@@ -1,46 +1,47 @@
 package breakthewall.model;
 
 import java.io.IOException;
+import java.util.Date;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import breakthewall.BreakWallConfig;
 
-public class BreakWallMusic {
+public class BreakWallMusic extends Thread {
 	
+	private float durationSongMillis;
 	private boolean play = false;
+	private boolean loopMusic = true;
 	private String[] musicClips;
 	private String musicString, randomMusicFile;
 	AudioInputStream audioFile;
 	Clip audioClip;
-	LineListener audioListener;
 	
 	public BreakWallMusic() {
 		musicClips = BreakWallConfig.backgroundMusic;
-		initMusic();
+		// initMusicClip();
 	}
 	
-	public void initMusic() {
+	public void initMusicClip() {
 		try {
 			randomMusicFile = getRandomClip();
 			AudioInputStream audioFile = AudioSystem.getAudioInputStream(BreakWallMusic.class.getResourceAsStream(randomMusicFile));
 			audioClip = AudioSystem.getClip();
+			durationSongMillis = 1000 * audioFile.getFrameLength() / audioFile.getFormat().getFrameRate();
 			audioClip.open(audioFile);
-			audioListener = new customLineListener();
-			audioClip.addLineListener(audioListener);
 		} catch (UnsupportedAudioFileException e1) {
 			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (NullPointerException e3) {
+			e3.printStackTrace();
 			System.out.println("Please check if music file paths are correct.");
+		} catch (LineUnavailableException e4) {
+			e4.printStackTrace();
 		} 	
 	}
 	
@@ -56,25 +57,37 @@ public class BreakWallMusic {
 	}
 	
 	public void playMusic(boolean play) {
-		this.play = play;
-		if(play == true) {
-			audioClip.start();
-		} else {
-			audioClip.stop();
-		}
-		
+		this.play = play;		
 	}
 	
-	private class customLineListener implements LineListener  {
-
-		@Override
-		public void update(LineEvent event) {
-			if((event.getType().toString().equals("Stop")) && (play == true)) {
-				initMusic();
-				playMusic(true);
+	public void run() {
+		Date startTime = new Date();
+		Date currentTime = new Date();
+		long timeAtThisLoop = 0;
+		long delayTime = 0;	
+		long tempDelayTime = 0;
+		long timeDiff = 0;
+		while(loopMusic) {
+			if((timeDiff == 0) || (timeDiff > durationSongMillis)) {
+				initMusicClip();
+				startTime = new Date();
+				delayTime = 0;
 			}
+			if(play) {
+				audioClip.start();
+			}
+			do {
+				currentTime = new Date();				 
+				timeDiff = currentTime.getTime() - (startTime.getTime() + delayTime);
+				timeAtThisLoop = currentTime.getTime();
+			} while((timeDiff < durationSongMillis) && (play));
+			audioClip.stop();
+			do {
+				tempDelayTime = 0;
+				currentTime = new Date();
+				tempDelayTime = currentTime.getTime() - timeAtThisLoop;				
+			} while(!play);
+			delayTime = delayTime + tempDelayTime;			
 		}
-		
 	}
-
 }
