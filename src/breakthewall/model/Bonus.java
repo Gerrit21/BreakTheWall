@@ -3,7 +3,7 @@ package breakthewall.model;
 /**
  * Interface mit gemeinsamen Methoden aller Bonus-Brick-Typen.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public interface Bonus {

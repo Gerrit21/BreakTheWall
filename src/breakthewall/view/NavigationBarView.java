@@ -47,7 +47,9 @@ public class NavigationBarView extends JPanel  {
 		lab3 = new JLabel ("Life");
 		b1 = new JButton ("Play/Pause");		
 		// b1.addActionListener(controller);
-		b2 = new JButton ("Mute");
+		Icon musicIcon = new ImageIcon("media/music_playing.png");
+		b2 = new JButton(musicIcon);
+		b2.setActionCommand("MuteMusic");
 		//b2.addActionListener(controller);
 		b3 = new JButton ("Menu");
 		//b3.addActionListener(controller);
@@ -97,6 +99,34 @@ public class NavigationBarView extends JPanel  {
 		return counter;
 	}
 	
+	public void setPlayPauseButton(String buttonText) {
+			b1.setText(buttonText);		
+	}
 	
+	public void setMusicButton(boolean isPlaying) {
+		System.out.println(isPlaying);
+		if(isPlaying == true) {
+			Icon musicIcon = new ImageIcon("media/music_playing.png");
+			b2.setIcon(musicIcon);
+			b2.setActionCommand("MuteMusic");			
+		} else {
+			Icon musicIcon = new ImageIcon("media/music_pausing.png");
+			b2.setIcon(musicIcon);
+			b2.setActionCommand("PlayMusic");
+		}
+
+	}
+	
+	public void updateScoreView(int score) {
+		scorecount.setText(Integer.toString(score));
+	}
+	
+	public void updateLevelView(int level) {
+		levelcount.setText(Integer.toString(level));
+	}
+	
+	public void updateLifeView(int lives) {
+		lifecount.setText(Integer.toString(lives));
+	}
 	
 }

@@ -52,6 +52,21 @@ public class BreakWallConfig {
 	public static final int stabilityNormal = 1;
 	public static final int stabilityHard = 3;
 	
+	// Musik & Sounds
+	public static String[] backgroundMusic = {
+			"/media/Bensound-Cute.wav", 
+			"/media/Bellevue-Gates.wav"
+			};
+	
+	// Punktevergabe für verschiedene Arten von Bricks
+	public static final int pointsNormal = 10;
+	public static final int pointsBonus = 20;
+	// Faktor, um den sich die Punktzahl eines Steins vervielfacht,
+	// wenn die Ballgeschwindigkeit erhöht wird
+	public static final int bonusFactor = 3;
+	// Strafpunkte, wenn der Ball ins Aus geht (werden positiv angegeben)
+	public static final int penalityPoints = 50;
+	
 	/*
 	 * Level-Schwierigkeiten
 	 * 
@@ -68,8 +83,8 @@ public class BreakWallConfig {
 	public static int hardPossible;
 	public static int normalPossible;
 	
-	// hier k�nnen Variablen f�r levelabh�ngige Einstellungen gesetzt werden
-	// to do: die Einstellungen f�r die Level sollen m�glichst aus einer XML-Datei eingelesen werden
+	// hier können Variablen für levelabhängige Einstellungen gesetzt werden
+	// to do: die Einstellungen für die Level sollen möglichst aus einer XML-Datei eingelesen werden
 	public static void setLevelDifficulty(int level) {
 		if(level == 1) {
 			// Leben
@@ -102,8 +117,8 @@ public class BreakWallConfig {
 			hardPossible = 30;
 			normalPossible = 100 - (hardPossible + bonusPossible);			
 		}		
-		// to do: Variablen f�r das jeweilige Level aus einer XML-Datei auslesen
-		// Variablen h�ngen vom jeweiligen Level ab
+		// to do: Variablen für das jeweilige Level aus einer XML-Datei auslesen
+		// Variablen hängen vom jeweiligen Level ab
 		// Leben
 		// lifeCount = Integer.parseInt(BreakWallConfigXML.getConfigData("lifeCount", level));
 		// Bilder	

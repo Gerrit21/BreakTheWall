@@ -8,17 +8,14 @@ import java.util.Random;
 
 /**
  * Klasse zur Erzeugung eines Bricks mit Bonus-Objekt
- * Es wird einer von verschiedenen Typen von Bonus-Objekten zuf�llig erzeugt
+ * Es wird einer von verschiedenen Typen von Bonus-Objekten zufällig erzeugt
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BrickBonus implements GameElement, Brick {
 	
-	private int xCoord;
-	private int yCoord;
-	private int height;
-	private int width;
+	private int yCoord, xCoord, height, width, points;
 	private String imagePath;
 	private String id = "";
 	private int stability = BreakWallConfig.stabilityNormal;
@@ -27,17 +24,18 @@ public class BrickBonus implements GameElement, Brick {
 	private Bonus randomBonus;
 	
 	/*
-	 * Bei Konstruktoraufruf wird dem Bonus-Brick ein zuf�lliger Bonus hinzugef�gt
+	 * Bei Konstruktoraufruf wird dem Bonus-Brick ein zufälliger Bonus hinzugefügt
 	 */
 	public BrickBonus() {
 		setRandomBonus();
+		this.points = BreakWallConfig.pointsBonus;
 		imagePath = getBonusObject().getImage();
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
 	
 	/**
-	 * Der Bonus-Typ f�r eine Bonus-Brick-Instanz wird zuf�llig erstellt
+	 * Der Bonus-Typ für eine Bonus-Brick-Instanz wird zufällig erstellt
 	 */
 	private void setRandomBonus() {
 		int randomInt = BreakWallModel.randomFromRange(1, 3);
@@ -139,6 +137,16 @@ public class BrickBonus implements GameElement, Brick {
 	public void setDestroyedState(boolean isDestroyed) {
 		this.isDestroyed = isDestroyed;
 		
+	}
+
+	@Override
+	public int getPoints() {
+		return this.points;
+	}
+
+	@Override
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 }

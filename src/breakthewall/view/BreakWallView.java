@@ -196,10 +196,16 @@ public class BreakWallView extends JFrame implements Observer {
 
 			}
 			editGameInfo(currentModel.getInfoText());
+			panelbar.updateScoreView(currentModel.getScore());
+			panelbar.updateLevelView(currentModel.getLevel());
+			panelbar.updateLifeView(currentModel.getLives());
 		}
 		if(gameObject.equals("focusGameElements")) {
 			this.requestFocus();
 		}
+		if(gameObject.equals("stopGame")) {
+			panelbar.setPlayPauseButton("Play");
+		}		
 		if(gameObject.equals("initLevel")) {
 			clearGameField();
 			controller.initNewLevel();
@@ -216,7 +222,14 @@ public class BreakWallView extends JFrame implements Observer {
 			
 		}	
 		
-		
+		if(gameObject.equals("showPlayButton")) {			
+			panelbar.setMusicButton(true);
+			this.requestFocus();
+		}
+		if(gameObject.equals("showMuteButton")) {			
+			panelbar.setMusicButton(false);
+			this.requestFocus();
+		}
 	}
 	
 	/**

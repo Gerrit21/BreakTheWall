@@ -4,9 +4,9 @@ import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erzeugung eines Bonus-Objekts, dass dem Spieler
- * ein Leben hinzuf�gt, wenn ein Brick mit diesem Bonus getroffen wurde.
+ * ein Leben hinzufügt, wenn ein Brick mit diesem Bonus getroffen wurde.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BonusXtraLife implements Bonus {

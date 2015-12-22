@@ -9,6 +9,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
+
 import breakthewall.BreakWallConfig;
 import breakthewall.remote.RemoteHighscoreClient;
 import breakthewall.view.BreakWallView;
@@ -18,14 +20,14 @@ import breakthewall.view.NavigationBarView;
 /**
  * Klasse zur Koordinierung der verschiedenen Break-The-Wall-Spielelemente.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BreakWallModel extends Observable {
 		
 	private PlayerPaddle gamePaddle;
 	private PlayerBall gameBall;
-	//private BreakWallMusic gameMusic;
+	private BreakWallMusic musicObj;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
 	private BreakWallScore gameScore;
@@ -36,7 +38,8 @@ public class BreakWallModel extends Observable {
 	private Timer timer;
 	private int constantPaddleWidth;
 	private int currentLevel;
-	private boolean moveBall, changeDir;
+	private int scoreFactor = 1;
+	private boolean moveBall, changeDir, musicIsPlaying;
 	private boolean updateLevel = false;
 	private String gameInfoText;
 	private boolean buttonClick;
@@ -52,6 +55,7 @@ public class BreakWallModel extends Observable {
 	public BreakWallModel(int initialLevel) {		
 		// das Level festlegen, mit dem das Spiel starten soll
 		currentLevel = initialLevel;
+		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameScore = new BreakWallScore(0);
 		initGameElements();
@@ -62,11 +66,16 @@ public class BreakWallModel extends Observable {
 	/**
 	 * Klasse erzeugt Objekte aller initial spielrelevanten Elemente,
 	 * also Spielfeld, Paddle, Ball und Brick-Wand
-	 * und zeichnet diese auf die Spielfl�che.
+	 * und zeichnet diese auf die Spielfläche.
 	 */
 	private void initGameElements() {
-	//	gameMusic = new BreakWallMusic();
-	//	gameMusic.start();	
+		// gameMusic = new BreakWallMusic();
+		musicObj = new BreakWallMusic();
+		if(musicIsPlaying == false) {
+			musicObj.playMusic(true);
+			musicIsPlaying = true;			
+			
+		}	
 		breakWallElements = new ArrayList<GameElement>();
 		gamePaddle = new PlayerPaddle();	
 		gameBall = new PlayerBall();
@@ -75,8 +84,7 @@ public class BreakWallModel extends Observable {
 		constantPaddleWidth = gamePaddle.getWidth();
 		breakWallElements.add(gameBall);
 		breakWallElements.add(gamePaddle);
-		
-		// Brick-Wand erstellen und Bricks zur Liste der Spielelemente hinzuf�gen
+		// Brick-Wand erstellen und Bricks zur Liste der Spielelemente hinzufügen
 		gameWall = new BrickWall();
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
@@ -86,6 +94,7 @@ public class BreakWallModel extends Observable {
 	public void startNewLevel() {
 		updateLevel = false;
 		currentLevel++;
+		scoreFactor = 1;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		setChanged();
 		notifyObservers("updateLevel");
@@ -95,7 +104,7 @@ public class BreakWallModel extends Observable {
 	}
 	
 	/*
-	 * �ffentliche Methoden, um Model-Daten zu �ndern
+	 * Öffentliche Methoden, um Model-Daten zu ändern
 	 */
 	
 	public void movePaddleLeft() {
@@ -133,11 +142,10 @@ public class BreakWallModel extends Observable {
 	public void saveGame() {
 		setInfoText("Want to save your highscore? Implement it.");
 		stopGame();
-		// to do: ggf. ins Hauptmen� integrieren
+		// to do: ggf. ins Hauptmenü integrieren
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
 	}
-	
 	
 	public void exitGame() {
 		setInfoText("Exit the Game...");
@@ -169,9 +177,18 @@ public class BreakWallModel extends Observable {
 		return this.buttonClick;
 	}
 	
+	public void setMusicPlaying(boolean boolval) {
+		setChanged();
+		if(boolval == true) {
+			notifyObservers("showPlayButton");
+		} else {
+			notifyObservers("showMuteButton");
+		}			
+		musicObj.playMusic(boolval);
+	}
 	
 	public void setBallAction(boolean moveBall) {
-		// Zuf�llige Ballrichtung beim ersten Wurf festlegen
+		// Zufällige Ballrichtung beim ersten Wurf festlegen
 		int randomDir = randomFromRange(1, 2);
 		System.out.println(randomDir);
 		if(randomDir == 1) {
@@ -212,9 +229,21 @@ public class BreakWallModel extends Observable {
 		return this.gameInfoText;
 	}
 	
+	public int getScore() {
+		return  gameScore.getCurrentScore();
+	}
+	
+	public int getLevel() {
+		return  this.currentLevel;
+	}
+	
+	public int getLives() {
+		return  BreakWallConfig.lifeCount;
+	}
+	
 	private void collisionDetection() {    	
 		// die Punkte sind definiert als Mitte Oben, Mitte Rechts, Mitte Unten, Mitte Links des Balls
-		// werden f�r die Kollisionsdetektion an verschiedenen Stellen ben�tigt
+		// werden für die Kollisionsdetektion an verschiedenen Stellen benötigt
 		ballTop = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), gameBall.getYCoord() + BreakWallConfig.ballOffset);
 		ballBottom = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), (gameBall.getYCoord() - BreakWallConfig.ballOffset + gameBall.getHeight()));
 		ballLeft = new Point(gameBall.getXCoord() +  BreakWallConfig.ballOffset, (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
@@ -222,7 +251,7 @@ public class BreakWallModel extends Observable {
 				
 		// der Ball befindet sich innerhalb der linken und rechten Begrenzung des Spielfeldes
 		if((ballLeft.getX() > 0) && (ballRight.getX() < BreakWallConfig.offsetWidth)) {
-	    // der Ball ber�hrt oder �berschreitet die linke und rechte Begrenzung des Spielfeldes
+	    // der Ball berührt oder überschreitet die linke und rechte Begrenzung des Spielfeldes
 		// die X-Richtung wird umgekehrt	
 		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallConfig.offsetWidth)) {
 			gameBall.setDirX(-1 * gameBall.getDirX());
@@ -235,17 +264,19 @@ public class BreakWallModel extends Observable {
 		} else if((ballTop.getY() <= BreakWallConfig.barHeight)) {
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			changeDir = true;
-		// der Ball ber�hrt oder unterschreitet die untere Begrenzung des Spielfeldes
+		// der Ball berührt oder unterschreitet die untere Begrenzung des Spielfeldes
 		// Spieler verliert ein Leben oder verliert das Spiel	
 		} else if(ballBottom.getY() > BreakWallConfig.offsetHeight) {
 			setInfoText("You've lost a life!");
-			gameScore.subtractPoints(20);
+			gameScore.subtractPoints(BreakWallConfig.penalityPoints);
+			scoreFactor = 1;
 			if(BreakWallConfig.lifeCount > 1) {
 				BreakWallConfig.lifeCount -= 1;			
 				gameBall.setXCoord(gamePaddle.getXCoord() + (gamePaddle.getWidth() / 2));
 				gameBall.setYCoord(gamePaddle.getYCoord() - gameBall.getHeight());
 				gameBall.setDirY(BreakWallConfig.initialBallYDir);			
 				gameBall.setDirX(BreakWallConfig.initialBallXDir);
+				gamePaddle.setWidth(new ImageIcon(gamePaddle.getId()).getImage().getWidth(null));
 			} else {
 				gameBall.setDestroyedState(true);
 				setInfoText("Game Over!");
@@ -258,13 +289,13 @@ public class BreakWallModel extends Observable {
 	
 	private void detectPaddleCollision() {
 		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallConfig.paddleOffsetTop);
-		// Ball st��t Paddle von oben an
+		// Ball stößt Paddle von oben an
 		if((paddleRect.contains(ballBottom)) && (changeDir == true)) {					
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			changeDir = false;
 			return;
-		// Ball st��t Paddle von links oder rechts
-		// l�sst den Ball wieder nach oben fliegen	
+		// Ball stößt Paddle von links oder rechts
+		// lässt den Ball wieder nach oben fliegen	
 		} else if((changeDir == true) && (paddleRect.contains(ballLeft)) || (paddleRect.contains(ballRight))) {				    
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			gameBall.setDirX(-1 * gameBall.getDirX());
@@ -281,15 +312,15 @@ public class BreakWallModel extends Observable {
 			currentBrick = currentBrickList.get(j);
 			brickRect = new Rectangle(currentBrick.getXCoord(), currentBrick.getYCoord(), currentBrick.getWidth(), currentBrick.getHeight());
 
-			// Ball st��t Brick von unten oder oben an
+			// Ball stößt Brick von unten oder oben an
 			if((brickRect.contains(ballTop)) || (brickRect.contains(ballBottom))) {
 				tempBrick = currentBrick.getId();
 				if(!(struckBrick.equals(tempBrick))) {
 					// Cast ist notwendig, um stability setter/ getter zu benutzen
 					Brick tempCurrentBrick = (Brick) currentBrick;
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
-					if(tempCurrentBrick.getStability() == 0) {
-						gameScore.addPoints(10);
+					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
+					if(tempCurrentBrick.getStability() == 0) {						
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);
 						if(tempCurrentBrick.hasBonusObject() == true) {
@@ -301,15 +332,15 @@ public class BreakWallModel extends Observable {
 				changeDir = true;
 				struckBrick = tempBrick;
 				return;
-			// Ball st��t Brick von links oder rechts an		
+			// Ball stößt Brick von links oder rechts an		
 			} else if((brickRect.contains(ballLeft)) || (brickRect.contains(ballRight))) {
 				tempBrick = currentBrick.getId();
 				if(!(struckBrick.equals(tempBrick))) {
 					// Cast ist notwendig, um stability setter/ getter zu benutzen
 					Brick tempCurrentBrick = (Brick) currentBrick;					
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
-					if(tempCurrentBrick.getStability() == 0) {
-						gameScore.addPoints(10);
+					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
+					if(tempCurrentBrick.getStability() == 0) {						
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);
 						if(tempCurrentBrick.hasBonusObject() == true) {
@@ -329,6 +360,7 @@ public class BreakWallModel extends Observable {
 		if(activeBrick.getBonusObject().getBonusType().equals("BonusBallSpeed")) {
 			BonusBallSpeed tempBonus = (BonusBallSpeed) activeBrick.getBonusObject();
 			int newAccel = tempBonus.setBallSpeed(gameBall.getDirY());
+			scoreFactor = scoreFactor * BreakWallConfig.bonusFactor;
 			gameBall.setDirY(newAccel);
 			setInfoText("Bonus: Change speed of ball!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusPaddleWidth")) {
@@ -354,11 +386,11 @@ public class BreakWallModel extends Observable {
 	/**
 	 * Statische Klasse zur Erzeugung einer Zufallszahl
 	 * innerhalb einer Ober- und Untergrenze.
-	 * Ober- und Untergrenze dienen haupts�chlich dazu,
-	 * die 0 als m�gliches Ergebnis auszuschlie�en.
+	 * Ober- und Untergrenze dienen hauptsächlich dazu,
+	 * die 0 als mögliches Ergebnis auszuschließen.
 	 * 
-	 * @param min Untergrenze der m�glichen Zufallszahl
-	 * @param max Obergrenze der m�glichen Zufallszahl
+	 * @param min Untergrenze der möglichen Zufallszahl
+	 * @param max Obergrenze der möglichen Zufallszahl
 	 * @return randomNum die Zufallszahl innerhalb der Grenzen
 	 */
 	public static int randomFromRange(int min, int max) {
@@ -371,13 +403,13 @@ public class BreakWallModel extends Observable {
 	 * Private Klasse zum Scheduling des Game-Loops
 	 * Aktualisiert die Position von Spielelementen in einem festgelegten Zeitrahmen 
 	 * 
-	 * @author Mareike R�ncke, Gerrit Schulte
+	 * @author Mareike Röncke, Gerrit Schulte
 	 *
 	 */
     private class GameLoopScheduler extends TimerTask {
     	
-    	// bewegt den Ball und pr�ft auf Kollision
-    	// informiert die Beobachter von �nderungen der Daten
+    	// bewegt den Ball und prüft auf Kollision
+    	// informiert die Beobachter von Änderungen der Daten
     	// entfernt ggf. Elemente aus der Element-Liste des Spiels
         public void run() {
 			if(gameWall.getBrickList().size() == 0) {
@@ -405,6 +437,8 @@ public class BreakWallModel extends Observable {
     }
 
     public void stopGame() {
+    	setChanged();
+    	notifyObservers("stopGame");
         timer.cancel();
     }	
 }

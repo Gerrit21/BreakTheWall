@@ -9,7 +9,7 @@ public class BreakWall {
 	private static volatile BreakWall gameInstance;
 	
 	/**
-	 * �ffentlicher Konstruktoraufruf stellt sicher,
+	 * Öffentlicher Konstruktoraufruf stellt sicher,
 	 * dass nur eine Instanz des Spiels erzeugt wird
 	 * Singleton-Entwurfsmuster wird verwendet
 	 */

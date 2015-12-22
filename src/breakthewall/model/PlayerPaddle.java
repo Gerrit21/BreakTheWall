@@ -7,7 +7,7 @@ import breakthewall.BreakWallConfig;
 /**
  * Runnable-Klasse zur Erstellung des Paddles.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class PlayerPaddle implements GameElement {
@@ -30,7 +30,7 @@ public class PlayerPaddle implements GameElement {
 	/**
 	 * Bewegt das Paddle auf dem Spielfeld in Geschwindigkeit speed
 	 * nach links und rechts, bis die Grenzen des Spielfelds erreicht sind.
-	 * @param direction Bewegungsrichtung, durch Tastendruck �bergeben
+	 * @param direction Bewegungsrichtung, durch Tastendruck übergeben
 	 */
 	public void movePaddle(String direction) {
 		int currentX = getXCoord(); 

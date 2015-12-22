@@ -4,9 +4,9 @@ import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erzeugung eines Bonus-Objekts, das die Breite des Paddles
- * ver�ndert, wenn ein Brick mit diesem Bonus getroffen wurde.
+ * verändert, wenn ein Brick mit diesem Bonus getroffen wurde.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BonusPaddleWidth implements Bonus {

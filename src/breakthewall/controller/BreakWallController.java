@@ -73,12 +73,18 @@ public class BreakWallController implements KeyListener, ActionListener {
 				gameModel.playGame();
 			}
 		}
-	
-		if(command.equals("Mute")) {
+
+		if(command.equals("Save")) {
 			gameModel.saveGame();
 		}
 		if(command.equals("Exit")) {
 			gameModel.exitGame();
+		}
+		if(command.equals("MuteMusic")) {
+			gameModel.setMusicPlaying(false);
+		}
+		if(command.equals("PlayMusic")) {
+			gameModel.setMusicPlaying(true);
 		}		
 		if(command.equals("Menu")) {
 			gameModel.menuGame();

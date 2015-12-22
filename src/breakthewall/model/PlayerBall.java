@@ -7,7 +7,7 @@ import breakthewall.BreakWallConfig;
 /**
  * Runnable-Klasse zur Erstellung eines Spielballs.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class PlayerBall implements GameElement {
@@ -42,7 +42,7 @@ public class PlayerBall implements GameElement {
 	/**
 	 * Methode, um den Ball synchron zum Paddle zu bewegen
 	 * 
-	 * Erm�glicht es, denn Ball erst auf Befehl (z.B. Tastendruck) "abzufeuern"
+	 * Ermöglicht es, denn Ball erst auf Befehl (z.B. Tastendruck) "abzufeuern"
 	 * @param direction Aktuelle Bewegungsrichtung des Paddles
 	 */
 	public void restBall(String direction, int speed) {		 

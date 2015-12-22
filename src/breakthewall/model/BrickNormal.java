@@ -6,41 +6,38 @@ import breakthewall.BreakWallConfig;
 
 /**
  * Klasse zur Erstellung eines normalen Bricks.
- * �ber die Variable stability kann die H�rte eines normalen Bricks
+ * Über die Variable stability kann die Härte eines normalen Bricks
  * variiert werden.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public class BrickNormal implements GameElement, Brick {
 
-	private int xCoord;
-	private int yCoord;
-	private int height;
-	private int width;
+	private int xCoord, yCoord, height, width, stability, points;
 	private String imagePath;
 	private String id = "";
-	private int stability;
 	private boolean isDestroyed = false;
 
 	/**
-	 *  Konstruktor f�r variierend harte Bricks.
-	 *  @param stability F�r den Brick zu setzende Stabilit�t
+	 *  Konstruktor für variierend harte Bricks.
+	 *  @param stability Für den Brick zu setzende Stabilität
 	 */
 	public BrickNormal(int stability) {
 		imagePath = BreakWallConfig.brickImgHard;
 		this.stability = BreakWallConfig.stabilityHard;
-		// System.out.println("H�rte: " + stability);
+		this.points = BreakWallConfig.pointsNormal; 
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
 	
 	/**
-	 *  Konstruktor f�r normal harte Bricks mit einer stability von 1 (siehe BreakWallData).
+	 *  Konstruktor für normal harte Bricks mit einer stability von 1 (siehe BreakWallData).
 	 */
 	public BrickNormal() {
 		imagePath = BreakWallConfig.brickImgNormal;
 		this.stability = BreakWallConfig.stabilityNormal;
+		this.points = BreakWallConfig.pointsNormal; 
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
@@ -135,5 +132,15 @@ public class BrickNormal implements GameElement, Brick {
 	public void setDestroyedState(boolean isDestroyed) {
 		this.isDestroyed = isDestroyed;
 		
+	}
+
+	@Override
+	public int getPoints() {
+		return this.points;
+	}
+
+	@Override
+	public void setPoints(int points) {
+		this.points = points;		
 	}
 }

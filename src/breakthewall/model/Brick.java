@@ -3,7 +3,7 @@ package breakthewall.model;
 /**
  * Interface mit gemeinsamen Methoden aller Brick-Typen.
  * 
- * @author Mareike R�ncke, Gerrit Schulte
+ * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, Oktober 2015.
  */
 public interface Brick {
@@ -14,6 +14,10 @@ public interface Brick {
 	
 	public int getStability();
 	
-	public void setStability(int stability);	
+	public void setStability(int stability);
+	
+	public int getPoints();
+	
+	public void setPoints(int points);
 
 }
