@@ -129,12 +129,14 @@ public class BreakWallModel extends Observable {
 		setChanged();
 		notifyObservers("focusGameElements");			
         timer = new Timer();
-        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);		
+        timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);
+        System.out.println("play");
 	}
 	
 	public void pauseGame() {
 		setInfoText("Pause ...");
 		stopGame();
+		System.out.println("pause");
 	}
 	
 	public void saveGame() {
@@ -166,6 +168,15 @@ public class BreakWallModel extends Observable {
 		
 	}
 	
+	public void backMenu() {
+		System.out.println("Highscore remove");
+		setInfoText("Go back to Menu...");
+		setChanged();
+		notifyObservers("quitHighscore");
+		
+		
+	}
+	
 	public void setPlayPause(boolean buttonClick) {
 		this.buttonClick = buttonClick;
 			
@@ -184,6 +195,15 @@ public class BreakWallModel extends Observable {
 		}			
 		musicObj.playMusic(boolval);
 	}
+	
+	
+	public void scoreGame() {
+		setInfoText("Go to Highscore...");
+		setChanged();
+		notifyObservers("showHighscore");
+		stopGame();
+	}
+	
 	
 	public void setBallAction(boolean moveBall) {
 		// Zufällige Ballrichtung beim ersten Wurf festlegen

@@ -63,12 +63,15 @@ public class BreakWallController implements KeyListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		command = e.getActionCommand();
-		if(command.equals("Play/Pause")) {
+		if(command.equals("Pause")) {
 			if(gameModel.getPlayPause() == false) {
 				gameModel.setPlayPause(true);
 				gameModel.pauseGame();
 			}
-			else if(gameModel.getPlayPause() == true) {
+		}
+		
+		if(command.equals("Play")) {
+			if(gameModel.getPlayPause() == true) {
 				gameModel.setPlayPause(false);
 				gameModel.playGame();
 			}
@@ -92,6 +95,14 @@ public class BreakWallController implements KeyListener, ActionListener {
 		if(command.equals("Back")) {
 			gameModel.backGame();
 		}	
+		if(command.equals("Highscores")) {
+			gameModel.scoreGame();
+		}	
+		if(command.equals("BackMenu")) {
+			gameModel.backMenu();
+		}
+		
+		
 	}
 
 }

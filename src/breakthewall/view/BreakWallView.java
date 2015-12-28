@@ -43,6 +43,7 @@ public class BreakWallView extends JFrame implements Observer {
 	private int layerCount = 0;
 	private NavigationBarView panelbar;
 	private MenuView pauseMenu;
+	private XMLView showHighscore;
 	private JLabel gameInfo;
 	
 	
@@ -98,6 +99,17 @@ public class BreakWallView extends JFrame implements Observer {
 		}
 		gameElements.put("mainMenu", pauseMenu);
 		addPanelToGameField(pauseMenu, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
+	}
+	
+	public void buildHighscoreLayout() {		
+		showHighscore = new XMLView();
+		
+		// add ActionListener to navigation buttons
+		showHighscore.getButton().addActionListener(controller);
+				
+		
+		gameElements.put("mainHighscore", showHighscore);
+		addPanelToGameField(showHighscore, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
 	public void editGameInfo(String newText) {
@@ -202,6 +214,9 @@ public class BreakWallView extends JFrame implements Observer {
 		}
 		if(gameObject.equals("stopGame")) {
 			panelbar.setPlayPauseButton("Play");
+		}	
+		if(gameObject.equals("playGame")) {
+			panelbar.setPlayPauseButton("Pause");
 		}		
 		if(gameObject.equals("initLevel")) {
 			clearGameField();
@@ -211,12 +226,22 @@ public class BreakWallView extends JFrame implements Observer {
 			buildGameLayout();
 		}	
 		if(gameObject.equals("showMenu")) {
-			buildMenuLayout();			
-		}	
-		
+			buildMenuLayout();	
+		}
 		if(gameObject.equals("quitMenu")) {		
 			removeElementFromGameField("mainMenu");
 		}	
+		
+		if(gameObject.equals("showHighscore")) {
+			buildHighscoreLayout();			
+		}	
+		
+		if(gameObject.equals("quitHighscore")) {		
+			removeElementFromGameField("mainHighscore");
+			System.out.println("Highscore remove");
+		}	
+		
+		
 		
 		if(gameObject.equals("showPlayButton")) {			
 			panelbar.setMusicButton(true);
