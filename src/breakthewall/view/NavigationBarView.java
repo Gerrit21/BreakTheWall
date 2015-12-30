@@ -3,6 +3,7 @@ package breakthewall.view;
 
 import javax.swing.*;
 
+import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
 
 import java.awt.*;
@@ -45,16 +46,12 @@ public class NavigationBarView extends JPanel  {
 		lab1 = new JLabel ("Score");
 		lab2 = new JLabel ("Level");
 		lab3 = new JLabel ("Life");
-		b1 = new JButton ("Play/Pause");		
-		// b1.addActionListener(controller);
-		Icon musicIcon = new ImageIcon("media/music_playing.png");
+		b1 = new JButton ("Pause");
+		b1.setPreferredSize(new Dimension(75, 25));
+		Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPlaying));
 		b2 = new JButton(musicIcon);
 		b2.setActionCommand("MuteMusic");
-		//b2.addActionListener(controller);
 		b3 = new JButton ("Menu");
-		//b3.addActionListener(controller);
-	
-		//b4.addActionListener(controller);
 		scorecount = new TextField(" 1234 ");
 		scorecount.setEditable(false);
 		scorecount.setFocusable(false);
@@ -106,11 +103,11 @@ public class NavigationBarView extends JPanel  {
 	public void setMusicButton(boolean isPlaying) {
 		System.out.println(isPlaying);
 		if(isPlaying == true) {
-			Icon musicIcon = new ImageIcon("media/music_playing.png");
+			Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPlaying));			
 			b2.setIcon(musicIcon);
 			b2.setActionCommand("MuteMusic");			
 		} else {
-			Icon musicIcon = new ImageIcon("media/music_pausing.png");
+			Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPausing));
 			b2.setIcon(musicIcon);
 			b2.setActionCommand("PlayMusic");
 		}

@@ -338,7 +338,7 @@ public class BreakWallModel extends Observable {
 					Brick tempCurrentBrick = (Brick) currentBrick;
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
-					if(tempCurrentBrick.getStability() == 0) {						
+					if(tempCurrentBrick.getStability() <= 0) {						
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);
 						if(tempCurrentBrick.hasBonusObject() == true) {
@@ -358,7 +358,7 @@ public class BreakWallModel extends Observable {
 					Brick tempCurrentBrick = (Brick) currentBrick;					
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
-					if(tempCurrentBrick.getStability() == 0) {						
+					if(tempCurrentBrick.getStability() <= 0) {						
 						currentBrick.setDestroyedState(true);
 						gameWall.removeFromBrickList(currentBrick);
 						if(tempCurrentBrick.hasBonusObject() == true) {

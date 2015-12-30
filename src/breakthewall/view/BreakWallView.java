@@ -57,7 +57,7 @@ public class BreakWallView extends JFrame implements Observer {
 		this.controller = controller;
 		this.addKeyListener(controller);
 		this.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
-		this.setResizable(true);
+		this.setResizable(false);
 		gamePane = new JLayeredPane();
 		gameElements = new HashMap<String, JPanel>();
 		this.add(gamePane, BorderLayout.CENTER);
@@ -86,7 +86,7 @@ public class BreakWallView extends JFrame implements Observer {
 		gameInfo = new JLabel("Spielhinweise");
 		gameInfo.setBackground(new Color(139, 223, 113));
 		gameInfo.setBorder(BorderFactory.createLineBorder(new Color(100, 158, 82)));
-		addPanelToGameField(gameInfo, 0, (BreakWallConfig.gameFieldHeight - 48), BreakWallConfig.gameFieldWidth, 20);
+		addPanelToGameField(gameInfo, 0, (BreakWallConfig.offsetHeight - 42), BreakWallConfig.offsetWidth + 10, 20);
 		
 	}
 	
@@ -210,6 +210,7 @@ public class BreakWallView extends JFrame implements Observer {
 			panelbar.updateLifeView(currentModel.getLives());
 		}
 		if(gameObject.equals("focusGameElements")) {
+			panelbar.setPlayPauseButton("Pause");
 			this.requestFocus();
 		}
 		if(gameObject.equals("stopGame")) {

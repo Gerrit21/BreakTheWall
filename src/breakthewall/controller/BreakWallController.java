@@ -64,18 +64,14 @@ public class BreakWallController implements KeyListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		command = e.getActionCommand();
 		if(command.equals("Pause")) {
-			if(gameModel.getPlayPause() == false) {
-				gameModel.setPlayPause(true);
-				gameModel.pauseGame();
-			}
+			gameModel.setPlayPause(true);
+			gameModel.pauseGame();			
 		}
 		
 		if(command.equals("Play")) {
-			if(gameModel.getPlayPause() == true) {
-				gameModel.setPlayPause(false);
-				gameModel.playGame();
-			}
-		}
+			gameModel.setPlayPause(false);
+			gameModel.playGame();			
+		}		
 
 		if(command.equals("Save")) {
 			gameModel.saveGame();
