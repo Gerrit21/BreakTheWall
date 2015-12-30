@@ -13,8 +13,8 @@ public class BreakWallConfig {
 	public static final String title = "Break The Wall";
 	public static final int gameFieldWidth = 600;
 	public static final int gameFieldHeight = 498;
-	public static final int offsetWidth = gameFieldWidth;
-	public static final int offsetHeight = 495;
+	public static final int offsetWidth = gameFieldWidth - 15;
+	public static final int offsetHeight = gameFieldHeight - 5;
 	public static final int wallWidth = gameFieldWidth - 60;
 	public static final int barWidth = 590;
 	public static final int barHeight = 40;
@@ -53,9 +53,11 @@ public class BreakWallConfig {
 	public static final int stabilityHard = 3;
 	
 	// Musik & Sounds
+	public static final String musicIconPlaying = "/breakthewall/media/music_playing.png";
+	public static final String musicIconPausing = "/breakthewall/media/music_pausing.png";
 	public static String[] backgroundMusic = {
-			"/media/Bensound-Cute.wav", 
-			"/media/Bellevue-Gates.wav"
+			"/breakthewall/media/Bensound-Cute.wav", 
+			"/breakthewall/media/Bellevue-Gates.wav"
 			};
 	
 	// Punktevergabe für verschiedene Arten von Bricks
