@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import org.w3c.dom.Document;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
@@ -43,7 +44,7 @@ public class BreakWallView extends JFrame implements Observer {
 	private int layerCount = 0;
 	private NavigationBarView panelbar;
 	private MenuView pauseMenu;
-	private XMLView showHighscore;
+	private HighscoreView showHighscore;
 	private JLabel gameInfo;
 	
 	
@@ -101,8 +102,8 @@ public class BreakWallView extends JFrame implements Observer {
 		addPanelToGameField(pauseMenu, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
-	public void buildHighscoreLayout() {		
-		showHighscore = new XMLView();
+	public void buildHighscoreLayout(Document highscoreDocument) {		
+		showHighscore = new HighscoreView(highscoreDocument);
 		
 		// add ActionListener to navigation buttons
 		showHighscore.getButton().addActionListener(controller);
@@ -234,7 +235,9 @@ public class BreakWallView extends JFrame implements Observer {
 		}	
 		
 		if(gameObject.equals("showHighscore")) {
-			buildHighscoreLayout();			
+			BreakWallModel currentModel = (BreakWallModel) gameModel;
+			Document highscoreDocument = currentModel.getHighscoreDocument();
+			buildHighscoreLayout(highscoreDocument);			
 		}	
 		
 		if(gameObject.equals("quitHighscore")) {		

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 
 
-public class XMLView extends JPanel  {
+public class HighscoreView extends JPanel  {
 	
 	/**
 	 * 
@@ -29,16 +29,14 @@ public class XMLView extends JPanel  {
 	private static final long serialVersionUID = 1L;
 	private JPanel xmlHighscore;
 	private JButton button1;
-	
-	public File xml = null;
-	public Document dom = null; 
+ 
 	public JScrollPane jScrollPane1;
 	public DefaultTableModel model;
 	public JTable jTable1;
 	
 	
 	
-	public XMLView() {
+	public HighscoreView(Document highscoreDocument) {
 		
 		
 		xmlHighscore = new JPanel();
@@ -46,11 +44,8 @@ public class XMLView extends JPanel  {
         xmlHighscore.setPreferredSize(new Dimension(120, 500));
         xmlHighscore.setVisible(true);
         xmlHighscore.setOpaque(false);	
-		
-        xml = new File(System.getProperty("user.dir") + File.separator + "breakwall.xml");
 	
 		button1 = new JButton ("BackMenu");		
-		// button1.addActionListener(controller);
 		
 		xmlHighscore.add(button1);
 	
@@ -73,26 +68,9 @@ public class XMLView extends JPanel  {
 	        model.addColumn("Level");
 	        model.addColumn("Life");
 	        model.addColumn("Highscore");
-	                 
-	        //if the xml file exists at the current location in the default user directory
-	        //then parse the xml data with the parseFile(File file) method      
-	        if (xml.exists() && xml.length() != 0) {
-	            dom = parseFile(xml);
-	            insertTableRows(model,dom);
-	        }
-		
-	
-	}
-	
-	//creates an instance of a Document object  
-    public Document parseFile(File file) {
-        try {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();     
-        dom = (Document) builder.parse(file);
-        } catch (Exception e) { e.printStackTrace(); }  
-        return dom;
-    }
+	        
+	        insertTableRows(model, highscoreDocument);			
+	} 
      
     public void insertTableRows(DefaultTableModel tableModel,Document doc) {            
         Element root = doc.getDocumentElement();

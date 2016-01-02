@@ -1,6 +1,7 @@
 package breakthewall.model;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -8,6 +9,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
+
+import org.w3c.dom.Document;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.remote.RemoteHighscoreClient;
@@ -27,6 +30,8 @@ public class BreakWallModel extends Observable {
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
 	private BreakWallScore gameScore;
+	private BreakWallXML gameXMLInstance;
+	Document dom;
 	private ArrayList<GameElement> breakWallElements;
 	private ArrayList<GameElement> currentBrickList;
 	private String struckBrick = "";
@@ -54,6 +59,7 @@ public class BreakWallModel extends Observable {
 		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameScore = new BreakWallScore(0);
+		gameXMLInstance = new BreakWallXML(); 
 		initGameElements();
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
 		playGame();
@@ -198,11 +204,29 @@ public class BreakWallModel extends Observable {
 	
 	
 	public void scoreGame() {
+		// Aktuelle XML-Highscore-Liste generieren
+		gameXMLInstance.createUserXML();
 		setInfoText("Go to Highscore...");
 		setChanged();
 		notifyObservers("showHighscore");
 		stopGame();
 	}
+	
+	public Document getHighscoreDocument() {
+		dom = null;
+		System.out.println(System.getProperty("user.dir"));
+		File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
+	    if (xml.exists() && xml.length() != 0) {
+	    	dom = gameXMLInstance.parseFile(xml);
+	    }
+	    return dom;
+	}
+    //if the xml file exists at the current location in the default user directory
+    //then parse the xml data with the parseFile(File file) method      
+    //if (xml.exists() && xml.length() != 0) {
+    //    dom = parseFile(xml);
+    //    insertTableRows(model,dom);
+    //}
 	
 	
 	public void setBallAction(boolean moveBall) {
