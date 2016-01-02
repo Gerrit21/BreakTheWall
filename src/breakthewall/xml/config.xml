@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<breakwall>
+<level number="1">
+<lifeCount data-type="Integer">3</lifeCount>
+<bgImagePath data-type="String">img/bg_3.png</bgImagePath>
+<wallHeight data-type="Integer">100</wallHeight>
+<bonusPossible data-type="Integer">40</bonusPossible>
+<hardPossible data-type="Integer">10</hardPossible>
+</level>
+<level number="2">
+<bgImagePath data-type="String">img/bg_2.png</bgImagePath>
+<wallHeight data-type="Integer">120</wallHeight>
+<bonusPossible data-type="Integer">30</bonusPossible>
+<hardPossible data-type="Integer">20</hardPossible>
+</level>
+<level number="3">
+<bgImagePath data-type="String">img/bg_3.png</bgImagePath>
+<wallHeight data-type="Integer">150</wallHeight>
+<bonusPossible data-type="Integer">20</bonusPossible>
+<hardPossible data-type="Integer">30</hardPossible>
+</level>	
+</breakwall>
