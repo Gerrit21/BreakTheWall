@@ -60,6 +60,11 @@ public class BreakWallConfig {
 			"/breakthewall/media/Bellevue-Gates.wav"
 			};
 	
+	// XML-Dokumente und Pfade
+	// Pfad für XML-Dateien
+	public static final String highscorePath = "src/breakthewall/xml/";
+	public static final String highscoreXML = "highscore.xml";
+	
 	// Punktevergabe für verschiedene Arten von Bricks
 	public static final int pointsNormal = 10;
 	public static final int pointsBonus = 20;
