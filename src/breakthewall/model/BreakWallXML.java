@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import breakthewall.BreakWallConfig;
+import breakthewall.view.EnterNameView;
 
 import org.w3c.dom.NodeList;
 import javax.xml.transform.*; // TransformerFactory, Transformer
@@ -33,21 +34,29 @@ public class BreakWallXML {
 		Element doctype;
 		Element uuserRoot;
 		Element usr1, usr2;
-		
+		EnterNameView UserEingabe = new EnterNameView(); 
 		Document doc = getXMLDocument();
 		
 		uuserRoot = doc.createElement("breakwall");
 		
+		int currentScore = BreakWallModel.gameScore.getCurrentScore();
+		
+		
+		System.out.println(UserEingabe.getTextFromTextBox());
+		String namen = UserEingabe.getTextFromTextBox();
+		
+		System.out.println(currentScore);
+	
 		doc.appendChild(uuserRoot);
 
 		// User einfuegen:
 		usr1 = createUser(doc,
-				"Peter",
-				"2", "4", "1234");
+				namen,
+				"2", "4", currentScore);
 		uuserRoot.appendChild(usr1);
 		usr2 = createUser(doc,
 				"Helmut",
-				"3", "3", "4321");
+				"3", "3", 4321);
 		uuserRoot.appendChild(usr2);
 
 		
@@ -79,11 +88,11 @@ public class BreakWallXML {
 	 * @param name Spitzname.
 	 * @param level Levelnummer.
 	 * @param life Life.
-	 * @param highscore Highscore.
+	 * @param i Highscore.
 	 * @return <tt>user></tt>-Element.
 	 */
 	protected Element createUser(Document doc,
-			String name, String level, String life, String highscore) {
+			String name, String level, String life, int highscore) {
 		Text txtName,
 		txtLevel, txtLife, txtHighscore;
 		
@@ -110,7 +119,7 @@ public class BreakWallXML {
 		
 		// Highscore: Inhalt befindet sich in #PCDATA:
 		Element elHighscore = doc.createElement("highscore");
-		txtHighscore = doc.createTextNode(highscore);
+		txtHighscore = doc.createTextNode(Integer.toString(highscore));
 		elHighscore.appendChild(txtHighscore);
 		
 		usr.appendChild(elName);

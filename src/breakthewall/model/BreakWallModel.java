@@ -29,7 +29,7 @@ public class BreakWallModel extends Observable {
 	private Thread musicThread;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
-	private BreakWallScore gameScore;
+	static BreakWallScore gameScore;
 	private BreakWallXML gameXMLInstance;
 	Document dom;
 	private ArrayList<GameElement> breakWallElements;
@@ -38,7 +38,7 @@ public class BreakWallModel extends Observable {
 	private String tempBrick = "";
 	private Timer timer;
 	private int constantPaddleWidth;
-	private int currentLevel;
+	static int currentLevel;
 	private int scoreFactor = 1;
 	private boolean moveBall, changeDir, musicIsPlaying;
 	private boolean updateLevel = false;
@@ -137,6 +137,7 @@ public class BreakWallModel extends Observable {
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);
         System.out.println("play");
+        
 	}
 	
 	public void pauseGame() {
@@ -151,6 +152,16 @@ public class BreakWallModel extends Observable {
 		// to do: ggf. ins Hauptmenü integrieren
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
+		gameXMLInstance.createUserXML();
+	}
+	
+	public void enterName() {
+		// Eingabefeld fuer Namen
+		
+		setInfoText("Enter your Name...");
+		setChanged();
+		notifyObservers("showEnterName");
+		
 	}
 	
 	public void exitGame() {
@@ -175,11 +186,17 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void backMenu() {
-		System.out.println("Highscore remove");
 		setInfoText("Go back to Menu...");
 		setChanged();
 		notifyObservers("quitHighscore");
 		
+		
+	}
+	
+	public void backMenuAfterSave() {
+		setInfoText("Go back to Menu...");
+		setChanged();
+		notifyObservers("quitEnterName");
 		
 	}
 	
@@ -205,7 +222,7 @@ public class BreakWallModel extends Observable {
 	
 	public void scoreGame() {
 		// Aktuelle XML-Highscore-Liste generieren
-		gameXMLInstance.createUserXML();
+		
 		setInfoText("Go to Highscore...");
 		setChanged();
 		notifyObservers("showHighscore");
@@ -457,7 +474,7 @@ public class BreakWallModel extends Observable {
 			if(gameWall.getBrickList().size() == 0) {
 				updateLevel = true;
 			}
-        	// System.out.println(gameScore.getCurrentScore());
+        	//System.out.println(gameScore.getCurrentScore());
         	if(moveBall == true) {
             	gameBall.moveBall();
             	collisionDetection();      		

@@ -3,8 +3,11 @@ package breakthewall.view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,6 +19,12 @@ import breakthewall.controller.BreakWallController;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+
+
+
+
+import java.util.List;
+
 
 
 
@@ -58,18 +67,37 @@ public class HighscoreView extends JPanel  {
 	        };
 	         
 	        //creates an instance of the table class and sets it up in a scrollpane
-	        jTable1 = new JTable(model);
+	        jTable1 = new JTable(model);       
 	        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	        jScrollPane1 = new JScrollPane(jTable1);            
 	        add(BorderLayout.CENTER,jScrollPane1);
 	         
 	        //add some columns
+	        model.addColumn("Highscore");
 	        model.addColumn("Name");
 	        model.addColumn("Level");
 	        model.addColumn("Life");
-	        model.addColumn("Highscore");
+	       
 	        
-	        insertTableRows(model, highscoreDocument);			
+	        insertTableRows(model, highscoreDocument);	
+	        
+	        //creates sorted table 
+	        
+	        TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
+	        jTable1.setRowSorter(sorter);
+	        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+	         
+	        int columnIndexToSort = 0;
+	        
+	        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
+	        sorter.setSortKeys(sortKeys);
+	        sorter.sort();
+	        
+	        
+	        
+	        
+	 
+	        
 	} 
      
     public void insertTableRows(DefaultTableModel tableModel,Document doc) {            
@@ -78,7 +106,7 @@ public class HighscoreView extends JPanel  {
         for (int i = 0; i < list.getLength(); ++i) {
             Element e = (Element) list.item(i);
             if (e.getNodeType() == Element.ELEMENT_NODE) {
-                Object[] row = { getArticleInfo("name",e),getArticleInfo("level",e),getArticleInfo("life",e),getArticleInfo("highscore",e) };
+                Object[] row = { getArticleInfo("highscore",e), getArticleInfo("name",e),getArticleInfo("level",e),getArticleInfo("life",e)};
                 tableModel.addRow(row);             
             }
         }       

@@ -45,6 +45,7 @@ public class BreakWallView extends JFrame implements Observer {
 	private NavigationBarView panelbar;
 	private MenuView pauseMenu;
 	private HighscoreView showHighscore;
+	private EnterNameView showEnterName;
 	private JLabel gameInfo;
 	
 	
@@ -111,6 +112,17 @@ public class BreakWallView extends JFrame implements Observer {
 		
 		gameElements.put("mainHighscore", showHighscore);
 		addPanelToGameField(showHighscore, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
+	}
+	
+	public void buildEnterNameLayout() {		
+		showEnterName = new EnterNameView();
+		
+		// add ActionListener to navigation buttons
+		showEnterName.getButton().addActionListener(controller);
+				
+		
+		gameElements.put("mainEnterName", showEnterName);
+		addPanelToGameField(showEnterName, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
 	public void editGameInfo(String newText) {
@@ -209,6 +221,8 @@ public class BreakWallView extends JFrame implements Observer {
 			panelbar.updateScoreView(currentModel.getScore());
 			panelbar.updateLevelView(currentModel.getLevel());
 			panelbar.updateLifeView(currentModel.getLives());
+			//pauseMenu.updateScoreMenuView(currentModel.getScore());
+		
 		}
 		if(gameObject.equals("focusGameElements")) {
 			panelbar.setPlayPauseButton("Pause");
@@ -240,9 +254,18 @@ public class BreakWallView extends JFrame implements Observer {
 			buildHighscoreLayout(highscoreDocument);			
 		}	
 		
+		if(gameObject.equals("showEnterName")) {
+			buildEnterNameLayout();			
+		}	
+		
 		if(gameObject.equals("quitHighscore")) {		
 			removeElementFromGameField("mainHighscore");
 			System.out.println("Highscore remove");
+		}	
+		
+		if(gameObject.equals("quitEnterName")) {		
+			removeElementFromGameField("mainEnterName");
+			System.out.println("EnterName remove");
 		}	
 		
 		

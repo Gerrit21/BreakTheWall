@@ -85,16 +85,6 @@ public class NavigationBarView extends JPanel  {
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtons;
 	}
-
-	
-	public int setCurrentCounter(int zahl) {
-		counter = zahl;
-		return counter;
-	}
-	
-	public int getCurrentCounter() {
-		return counter;
-	}
 	
 	public void setPlayPauseButton(String buttonText) {
 			b1.setText(buttonText);		
@@ -114,8 +104,8 @@ public class NavigationBarView extends JPanel  {
 
 	}
 	
-	public void updateScoreView(int score) {
-		scorecount.setText(Integer.toString(score));
+	public void updateScoreView(int scoree) {
+		scorecount.setText(Integer.toString(scoree));
 	}
 	
 	public void updateLevelView(int level) {

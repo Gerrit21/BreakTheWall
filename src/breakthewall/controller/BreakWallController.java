@@ -74,7 +74,7 @@ public class BreakWallController implements KeyListener, ActionListener {
 		}		
 
 		if(command.equals("Save")) {
-			gameModel.saveGame();
+			gameModel.enterName();
 		}
 		if(command.equals("Exit")) {
 			gameModel.exitGame();
@@ -96,6 +96,10 @@ public class BreakWallController implements KeyListener, ActionListener {
 		}	
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();
+		}
+		if(command.equals("Enter and Save")) {
+			gameModel.saveGame();
+			gameModel.backMenuAfterSave();
 		}
 		
 		

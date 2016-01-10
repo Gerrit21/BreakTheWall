@@ -24,13 +24,10 @@ public class MenuView extends JPanel  {
 	private JButton bu4;
 	private ArrayList<JButton> navigationButtonsMenu;
 	private JLabel lab1;
-	private JLabel lab2;
-	private JLabel lab3;
+	
 	
 	private TextField scorecount;
-	private TextField levelcount;
-	private TextField lifecount; 
-	private int counter = 0;
+
 	
 	
 	public MenuView() {
@@ -77,15 +74,10 @@ public class MenuView extends JPanel  {
 		return navigationButtonsMenu;
 	}
 
-	
-	public int setCurrentCounter(int zahl) {
-		counter = zahl;
-		return counter;
+	public void updateScoreView(int score) {
+		scorecount.setText(Integer.toString(score));
 	}
-	
-	public int getCurrentCounter() {
-		return counter;
-	}
+
 	
 	
 	
