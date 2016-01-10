@@ -34,6 +34,14 @@ public class BrickBonus implements GameElement, Brick {
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
 	}
 	
+	public BrickBonus(String bonusRef) {
+		setBonusObject(bonusRef);
+		this.points = BreakWallConfig.pointsBonus;
+		imagePath = getBonusObject().getImage();
+		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
+		this.height = new ImageIcon(imagePath).getImage().getHeight(null);		
+	}
+	
 	/**
 	 * Der Bonus-Typ für eine Bonus-Brick-Instanz wird zufällig erstellt
 	 */
@@ -50,6 +58,16 @@ public class BrickBonus implements GameElement, Brick {
 
 	public Bonus getBonusObject() {
 		return randomBonus;
+	}
+	
+	public void setBonusObject(String bonusRef) {
+		if(bonusRef.equals("BonusXtraLife")) {
+			randomBonus = new BonusXtraLife();
+		} else if(bonusRef.equals("BonusBallSpeed")) {
+			randomBonus = new BonusBallSpeed();
+		} else if(bonusRef.equals("BonusPaddleWidth")) {
+			randomBonus = new BonusPaddleWidth();
+		}		
 	}
 	
 	public boolean hasBonusObject() {

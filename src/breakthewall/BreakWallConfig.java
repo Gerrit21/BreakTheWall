@@ -10,6 +10,9 @@ public class BreakWallConfig {
 	/*
 	 *  Variablen für das gesamte Spielfeld
 	 */	
+	public static final String configXML = "config.xml";
+	public static Map<String, Object> configMap = new HashMap<String, Object>();;
+	
 	public static final String title = "Break The Wall";
 	public static final int gameFieldWidth = 600;
 	public static final int gameFieldHeight = 498;
@@ -49,15 +52,17 @@ public class BreakWallConfig {
 	public static final String brickImgNormal = "img/brick_n.png";
 	public static final String brickImgHard = "img/brick_h.png";
 	public static final String brickXtraLifeImg = "img/Ice_cream.png";
+	public static final String brickPaddleWidthImg = "img/brick_blue.png";
+	public static final String brickBallSpeedImg = "img/brick_green.png";
 	public static final int stabilityNormal = 1;
 	public static final int stabilityHard = 3;
 	
 	// Musik & Sounds
-	public static final String musicIconPlaying = "/breakthewall/media/music_playing.png";
-	public static final String musicIconPausing = "/breakthewall/media/music_pausing.png";
+	public static final String musicIconPlaying = "/breakthewall/media/images/music_playing.png";
+	public static final String musicIconPausing = "/breakthewall/media/images/music_pausing.png";
 	public static String[] backgroundMusic = {
-			"/breakthewall/media/Bensound-Cute.wav", 
-			"/breakthewall/media/Bellevue-Gates.wav"
+			"/breakthewall/media/sound/Bensound-Cute.wav", 
+			"/breakthewall/media/sound/Bellevue-Gates.wav"
 			};
 	
 	// XML-Dokumente und Pfade
