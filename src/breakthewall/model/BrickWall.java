@@ -46,7 +46,6 @@ public class BrickWall {
 				randomBrick.setYCoord(getBrickY());				
 				randomBrick.setId(Integer.toString(getBrickX()) + Integer.toString(getBrickY()));
 				brickList.add(randomBrick);
-				// gameField.addElementToGameField(randomBrick.getImage(), randomBrick.getId(), getBrickX(), getBrickY(), randomBrick.getWidth(), randomBrick.getHeight());
 				setBrickX(getBrickX() + randomBrick.getWidth() + 10);
 			}
 			setBrickY(getBrickY() + randomBrick.getHeight() + 10);

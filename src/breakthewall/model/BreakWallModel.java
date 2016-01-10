@@ -11,6 +11,9 @@ import java.util.TimerTask;
 import javax.swing.ImageIcon;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.remote.RemoteHighscoreClient;
@@ -29,7 +32,7 @@ public class BreakWallModel extends Observable {
 	private Thread musicThread;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
-	static BreakWallScore gameScore;
+	private BreakWallScore gameScore;
 	private BreakWallXML gameXMLInstance;
 	Document dom;
 	private ArrayList<GameElement> breakWallElements;
@@ -38,7 +41,7 @@ public class BreakWallModel extends Observable {
 	private String tempBrick = "";
 	private Timer timer;
 	private int constantPaddleWidth;
-	static int currentLevel;
+	private int currentLevel;
 	private int scoreFactor = 1;
 	private boolean moveBall, changeDir, musicIsPlaying;
 	private boolean updateLevel = false;
@@ -59,7 +62,7 @@ public class BreakWallModel extends Observable {
 		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameScore = new BreakWallScore(0);
-		gameXMLInstance = new BreakWallXML(); 
+		gameXMLInstance = new BreakWallXML(this); 
 		initGameElements();
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
 		playGame();
@@ -129,6 +132,58 @@ public class BreakWallModel extends Observable {
 		}
 	}
 	
+	public void loadGame(String userName) {
+		Document currentDocument = getHighscoreDocument();		
+		Element root = currentDocument.getDocumentElement();
+		NodeList list = root.getElementsByTagName("user");
+
+		for (int i = 0; i < list.getLength(); ++i) {
+			Element e = (Element) list.item(i);
+			if(gameXMLInstance.getTagInfo("name", e).equals(userName)) {
+				loadBrickWall(e.getElementsByTagName("brick"));
+			}
+		}	
+	}
+	
+	public void loadBrickWall(NodeList xmlBrickList) {
+		// XML:
+		/** <brickWall>
+		<brick>
+		<type></type>
+		<bonus></bonus>
+		<stability></stability>
+		<xPos></xPos>
+		<yPos></yPos>
+		</brick>
+		</brickWall>**/
+		ArrayList<GameElement> brickList = new ArrayList<GameElement>();
+		for (int i = 0; i < xmlBrickList.getLength(); ++i) {
+			Element e = (Element) xmlBrickList.item(i);			
+			if(gameXMLInstance.getTagInfo("type", e).equals("BrickNormal")) {
+				int stability = Integer.valueOf((String) gameXMLInstance.getTagInfo("stability", e));
+				int xPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("xPos", e));
+				int yPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("yPos", e));
+				BrickNormal newBrick = new BrickNormal(stability);
+				newBrick.setXCoord(xPos);
+				newBrick.setYCoord(yPos);
+				newBrick.setId(Integer.toString(newBrick.getXCoord()) + Integer.toString(newBrick.getYCoord()));
+				brickList.add(newBrick);
+			} else if(gameXMLInstance.getTagInfo("type", e).equals("BrickBonus")) {
+				int xPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("xPos", e));
+				int yPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("yPos", e));
+				String bonusRef = (String) gameXMLInstance.getTagInfo("bonus", e);
+				BrickBonus newBrick = new BrickBonus(bonusRef);
+				newBrick.setXCoord(xPos);
+				newBrick.setYCoord(yPos);
+				newBrick.setId(Integer.toString(newBrick.getXCoord()) + Integer.toString(newBrick.getYCoord()));
+				brickList.add(newBrick);
+				
+			}
+		}
+		System.out.println("Loaded list of bricks: ");
+		System.out.println(brickList);
+	}
+	
 	public void playGame() {
 		
 		setInfoText("Play ...");
@@ -137,7 +192,6 @@ public class BreakWallModel extends Observable {
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);
         System.out.println("play");
-        
 	}
 	
 	public void pauseGame() {
@@ -152,7 +206,7 @@ public class BreakWallModel extends Observable {
 		// to do: ggf. ins Hauptmenü integrieren
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
-		gameXMLInstance.createUserXML();
+		gameXMLInstance.createUserXML(gameWall.getBrickList());
 	}
 	
 	public void enterName() {
@@ -222,7 +276,8 @@ public class BreakWallModel extends Observable {
 	
 	public void scoreGame() {
 		// Aktuelle XML-Highscore-Liste generieren
-		
+		gameXMLInstance.createUserXML(gameWall.getBrickList());
+		loadGame("Helmut");
 		setInfoText("Go to Highscore...");
 		setChanged();
 		notifyObservers("showHighscore");

@@ -11,7 +11,7 @@ import breakthewall.BreakWallConfig;
  */
 public class BonusPaddleWidth implements Bonus {
 
-	private String imagePath = BreakWallConfig.brickImgNormal;
+	private String imagePath = BreakWallConfig.brickPaddleWidthImg;
 	private int tempSize;
 	
 	public int changePaddleSize(int paddleWidth) {
