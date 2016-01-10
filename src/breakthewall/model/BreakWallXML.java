@@ -64,11 +64,11 @@ public class BreakWallXML {
 		// User einfuegen:
 		usr1 = createUser(doc,
 				namen,
-				"2", "4", Integer.toString(currentScore), brickList);
+				currentLevel, currentLives, currentScore, brickList);
 		uuserRoot.appendChild(usr1);
 		usr2 = createUser(doc,
 				"Helmut",
-				"3", "3", Integer.toString(currentScore), brickList);
+				3, 3, currentScore, brickList);
 		uuserRoot.appendChild(usr2);
 
 		
@@ -98,13 +98,13 @@ public class BreakWallXML {
 	/** 
 	 * @param doc XML-Dokument, in das eine User eingef&uuml;gt werden soll.
 	 * @param name Spitzname.
-	 * @param level Levelnummer.
+	 * @param Level Levelnummer.
 	 * @param life Life.
 	 * @param highscore Highscore.
 	 * @return <tt>user></tt>-Element.
 	 */
 	protected Element createUser(Document doc,
-			String name, String level, String life, String highscore, ArrayList<GameElement> brickList) {
+			String name, int Level, int life, int highscore, ArrayList<GameElement> brickList) {
 		Text txtName,
 		txtLevel, txtLife, txtHighscore;
 		
@@ -119,19 +119,19 @@ public class BreakWallXML {
 		
 		// Level ist #PCDATA:
 		Element elLevel = doc.createElement("level");
-		txtLevel = doc.createTextNode(level);
+		txtLevel = doc.createTextNode(Integer.toString(Level));
 		elLevel.appendChild(txtLevel);
 		
 		
 		// Life: Inhalt befindet sich in #PCDATA:
 		Element elLife = doc.createElement("life");
-		txtLife = doc.createTextNode(life);
+		txtLife = doc.createTextNode(Integer.toString(life));
 		elLife.appendChild(txtLife);
 		
 		
 		// Highscore: Inhalt befindet sich in #PCDATA:
 		Element elHighscore = doc.createElement("highscore");
-		txtHighscore = doc.createTextNode(highscore);
+		txtHighscore = doc.createTextNode(Integer.toString(highscore));
 		elHighscore.appendChild(txtHighscore);
 		
 		usr.appendChild(elName);

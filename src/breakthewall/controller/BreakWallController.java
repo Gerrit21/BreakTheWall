@@ -94,6 +94,9 @@ public class BreakWallController implements KeyListener, ActionListener {
 		if(command.equals("Highscores")) {
 			gameModel.scoreGame();
 		}	
+		if(command.equals("Load")) {
+			gameModel.loadUser();
+		}	
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();
 		}

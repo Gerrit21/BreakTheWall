@@ -45,6 +45,7 @@ public class BreakWallView extends JFrame implements Observer {
 	private NavigationBarView panelbar;
 	private MenuView pauseMenu;
 	private HighscoreView showHighscore;
+	private UserLoadView showUserLoad;
 	private EnterNameView showEnterName;
 	private JLabel gameInfo;
 	
@@ -112,6 +113,16 @@ public class BreakWallView extends JFrame implements Observer {
 		
 		gameElements.put("mainHighscore", showHighscore);
 		addPanelToGameField(showHighscore, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
+	}
+	
+	public void buildLoadLayout(Document highscoreDocument) {		
+		showUserLoad = new UserLoadView(highscoreDocument);
+		
+		// add ActionListener to navigation buttons
+		showUserLoad.getButton().addActionListener(controller);
+				
+		gameElements.put("mainHighscore", showUserLoad);
+		addPanelToGameField(showUserLoad, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
 	public void buildEnterNameLayout() {		
@@ -252,6 +263,12 @@ public class BreakWallView extends JFrame implements Observer {
 			BreakWallModel currentModel = (BreakWallModel) gameModel;
 			Document highscoreDocument = currentModel.getHighscoreDocument();
 			buildHighscoreLayout(highscoreDocument);			
+		}	
+		
+		if(gameObject.equals("showUserLoad")) {
+			BreakWallModel currentModel = (BreakWallModel) gameModel;
+			Document highscoreDocument = currentModel.getHighscoreDocument();
+			buildLoadLayout(highscoreDocument);			
 		}	
 		
 		if(gameObject.equals("showEnterName")) {

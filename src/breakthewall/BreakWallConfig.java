@@ -1,5 +1,8 @@
 package breakthewall;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Klasse zur Kapselung global ben�tigter Spielvariablen.
  * 

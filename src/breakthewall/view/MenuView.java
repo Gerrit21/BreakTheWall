@@ -20,6 +20,7 @@ public class MenuView extends JPanel  {
 	private JPanel menup;
 	private JButton bu1;
 	private JButton bu2;
+	private JButton bu2b;
 	private JButton bu3;
 	private JButton bu4;
 	private ArrayList<JButton> navigationButtonsMenu;
@@ -42,19 +43,22 @@ public class MenuView extends JPanel  {
 		lab1 = new JLabel ("Current Score");
 	
 		bu1 = new JButton ("Highscores");		
-		// b1.addActionListener(controller);
+		
 		bu2 = new JButton ("Save");
-		//b2.addActionListener(controller);
+		
+		bu2b = new JButton ("Load");
+		
 		bu3 = new JButton ("Back");
-		//b3.addActionListener(controller);
+		
 		bu4 = new JButton ("Exit");
-		//b4.addActionListener(controller);
+		
 		scorecount = new TextField(" 1234 ");
 		scorecount.setEditable(false);
 		scorecount.setFocusable(false);
 		
 		navigationButtonsMenu.add(bu1);
 		navigationButtonsMenu.add(bu2);
+		navigationButtonsMenu.add(bu2b);
 		navigationButtonsMenu.add(bu3);
 		navigationButtonsMenu.add(bu4);
 		
@@ -63,6 +67,7 @@ public class MenuView extends JPanel  {
 
 		menup.add(bu1);
 		menup.add(bu2);
+		menup.add(bu2b);
 		menup.add(bu3);
 		menup.add(bu4);
 				

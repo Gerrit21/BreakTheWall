@@ -201,13 +201,15 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void saveGame() {
-		setInfoText("Want to save your highscore? Implement it.");
+		setInfoText("Save Highscore...");
 		stopGame();
-		// to do: ggf. ins Hauptmenü integrieren
+		
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
 		gameXMLInstance.createUserXML(gameWall.getBrickList());
 	}
+	
+
 	
 	public void enterName() {
 		// Eingabefeld fuer Namen
@@ -276,11 +278,21 @@ public class BreakWallModel extends Observable {
 	
 	public void scoreGame() {
 		// Aktuelle XML-Highscore-Liste generieren
-		gameXMLInstance.createUserXML(gameWall.getBrickList());
-		loadGame("Helmut");
+		//gameXMLInstance.createUserXML(gameWall.getBrickList());
+		//loadGame("Helmut");
 		setInfoText("Go to Highscore...");
 		setChanged();
 		notifyObservers("showHighscore");
+		stopGame();
+	}
+	
+	public void loadUser() {
+		// Aktuelle XML-Highscore-Liste generieren
+		//gameXMLInstance.createUserXML(gameWall.getBrickList());
+		loadGame("Helmut");
+		setInfoText("Go to User List...");
+		setChanged();
+		notifyObservers("showUserLoad");
 		stopGame();
 	}
 	
