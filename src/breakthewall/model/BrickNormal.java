@@ -25,7 +25,7 @@ public class BrickNormal implements GameElement, Brick {
 	 */
 	public BrickNormal(int stability) {
 		imagePath = BreakWallConfig.brickImgHard;
-		this.stability = stability;
+		this.stability = BreakWallConfig.stabilityHard;
 		this.points = BreakWallConfig.pointsNormal; 
 		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
 		this.height = new ImageIcon(imagePath).getImage().getHeight(null);

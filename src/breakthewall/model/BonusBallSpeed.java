@@ -11,7 +11,7 @@ import breakthewall.BreakWallConfig;
  */
 public class BonusBallSpeed implements Bonus {
 	
-	private String imagePath = BreakWallConfig.brickBallSpeedImg;
+	private String imagePath = BreakWallConfig.brickImgNormal;
 	
 	public String getBonusType() {
 		return this.getClass().getSimpleName();

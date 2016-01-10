@@ -1,7 +1,6 @@
 package breakthewall.model;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -9,7 +8,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import breakthewall.BreakWallConfig;
@@ -24,15 +22,6 @@ public class BreakWallXML {
 	
 	public File xml = null;
 	public Document dom = null;
-	private BreakWallModel model;
-	
-	public BreakWallXML() {
-		
-	}
-	
-	public BreakWallXML(BreakWallModel model) {
-		this.model = model;
-	}
 	
 	/**
 	 * Erzeugt ein XML-Dokument
@@ -40,7 +29,7 @@ public class BreakWallXML {
 	 * @param doc Neu erstelltes XML-Dokument.
 	 * @return Modifiziertes XML-Dokument.
 	 */
-	public void createUserXML(ArrayList<GameElement> brickList) {		
+	public void createUserXML() {		
 		Element xml;
 		Element doctype;
 		Element uuserRoot;
@@ -50,9 +39,8 @@ public class BreakWallXML {
 		
 		uuserRoot = doc.createElement("breakwall");
 		
-		int currentScore = model.getScore();
-		int currentLevel = model.getLevel();
-		int currentLives = model.getLives();
+		int currentScore = BreakWallModel.gameScore.getCurrentScore();
+		
 		
 		System.out.println(UserEingabe.getTextFromTextBox());
 		String namen = UserEingabe.getTextFromTextBox();
@@ -64,11 +52,11 @@ public class BreakWallXML {
 		// User einfuegen:
 		usr1 = createUser(doc,
 				namen,
-				"2", "4", Integer.toString(currentScore), brickList);
+				"2", "4", currentScore);
 		uuserRoot.appendChild(usr1);
 		usr2 = createUser(doc,
 				"Helmut",
-				"3", "3", Integer.toString(currentScore), brickList);
+				"3", "3", 4321);
 		uuserRoot.appendChild(usr2);
 
 		
@@ -100,11 +88,11 @@ public class BreakWallXML {
 	 * @param name Spitzname.
 	 * @param level Levelnummer.
 	 * @param life Life.
-	 * @param highscore Highscore.
+	 * @param i Highscore.
 	 * @return <tt>user></tt>-Element.
 	 */
 	protected Element createUser(Document doc,
-			String name, String level, String life, String highscore, ArrayList<GameElement> brickList) {
+			String name, String level, String life, int highscore) {
 		Text txtName,
 		txtLevel, txtLife, txtHighscore;
 		
@@ -131,63 +119,15 @@ public class BreakWallXML {
 		
 		// Highscore: Inhalt befindet sich in #PCDATA:
 		Element elHighscore = doc.createElement("highscore");
-		txtHighscore = doc.createTextNode(highscore);
+		txtHighscore = doc.createTextNode(Integer.toString(highscore));
 		elHighscore.appendChild(txtHighscore);
 		
 		usr.appendChild(elName);
 		usr.appendChild(elLevel);
 		usr.appendChild(elLife);
 		usr.appendChild(elHighscore);
-		usr.appendChild(brickWallInfo(doc, brickList));
 		return usr;
 	} // createUser
-	
-	public Element brickWallInfo(Document doc, ArrayList<GameElement> brickList) {
-		Element brickWallInfo, brickWallBrick, brickWallType;
-		Element brickWallBonus = null;
-		Element brickWallStability = null;
-		Element brickWallXPos = null;
-		Element brickWallYPos = null;
-		brickWallInfo = doc.createElement("brickWall");		
-		for(int i = 0; i < brickList.size(); i++) {
-			GameElement currentElement = brickList.get(i); 
-			brickWallBrick = doc.createElement("brick");
-			brickWallType = doc.createElement("type");			
-			String brickType = currentElement.getClass().getSimpleName();
-			brickWallType.appendChild(doc.createTextNode(brickType));
-			if(brickType.equals("BrickNormal")) {
-				BrickNormal brick = (BrickNormal) currentElement;
-				
-				brickWallBonus = doc.createElement("bonus");
-				
-				brickWallStability = doc.createElement("stability");
-				brickWallStability.appendChild(doc.createTextNode(Integer.toString(brick.getStability())));;				
-
-			} else if(brickType.equals("BrickBonus")) {
-				BrickBonus brick = (BrickBonus) currentElement;
-				
-				brickWallBonus = doc.createElement("bonus");
-				brickWallBonus.appendChild(doc.createTextNode(brick.getBonusObject().getClass().getSimpleName()));
-				
-				brickWallStability = doc.createElement("stability");
-				brickWallStability.appendChild(doc.createTextNode(Integer.toString(brick.getStability())));				
-			}
-			
-			brickWallXPos = doc.createElement("xPos");
-			brickWallXPos.appendChild(doc.createTextNode(Integer.toString(currentElement.getXCoord())));
-
-			brickWallYPos = doc.createElement("yPos");
-			brickWallYPos.appendChild(doc.createTextNode(Integer.toString(currentElement.getYCoord())));
-
-			brickWallBrick.appendChild(brickWallType);
-			brickWallBrick.appendChild(brickWallBonus);
-			brickWallBrick.appendChild(brickWallStability);
-			brickWallBrick.appendChild(brickWallXPos);
-			brickWallBrick.appendChild(brickWallYPos);			
-			brickWallInfo.appendChild(brickWallBrick);
-		}
-		return brickWallInfo; 
-	}
 	
 	public Document parseFile(String fileRef) {
 		xml = new File(System.getProperty("user.dir") + File.separator + fileRef);
@@ -268,20 +208,5 @@ public class BreakWallXML {
 		
 		return document;
 	} // getXMLDocument
-	
-    public Object getTagInfo(String tagName, Element elem) {    
-        NodeList list = elem.getElementsByTagName(tagName);
-        for (int i = 0; i < list.getLength(); ++i) {
-            Node node = (Node) list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Node child = (Node) node.getFirstChild();
-                return child.getTextContent().trim();
-            }
-             
-            return null;
-        }
-     
-        return null;
-    }
 
 }
