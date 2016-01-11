@@ -119,7 +119,10 @@ public class BreakWallView extends JFrame implements Observer {
 		showUserLoad = new UserLoadView(highscoreDocument);
 		
 		// add ActionListener to navigation buttons
-		showUserLoad.getButton().addActionListener(controller);
+		ArrayList<JButton> navigationButtonsLoad = showUserLoad.getButtonList();
+		for(int i = 0; i < navigationButtonsLoad.size(); i++) {
+			navigationButtonsLoad.get(i).addActionListener(controller);
+		}
 				
 		gameElements.put("mainHighscore", showUserLoad);
 		addPanelToGameField(showUserLoad, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		

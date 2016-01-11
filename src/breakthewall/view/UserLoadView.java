@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,25 +20,31 @@ import java.text.SimpleDateFormat;
 
 public class UserLoadView extends JPanel implements ActionListener {
    
-	static JFrame frame;
+	
     JLabel result;
     String currentPattern;
+    private String[] Namen;
     private JButton button1;
+    private JButton button2;
     private JPanel patternPanel;
+    private ArrayList<JButton> navigationButtonsLoad;
+    
  
     public UserLoadView(Document highscoreDocument) {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        String[] patternExamples = {
-        		  "Helmut",
-                  "Franz",
-                  "Theo",
-                  "Günther",
-                  "Paul",
-                  "Hermann",
-                  "Hans"
-                 };
+       
+    	
+    	navigationButtonsLoad = new ArrayList<JButton>();
+    	
+    	setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        
+        
+        getNameXML(highscoreDocument);
+        
+        String[] patternExamples = getNamen();
  
         currentPattern = patternExamples[0];
+        
+       
         
         //Set up the UI for selecting a pattern.
         JLabel patternLabel1 = new JLabel("Select your Username");
@@ -63,6 +70,11 @@ public class UserLoadView extends JPanel implements ActionListener {
         
         button1 = new JButton ("BackMenu");	
         patternPanel.add(button1);
+        button2 = new JButton ("Load Game");
+        patternPanel.add(button2);
+        
+    	navigationButtonsLoad.add(button1);
+		navigationButtonsLoad.add(button2);
         
         patternPanel.add(patternLabel1);
         patternPanel.add(patternList);
@@ -75,12 +87,13 @@ public class UserLoadView extends JPanel implements ActionListener {
         add(patternPanel,BorderLayout.CENTER);
         add(resultPanel,BorderLayout.CENTER);
         
-       
- 
+      
+        
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         
         ausgeben();
-     
+        
+      
         
         
         
@@ -96,43 +109,54 @@ public class UserLoadView extends JPanel implements ActionListener {
     
     public void ausgeben() {
     	 result.setText(currentPattern);
-    	 System.out.println(currentPattern);
+    	 //System.out.println(currentPattern);
          
     }
     
     
-    public void insertTableRows(Document doc) {            
+    public void getNameXML(Document doc) { 
+    	
+    	
+    	ArrayList<String> aList = new ArrayList<String>();
         Element root = doc.getDocumentElement();
-        NodeList list = root.getElementsByTagName("user");
+        NodeList list = doc.getElementsByTagName("user");
         for (int i = 0; i < list.getLength(); ++i) {
-            Element e = (Element) list.item(i);
-            if (e.getNodeType() == Element.ELEMENT_NODE) {
-            	 String[] Namen = {getArticleInfo("name",e)};
-//                tableModel.addRow(Namen); 
-            	System.out.println(Namen);
-            }
-        }       
+        	 NodeList name = root.getElementsByTagName("name");
+        	 Element line = (Element) name.item(i);
+             aList.add (getCharacterDataFromElement(line));
+        }    
+        
+ //		ArrayList to Array konvertieren
+        
+        String NameList[] = new String[aList.size()];              
+		for(int j =0;j<aList.size();j++){
+		  NameList[j] = aList.get(j);
+		}
+		
+        setNamen(NameList);
     }
      
     
-    public String getArticleInfo(String tagName, Element elem) {    
-        NodeList list = elem.getElementsByTagName(tagName);
-        for (int i = 0; i < list.getLength(); ++i) {
-            Node node = (Node) list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Node child = (Node) node.getFirstChild();
-                return child.getTextContent().trim();
-            }
-             
-            return null;
+    public static String getCharacterDataFromElement(Element e) {
+        Node child = e.getFirstChild();
+        if (child instanceof CharacterData) {
+          CharacterData cd = (CharacterData) child;
+          return cd.getData();
         }
-     
-        return null;
-    }
+        return "";
+      }
 	
 
-	public JButton getButton() {
-		return button1;
+    public ArrayList<JButton> getButtonList() {
+		return navigationButtonsLoad;
+	}
+
+	public String[] getNamen() {
+		return Namen;
+	}
+
+	public void setNamen(String[] Names) {
+		Namen = Names;
 	}	
     
     
