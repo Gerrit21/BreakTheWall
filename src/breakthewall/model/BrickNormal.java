@@ -1,8 +1,7 @@
 package breakthewall.model;
 
-import javax.swing.ImageIcon;
-
 import breakthewall.BreakWallConfig;
+import breakthewall.view.BreakWallView;
 
 /**
  * Klasse zur Erstellung eines normalen Bricks.
@@ -27,8 +26,8 @@ public class BrickNormal implements GameElement, Brick {
 		imagePath = BreakWallConfig.brickImgHard;
 		this.stability = stability;
 		this.points = BreakWallConfig.pointsNormal; 
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
 	/**
@@ -38,8 +37,8 @@ public class BrickNormal implements GameElement, Brick {
 		imagePath = BreakWallConfig.brickImgNormal;
 		this.stability = BreakWallConfig.stabilityNormal;
 		this.points = BreakWallConfig.pointsNormal; 
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
 	public boolean hasBonusObject() {

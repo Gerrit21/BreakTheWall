@@ -1,10 +1,7 @@
 package breakthewall.model;
 
-import javax.swing.ImageIcon;
-
 import breakthewall.BreakWallConfig;
-
-import java.util.Random;
+import breakthewall.view.BreakWallView;
 
 /**
  * Klasse zur Erzeugung eines Bricks mit Bonus-Objekt
@@ -30,16 +27,16 @@ public class BrickBonus implements GameElement, Brick {
 		setRandomBonus();
 		this.points = BreakWallConfig.pointsBonus;
 		imagePath = getBonusObject().getImage();
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
 	public BrickBonus(String bonusRef) {
 		setBonusObject(bonusRef);
 		this.points = BreakWallConfig.pointsBonus;
 		imagePath = getBonusObject().getImage();
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);		
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);		
 	}
 	
 	/**

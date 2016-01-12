@@ -1,8 +1,7 @@
 package breakthewall.model;
 
-import javax.swing.ImageIcon;
-
 import breakthewall.BreakWallConfig;
+import breakthewall.view.BreakWallView;
 
 /**
  * Runnable-Klasse zur Erstellung eines Spielballs.
@@ -26,8 +25,8 @@ public class PlayerBall implements GameElement {
 	
 	public PlayerBall() {
 		this.id = imagePath;
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
 	/**

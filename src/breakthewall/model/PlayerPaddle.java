@@ -1,8 +1,7 @@
 package breakthewall.model;
 
-import javax.swing.ImageIcon;
-
 import breakthewall.BreakWallConfig;
+import breakthewall.view.BreakWallView;
 
 /**
  * Runnable-Klasse zur Erstellung des Paddles.
@@ -23,8 +22,8 @@ public class PlayerPaddle implements GameElement {
 
 	public PlayerPaddle() {
 		this.id = imagePath;
-		this.width = new ImageIcon(imagePath).getImage().getWidth(null);
-		this.height = new ImageIcon(imagePath).getImage().getHeight(null);		
+		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
+		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);		
 	}
 	
 	/**
