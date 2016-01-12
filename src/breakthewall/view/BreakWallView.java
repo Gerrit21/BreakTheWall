@@ -299,6 +299,26 @@ public class BreakWallView extends JFrame implements Observer {
 			this.requestFocus();
 		}
 	}
+
+	/**
+	 * ֦fentliche Klasse zur Erzeugung eines Images aus einer URL.
+	 * Bei nicht vorhandenem Bild unter der URL wird eine Fehlerinfo ausgegeben. 
+	 * @author Mareike R?e, Gerrit Schulte
+	 * @param e Instanz der Klasse, die das Bild erzeugen will
+	 * @param ref String-Referenz des Bildpfades
+	 * @return newImg Image-Instanz
+	 */
+	public static Image getImageByURL(Object e, String ref) {
+		Image newImg = null;
+		try {
+			newImg = new ImageIcon(e.getClass().getResource(ref)).getImage();
+		} catch(NullPointerException e1) {
+			System.out.println("Das Bild kann unter dem angegebenen Pfad nicht gefunden werden: " + ref);
+			e1.printStackTrace();
+		}
+		
+		return newImg;
+	}
 	
 	/**
 	 * Private Klasse zur Erzeugung eines Objekts vom Typ ImgPanel. 
@@ -309,7 +329,7 @@ public class BreakWallView extends JFrame implements Observer {
 	private class ImgPanel extends JPanel {
 
 		private static final long serialVersionUID = 1L;
-		private Image img;
+		private Image newImg;
 		private int x;
 		private int y;
 		
@@ -317,24 +337,26 @@ public class BreakWallView extends JFrame implements Observer {
 		 *  Konstruktoren erzeugen ein Objekt vom Typ Image
 		 */
 
-		  public ImgPanel(String img) {
-		    this(new ImageIcon(img).getImage());
-		    this.x = 0;
-		    this.y = 0;
-		  }	  
-
-		  public ImgPanel(Image img) {
-		    this.img = img;
-		    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
-		    setPreferredSize(size);
-		    setMinimumSize(size);
-		    setMaximumSize(size);
-		    setSize(size);
-		    setLayout(null);
-		  }  
+		  public ImgPanel(String imgRef) {
+			try {
+			    newImg = new ImageIcon(getImageByURL(this, imgRef)).getImage();
+			    this.x = 0;
+			    this.y = 0;
+			    Dimension size = new Dimension(newImg.getWidth(null), newImg.getHeight(null));
+			    setPreferredSize(size);
+			    setMinimumSize(size);
+			    setMaximumSize(size);
+			    setSize(size);
+			    setLayout(null);
+			} catch(NullPointerException e) {
+				System.out.println("Could not find image for image path: " + imgRef);
+				System.out.println("Check if path is correct.");
+				e.printStackTrace();
+			}
+		  }	    
 
 		  public void paintComponent(Graphics g) {
-		    g.drawImage(img, x, y, null);	    
+		    g.drawImage(newImg, x, y, null);	    
 		  }		
 	}
 
