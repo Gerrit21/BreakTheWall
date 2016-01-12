@@ -1,6 +1,7 @@
 package breakthewall.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.sound.sampled.AudioInputStream;
@@ -16,7 +17,7 @@ public class BreakWallMusic extends Thread {
 	private float durationSongMillis;
 	private boolean play = false;
 	private boolean loopMusic = true;
-	private String[] musicClips;
+	private ArrayList<String> musicClips;
 	private String musicString, randomMusicFile;
 	AudioInputStream audioFile;
 	Clip audioClip;
@@ -27,8 +28,7 @@ public class BreakWallMusic extends Thread {
 	}
 	
 	public void initMusicClip() {
-		try {
-			randomMusicFile = getRandomClip();
+		try {		
 			AudioInputStream audioFile = AudioSystem.getAudioInputStream(BreakWallMusic.class.getResourceAsStream(randomMusicFile));
 			audioClip = AudioSystem.getClip();
 			durationSongMillis = 1000 * audioFile.getFrameLength() / audioFile.getFormat().getFrameRate();
@@ -39,7 +39,7 @@ public class BreakWallMusic extends Thread {
 			e2.printStackTrace();
 		} catch (NullPointerException e3) {
 			e3.printStackTrace();
-			System.out.println("Please check if music file paths are correct.");
+			System.out.println("Please check if music file paths are correct: " + randomMusicFile);
 		} catch (LineUnavailableException e4) {
 			e4.printStackTrace();
 		} 	
@@ -47,9 +47,9 @@ public class BreakWallMusic extends Thread {
 	
 	public String getRandomClip() {
 		try {
-		int musicClipLength = musicClips.length;
+		int musicClipLength = musicClips.size();		
 		int randomClipIndex = (BreakWallModel.randomFromRange(1, musicClipLength)) - 1;
-		musicString = musicClips[randomClipIndex];		
+		musicString = musicClips.get(randomClipIndex);		
 		} catch(Exception e) {
 			System.out.println("No music file references were defined. Please check Configuration.");
 		}
@@ -69,6 +69,7 @@ public class BreakWallMusic extends Thread {
 		long timeDiff = 0;
 		while(loopMusic) {
 			if((timeDiff == 0) || (timeDiff > durationSongMillis)) {
+				randomMusicFile = getRandomClip();
 				initMusicClip();
 				startTime = new Date();
 				delayTime = 0;
