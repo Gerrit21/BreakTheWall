@@ -9,8 +9,7 @@ package breakthewall;
 public class BreakWallMain {
 
 	public static void main(String[] args) {
-		BreakWall.getInstance(1);
-
+		BreakWall.getInstance(1);		
 	}
 
 }

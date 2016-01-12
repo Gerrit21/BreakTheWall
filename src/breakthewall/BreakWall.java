@@ -15,6 +15,7 @@ public class BreakWall {
 	 */
 	public static BreakWall getInstance(int initialLevel) {
 		if (gameInstance == null) {
+			BreakWallConfigXML.setGeneralConfigurations();
 			gameInstance = new BreakWall(initialLevel);
 		}
 		return gameInstance;
@@ -24,7 +25,7 @@ public class BreakWall {
 	 * Privater Konstruktoraufruf initiiert das Spiel
 	 * MVC-Entwurfsmuster wird verwendet
 	 */
-	private BreakWall(int initialLevel) {
+	private BreakWall(int initialLevel) {		
 		BreakWallModel newModel = new BreakWallModel(initialLevel);
 		BreakWallController newController = new BreakWallController(newModel);
 		new BreakWallView(newModel, newController);

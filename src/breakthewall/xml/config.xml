@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <breakwall>
+<common>
+<title data-type="String">Break The Wall</title>
+<paddleImg data-type="String">/breakthewall/media/images/paddle.png</paddleImg>
+<ballImg data-type="String">/breakthewall/media/images/ball.png</ballImg>
+<brickImgNormal data-type="String">/breakthewall/media/images/brick_n.png</brickImgNormal>
+<brickImgHard data-type="String">/breakthewall/media/images/brick_h.png</brickImgHard>
+<brickXtraLifeImg data-type="String">/breakthewall/media/images/Ice_cream.png</brickXtraLifeImg>
+<brickPaddleWidthImg data-type="String">/breakthewall/media/images/brick_blue.png</brickPaddleWidthImg>
+<brickBallSpeedImg data-type="String">/breakthewall/media/images/brick_blue.png</brickBallSpeedImg>
+<musicIconPlaying data-type="String">/breakthewall/media/images/music_playing.png</musicIconPlaying>
+<musicIconPausing data-type="String">/breakthewall/media/images/music_pausing.png</musicIconPausing>
+<paddleSpeed data-type="Integer">10</paddleSpeed><penalityPoints data-type="Integer">50</penalityPoints><pointsNormal data-type="Integer">20</pointsNormal>
+<initialBallXDir data-type="Integer">1</initialBallXDir>
+<initialBallYDir data-type="Integer">-2</initialBallYDir><bonusFactor data-type="Integer">3</bonusFactor>
+<ballSpeed data-type="Integer">1</ballSpeed>
+	<pointsBonus data-type="Integer">20</pointsBonus><stabilityNormal data-type="Integer">1</stabilityNormal>
+	<stabilityHard data-type="Integer">3</stabilityHard>
+	<backgroundMusic data-type="ArrayList&lt;String&gt;"><mediaPath data-type="String">/breakthewall/media/sound/Bensound-Cute.wav</mediaPath>
+		<mediaPath data-type="String">/breakthewall/media/sound/Bellevue-Gates.wav</mediaPath></backgroundMusic></common>
 <level number="1">
 <lifeCount data-type="Integer">3</lifeCount>
-<bgImagePath data-type="String">img/bg_3.png</bgImagePath>
+<bgImagePath data-type="String">/breakthewall/media/images/bg_3.png</bgImagePath>
 <wallHeight data-type="Integer">100</wallHeight>
 <bonusPossible data-type="Integer">40</bonusPossible>
 <hardPossible data-type="Integer">10</hardPossible>
 </level>
 <level number="2">
-<bgImagePath data-type="String">img/bg_2.png</bgImagePath>
+<bgImagePath data-type="String">/breakthewall/media/images/bg_2.png</bgImagePath>
 <wallHeight data-type="Integer">120</wallHeight>
 <bonusPossible data-type="Integer">30</bonusPossible>
 <hardPossible data-type="Integer">20</hardPossible>
 </level>
 <level number="3">
-<bgImagePath data-type="String">img/bg_3.png</bgImagePath>
+<bgImagePath data-type="String">/breakthewall/media/images/bg_3.png</bgImagePath>
 <wallHeight data-type="Integer">150</wallHeight>
 <bonusPossible data-type="Integer">20</bonusPossible>
 <hardPossible data-type="Integer">30</hardPossible>
