@@ -23,19 +23,12 @@ public class BrickNormal implements GameElement, Brick {
 	 *  @param stability Für den Brick zu setzende Stabilität
 	 */
 	public BrickNormal(int stability) {
-		imagePath = BreakWallConfig.brickImgHard;
+		if(stability == 1) {
+			imagePath = BreakWallConfig.brickImgNormal;
+		} else {
+			imagePath = BreakWallConfig.brickImgHard;
+		}
 		this.stability = stability;
-		this.points = BreakWallConfig.pointsNormal; 
-		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
-		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
-	}
-	
-	/**
-	 *  Konstruktor für normal harte Bricks mit einer stability von 1 (siehe BreakWallData).
-	 */
-	public BrickNormal() {
-		imagePath = BreakWallConfig.brickImgNormal;
-		this.stability = BreakWallConfig.stabilityNormal;
 		this.points = BreakWallConfig.pointsNormal; 
 		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
 		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);

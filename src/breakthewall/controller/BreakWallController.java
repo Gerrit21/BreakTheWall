@@ -22,6 +22,10 @@ public class BreakWallController implements KeyListener, ActionListener {
 		gameModel.startNewLevel();		
 	}
 	
+	public void initExistingLevel() {		
+		gameModel.startExistingLevel();		
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// entspricht der Leertaste
@@ -95,10 +99,10 @@ public class BreakWallController implements KeyListener, ActionListener {
 			gameModel.scoreGame();
 		}	
 		if(command.equals("Load")) {
-			gameModel.loadUser();
+			gameModel.selectUser();
 		}	
 		if(command.equals("Load Game")) {
-			System.out.println("Load Game");
+			gameModel.loadUser("Helmut");
 		}
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();

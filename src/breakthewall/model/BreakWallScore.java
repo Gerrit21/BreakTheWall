@@ -12,6 +12,10 @@ public class BreakWallScore {
 		return breakWallScore;
 	}
 	
+	public void setCurrentScore(int score) {
+		breakWallScore = score;
+	}
+	
 	public void addPoints(int points) {
 		breakWallScore += points;
 	}

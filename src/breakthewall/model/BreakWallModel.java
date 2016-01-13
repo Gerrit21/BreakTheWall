@@ -12,10 +12,10 @@ import javax.swing.ImageIcon;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import breakthewall.BreakWallConfig;
+import breakthewall.BreakWallConfigXML;
 import breakthewall.remote.RemoteHighscoreClient;
 
 /**
@@ -32,6 +32,7 @@ public class BreakWallModel extends Observable {
 	private Thread musicThread;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
+	private ArrayList<GameElement> brickList;
 	private BreakWallScore gameScore;
 	private BreakWallXML gameXMLInstance;
 	Document dom;
@@ -62,7 +63,8 @@ public class BreakWallModel extends Observable {
 		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameScore = new BreakWallScore(0);
-		gameXMLInstance = new BreakWallXML(this); 
+		gameXMLInstance = new BreakWallXML(this);
+		gameWall = new BrickWall();
 		initGameElements();
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
 		playGame();
@@ -73,8 +75,7 @@ public class BreakWallModel extends Observable {
 	 * also Spielfeld, Paddle, Ball und Brick-Wand
 	 * und zeichnet diese auf die Spielfläche.
 	 */
-	private void initGameElements() {
-		// gameMusic = new BreakWallMusic();
+	private void initGameElements() {		
 		musicObj = new BreakWallMusic();
 		musicThread = new Thread(musicObj);
 		if(!musicIsPlaying) {
@@ -85,20 +86,20 @@ public class BreakWallModel extends Observable {
 		}	
 		breakWallElements = new ArrayList<GameElement>();
 		gamePaddle = new PlayerPaddle();	
-		gameBall = new PlayerBall();
+		gameBall = new PlayerBall();	
 		moveBall = false;
 		changeDir = true;
 		constantPaddleWidth = gamePaddle.getWidth();
 		breakWallElements.add(gameBall);
 		breakWallElements.add(gamePaddle);
 		// Brick-Wand erstellen und Bricks zur Liste der Spielelemente hinzufügen
-		gameWall = new BrickWall();
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
-		}				
+		}							
 	}
 	
 	public void startNewLevel() {
+		System.out.println("Start new Level");
 		updateLevel = false;
 		currentLevel++;
 		scoreFactor = 1;
@@ -107,6 +108,18 @@ public class BreakWallModel extends Observable {
 		notifyObservers("updateLevel");
 		initGameElements();
 		setInfoText("You've entered Level " + currentLevel + "!");
+		playGame();
+	}
+	
+	public void startExistingLevel() {
+		System.out.println("Load existing Game");
+		updateLevel = false;
+		scoreFactor = 1;
+		BreakWallConfig.setLevelDifficulty(currentLevel);
+		gameWall = new BrickWall();
+		gameWall.setBrickList(brickList);
+		initGameElements();
+		setInfoText("You may start at Level " + currentLevel + "!");
 		playGame();
 	}
 	
@@ -139,24 +152,20 @@ public class BreakWallModel extends Observable {
 
 		for (int i = 0; i < list.getLength(); ++i) {
 			Element e = (Element) list.item(i);
+			currentLevel = Integer.parseInt(gameXMLInstance.getTagInfo("level", e).toString());
+			BreakWallConfig.lifeCount = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
+			gameScore.setCurrentScore(Integer.parseInt(gameXMLInstance.getTagInfo("highscore", e).toString()));
 			if(gameXMLInstance.getTagInfo("name", e).equals(userName)) {
-				loadBrickWall(e.getElementsByTagName("brick"));
+				loadBrickWall(e.getElementsByTagName("brick"));			
 			}
-		}	
+		}
+		BreakWallConfigXML.setLevelConfigurations(currentLevel);
+		setChanged();
+		notifyObservers("loadLevel");
 	}
 	
 	public void loadBrickWall(NodeList xmlBrickList) {
-		// XML:
-		/** <brickWall>
-		<brick>
-		<type></type>
-		<bonus></bonus>
-		<stability></stability>
-		<xPos></xPos>
-		<yPos></yPos>
-		</brick>
-		</brickWall>**/
-		ArrayList<GameElement> brickList = new ArrayList<GameElement>();
+		brickList = new ArrayList<GameElement>();
 		for (int i = 0; i < xmlBrickList.getLength(); ++i) {
 			Element e = (Element) xmlBrickList.item(i);			
 			if(gameXMLInstance.getTagInfo("type", e).equals("BrickNormal")) {
@@ -180,8 +189,6 @@ public class BreakWallModel extends Observable {
 				
 			}
 		}
-		System.out.println("Loaded list of bricks: ");
-		System.out.println(brickList);
 	}
 	
 	public void playGame() {
@@ -286,19 +293,23 @@ public class BreakWallModel extends Observable {
 		stopGame();
 	}
 	
-	public void loadUser() {
+	public void selectUser() {
 		// Aktuelle XML-Highscore-Liste generieren
 		//gameXMLInstance.createUserXML(gameWall.getBrickList());
-		loadGame("Helmut");
 		setInfoText("Go to User List...");
 		setChanged();
-		notifyObservers("showUserLoad");
+		notifyObservers("showUserSelect");
 		stopGame();
 	}
 	
+	public void loadUser(String name) {
+		setChanged();
+		notifyObservers("loadUserGame");		
+		loadGame(name);
+	}
+	
 	public Document getHighscoreDocument() {
-		dom = null;
-		System.out.println(System.getProperty("user.dir"));
+		dom = null;		
 		File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
 	    if (xml.exists() && xml.length() != 0) {
 	    	dom = gameXMLInstance.parseFile(xml);

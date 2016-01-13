@@ -25,10 +25,13 @@ public class BrickWall {
 	 * Diese wird in das �bergebene Spielfeld gezeichnet.
 	 */
 	
-	public BrickWall() {
-		// this.gameField = gameField;		
+	public BrickWall() {		
 		brickList = new ArrayList<GameElement>();
 		buildWall();
+	}
+	
+	public BrickWall(ArrayList<GameElement> brickList) {		
+		this.brickList = brickList;
 	}
 	
 	/**
@@ -62,7 +65,7 @@ public class BrickWall {
 	private void setRandomBrick() {
 		int randomInt = BreakWallModel.randomFromRange(1, 100);
 		if(randomInt <= BreakWallConfig.normalPossible) {
-			randomBrick = new BrickNormal();
+			randomBrick = new BrickNormal(BreakWallConfig.stabilityNormal);
 		} else if(randomInt > BreakWallConfig.normalPossible) {
 			if(randomInt < (BreakWallConfig.bonusPossible + BreakWallConfig.normalPossible)) {
 				randomBrick = new BrickBonus();				
@@ -79,6 +82,10 @@ public class BrickWall {
 	
 	public ArrayList<GameElement> getBrickList() {
 		return this.brickList;
+	}
+	
+	public void setBrickList(ArrayList<GameElement> brickList) {
+		this.brickList = brickList;
 	}
 	
 	public void removeFromBrickList(GameElement removeBrick) {

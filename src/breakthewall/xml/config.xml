@@ -21,7 +21,7 @@
 		<mediaPath data-type="String">/breakthewall/media/sound/Bellevue-Gates.wav</mediaPath></backgroundMusic></common>
 <level number="1">
 <lifeCount data-type="Integer">3</lifeCount>
-<bgImagePath data-type="String">/breakthewall/media/images/bg_3.png</bgImagePath>
+<bgImagePath data-type="String">/breakthewall/media/images/bg_1.png</bgImagePath>
 <wallHeight data-type="Integer">100</wallHeight>
 <bonusPossible data-type="Integer">40</bonusPossible>
 <hardPossible data-type="Integer">10</hardPossible>

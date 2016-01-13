@@ -115,7 +115,7 @@ public class BreakWallView extends JFrame implements Observer {
 		addPanelToGameField(showHighscore, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
-	public void buildLoadLayout(Document highscoreDocument) {		
+	public void buildUserSelectLayout(Document highscoreDocument) {		
 		showUserLoad = new UserLoadView(highscoreDocument);
 		
 		// add ActionListener to navigation buttons
@@ -254,7 +254,12 @@ public class BreakWallView extends JFrame implements Observer {
 		}
 		if(gameObject.equals("updateLevel")) {
 			buildGameLayout();
-		}	
+		}
+		if(gameObject.equals("loadLevel")) {
+			clearGameField();
+			controller.initExistingLevel();
+			buildGameLayout();
+		}		
 		if(gameObject.equals("showMenu")) {
 			buildMenuLayout();	
 		}
@@ -263,16 +268,20 @@ public class BreakWallView extends JFrame implements Observer {
 		}	
 		
 		if(gameObject.equals("showHighscore")) {
-			BreakWallModel currentModel = (BreakWallModel) gameModel;
-			Document highscoreDocument = currentModel.getHighscoreDocument();
+			Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
 			buildHighscoreLayout(highscoreDocument);			
 		}	
 		
-		if(gameObject.equals("showUserLoad")) {
-			BreakWallModel currentModel = (BreakWallModel) gameModel;
-			Document highscoreDocument = currentModel.getHighscoreDocument();
-			buildLoadLayout(highscoreDocument);			
-		}	
+		if(gameObject.equals("showUserSelect")) {
+			Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
+			buildUserSelectLayout(highscoreDocument);			
+		}
+		
+		if(gameObject.equals("loadUserGame")) {
+			removeElementFromGameField("mainHighscore");
+			removeElementFromGameField("mainMenu");
+			
+		}
 		
 		if(gameObject.equals("showEnterName")) {
 			buildEnterNameLayout();			
