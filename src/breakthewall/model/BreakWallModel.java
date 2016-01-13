@@ -152,10 +152,10 @@ public class BreakWallModel extends Observable {
 
 		for (int i = 0; i < list.getLength(); ++i) {
 			Element e = (Element) list.item(i);
-			currentLevel = Integer.parseInt(gameXMLInstance.getTagInfo("level", e).toString());
-			BreakWallConfig.lifeCount = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
-			gameScore.setCurrentScore(Integer.parseInt(gameXMLInstance.getTagInfo("highscore", e).toString()));
 			if(gameXMLInstance.getTagInfo("name", e).equals(userName)) {
+				currentLevel = Integer.parseInt(gameXMLInstance.getTagInfo("level", e).toString());
+				BreakWallConfig.lifeCount = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
+				gameScore.setCurrentScore(Integer.parseInt(gameXMLInstance.getTagInfo("highscore", e).toString()));
 				loadBrickWall(e.getElementsByTagName("brick"));			
 			}
 		}
