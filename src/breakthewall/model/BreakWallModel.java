@@ -413,7 +413,7 @@ public class BreakWallModel extends Observable {
 				gameBall.setYCoord(gamePaddle.getYCoord() - gameBall.getHeight());
 				gameBall.setDirY(BreakWallConfig.initialBallYDir);			
 				gameBall.setDirX(BreakWallConfig.initialBallXDir);
-				gamePaddle.setWidth(new ImageIcon(gamePaddle.getId()).getImage().getWidth(null));
+				gamePaddle.setWidth(BreakWallView.getImageByURL(this, gamePaddle.getId()).getWidth(null));
 			} else {
 				gameBall.setDestroyedState(true);
 				setInfoText("Game Over!");
@@ -502,7 +502,7 @@ public class BreakWallModel extends Observable {
 			setInfoText("Bonus: Change speed of ball!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusPaddleWidth")) {
 			BonusPaddleWidth tempBonus = (BonusPaddleWidth) activeBrick.getBonusObject();
-			int newWidth = tempBonus.changePaddleSize(constantPaddleWidth/2);
+			int newWidth = tempBonus.changePaddleSize(constantPaddleWidth);
 			gamePaddle.setWidth(newWidth);
 			setInfoText("Bonus: Change paddle width!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusXtraLife")) {

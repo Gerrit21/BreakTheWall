@@ -15,7 +15,7 @@ public class BonusPaddleWidth implements Bonus {
 	private int tempSize;
 	
 	public int changePaddleSize(int paddleWidth) {
-		tempSize = BreakWallModel.randomFromRange((paddleWidth/2), (paddleWidth*2));
+		tempSize = BreakWallModel.randomFromRange(20, (paddleWidth*2));
 		return tempSize;
 	}
 
