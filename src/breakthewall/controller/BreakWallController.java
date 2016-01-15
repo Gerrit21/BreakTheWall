@@ -17,7 +17,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	
 	private BreakWallModel gameModel;
 	private String command;
-	private int count;
+	private String name;
 
 	public BreakWallController(BreakWallModel gameModel) {
 		this.gameModel = gameModel;
@@ -113,7 +113,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 			gameModel.backMenu();
 		}
 		if(command.equals("Enter and Save")) {
-			gameModel.saveGame();
+			gameModel.saveGame(name);
 			gameModel.backMenuAfterSave();
 		}
 		
@@ -129,6 +129,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	public void insertUpdate(DocumentEvent arg0) {
 		System.out.println("Änderung:");
 		try {
+			name = arg0.getDocument().getText(0, arg0.getDocument().getLength()); 
 			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
@@ -140,6 +141,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	public void removeUpdate(DocumentEvent arg0) {
 		System.out.println("Änderung rückgängig:");
 		try {
+			name = arg0.getDocument().getText(0, arg0.getDocument().getLength());
 			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block

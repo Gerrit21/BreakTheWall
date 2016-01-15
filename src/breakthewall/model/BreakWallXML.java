@@ -40,7 +40,7 @@ public class BreakWallXML {
 	 * @param doc Neu erstelltes XML-Dokument.
 	 * @return Modifiziertes XML-Dokument.
 	 */
-	public void createUserXML(ArrayList<GameElement> brickList) {		
+	public void createUserXML(String userName, ArrayList<GameElement> brickList) {		
 		Element xml;
 		Element doctype;
 		Element uuserRoot;
@@ -63,14 +63,9 @@ public class BreakWallXML {
 
 		// User einfuegen:
 		usr1 = createUser(doc,
-				"Hans",
+				userName,
 				currentLevel, currentLives, currentScore, brickList);
 		uuserRoot.appendChild(usr1);
-		usr2 = createUser(doc,
-				"Helmut",
-				3, 3, currentScore, brickList);
-		uuserRoot.appendChild(usr2);
-
 		
 		
 		// Highscore ersetzen:

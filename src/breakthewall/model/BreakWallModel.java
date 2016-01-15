@@ -207,13 +207,14 @@ public class BreakWallModel extends Observable {
 		System.out.println("pause");
 	}
 	
-	public void saveGame() {
+	public void saveGame(String userName) {
+		System.out.println("Save user name!");
 		setInfoText("Save Highscore...");
 		stopGame();
 		
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
-		gameXMLInstance.createUserXML(gameWall.getBrickList());
+		gameXMLInstance.createUserXML(userName, gameWall.getBrickList());
 	}
 	
 
