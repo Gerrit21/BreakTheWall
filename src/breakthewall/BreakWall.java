@@ -4,14 +4,24 @@ import breakthewall.controller.BreakWallController;
 import breakthewall.model.BreakWallModel;
 import breakthewall.view.BreakWallView;
 
+/**
+ * Main Break Wall class
+ * Returns an instance of the game (Singleton).
+ * Invokes an MVC-architecture by connecting
+ * model, view and controller
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 public class BreakWall {
 	
 	private static volatile BreakWall gameInstance;
 	
 	/**
-	 * Öffentlicher Konstruktoraufruf stellt sicher,
-	 * dass nur eine Instanz des Spiels erzeugt wird
-	 * Singleton-Entwurfsmuster wird verwendet
+	 * Public constructor ensures that only one instance 
+	 * of the class is instatiated (Singleton pattern).
+	 * 
+	 * @param initialLevel sets the initial level to start the game
 	 */
 	public static BreakWall getInstance(int initialLevel) {
 		if (gameInstance == null) {
@@ -22,8 +32,9 @@ public class BreakWall {
 	}
 
 	/**
-	 * Privater Konstruktoraufruf initiiert das Spiel
-	 * MVC-Entwurfsmuster wird verwendet
+	 * Private constructor call initiates the game
+	 * 
+	 * @param initialLevel sets the initial level to start the game
 	 */
 	private BreakWall(int initialLevel) {		
 		BreakWallModel newModel = new BreakWallModel(initialLevel);

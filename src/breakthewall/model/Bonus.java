@@ -1,13 +1,13 @@
 package breakthewall.model;
 
 /**
- * Interface mit gemeinsamen Methoden aller Bonus-Brick-Typen.
+ * Interface for common methods of all bonus brick types
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public interface Bonus {
 	
-	public String getBonusType();	
+	public String getBonusType();
 	public String getImage();
 }

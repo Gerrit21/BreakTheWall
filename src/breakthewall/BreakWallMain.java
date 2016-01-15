@@ -1,10 +1,10 @@
 package breakthewall;
 
 /**
- * Diese Main-Methode startet das Spiel.
+ * Class containing main method which starts the game
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class BreakWallMain {
 
