@@ -8,7 +8,7 @@
 <brickImgHard data-type="String">/breakthewall/media/images/brick_h.png</brickImgHard>
 <brickXtraLifeImg data-type="String">/breakthewall/media/images/Ice_cream.png</brickXtraLifeImg>
 <brickPaddleWidthImg data-type="String">/breakthewall/media/images/brick_blue.png</brickPaddleWidthImg>
-<brickBallSpeedImg data-type="String">/breakthewall/media/images/brick_blue.png</brickBallSpeedImg>
+<brickBallSpeedImg data-type="String">/breakthewall/media/images/brick_green.png</brickBallSpeedImg>
 <musicIconPlaying data-type="String">/breakthewall/media/images/music_playing.png</musicIconPlaying>
 <musicIconPausing data-type="String">/breakthewall/media/images/music_pausing.png</musicIconPausing>
 <paddleSpeed data-type="Integer">10</paddleSpeed><penalityPoints data-type="Integer">50</penalityPoints><pointsNormal data-type="Integer">20</pointsNormal>

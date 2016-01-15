@@ -8,6 +8,7 @@ import java.util.EventListener;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.model.BreakWallModel;
@@ -122,20 +123,28 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
-		count++;
-		System.out.println(count);
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
-		count++;
-		System.out.println(count);
+		System.out.println("Änderung:");
+		try {
+			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {
-		count++;
-		System.out.println(count);
+		System.out.println("Änderung rückgängig:");
+		try {
+			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
