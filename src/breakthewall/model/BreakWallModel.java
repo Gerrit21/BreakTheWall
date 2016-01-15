@@ -19,10 +19,11 @@ import breakthewall.BreakWallConfigXML;
 import breakthewall.remote.RemoteHighscoreClient;
 
 /**
- * Klasse zur Koordinierung der verschiedenen Break-The-Wall-Spielelemente.
+ * Main model class
+ * Class to coordinate all game element instances
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class BreakWallModel extends Observable {
 		
@@ -35,30 +36,22 @@ public class BreakWallModel extends Observable {
 	private ArrayList<GameElement> brickList;
 	private BreakWallScore gameScore;
 	private BreakWallXML gameXMLInstance;
-	Document dom;
-	private ArrayList<GameElement> breakWallElements;
-	private ArrayList<GameElement> currentBrickList;
+	private Document dom;
+	private ArrayList<GameElement> breakWallElements, currentBrickList, movableBonusObjects;
 	private String struckBrick = "";
 	private String tempBrick = "";
 	private Timer timer;
-	private int constantPaddleWidth;
-	private int currentLevel;
+	private int constantPaddleWidth, currentLevel;
 	private int scoreFactor = 1;
-	private boolean moveBall, changeDir, musicIsPlaying;
+	private boolean moveBall, changeDir, musicIsPlaying, buttonClick;
 	private boolean updateLevel = false;
 	private String gameInfoText;
-	private boolean buttonClick;
-	
-	
-
-	
 	
 	/**
-	 * Konstruktoraufruf initiiert die Erzeugung der Spielelemente
-	 * und startet den Game-Loop
+	 * Constructor initiates instantiation of game elements
+	 * starts game loop
 	 */
 	public BreakWallModel(int initialLevel) {		
-		// das Level festlegen, mit dem das Spiel starten soll
 		currentLevel = initialLevel;
 		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
@@ -69,20 +62,23 @@ public class BreakWallModel extends Observable {
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
 		playGame();
 	}
+	
+	// ***************************************************************//
+	// Methods to organize the course of game
+	// ***************************************************************//
 
 	/**
-	 * Klasse erzeugt Objekte aller initial spielrelevanten Elemente,
-	 * also Spielfeld, Paddle, Ball und Brick-Wand
-	 * und zeichnet diese auf die Spielfläche.
+	 * Private method to create relevant game elements:
+	 * music, paddle, ball, brick wall e.g.
 	 */
-	private void initGameElements() {		
+	private void initGameElements() {
+		// start music thread
 		musicObj = new BreakWallMusic();
 		musicThread = new Thread(musicObj);
 		if(!musicIsPlaying) {
 			musicObj.playMusic(true);
 			musicThread.start();
-			musicIsPlaying = true;			
-			
+			musicIsPlaying = true;					
 		}	
 		breakWallElements = new ArrayList<GameElement>();
 		gamePaddle = new PlayerPaddle();	
@@ -92,25 +88,33 @@ public class BreakWallModel extends Observable {
 		constantPaddleWidth = gamePaddle.getWidth();
 		breakWallElements.add(gameBall);
 		breakWallElements.add(gamePaddle);
-		// Brick-Wand erstellen und Bricks zur Liste der Spielelemente hinzufügen
+		// create brick wall, add it to a list of game elements
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
 		}							
 	}
 	
+	/**
+	 * Public method to initiate every new level after the first level
+	 */
 	public void startNewLevel() {
 		System.out.println("Start new Level");
 		updateLevel = false;
 		currentLevel++;
 		scoreFactor = 1;
+		// set new level difficulty
 		BreakWallConfig.setLevelDifficulty(currentLevel);
+		gameWall = new BrickWall();
+		initGameElements();
 		setChanged();
 		notifyObservers("updateLevel");
-		initGameElements();
 		setInfoText("You've entered Level " + currentLevel + "!");
 		playGame();
 	}
-	
+
+	/**
+	 * Public method to initiate an existing level from a loaded game
+	 */
 	public void startExistingLevel() {
 		System.out.println("Load existing Game");
 		updateLevel = false;
@@ -123,28 +127,10 @@ public class BreakWallModel extends Observable {
 		playGame();
 	}
 	
-	/*
-	 * Öffentliche Methoden, um Model-Daten zu ändern
+	/**
+	 * Public method to load existing game of a user.
+	 * Variables (current level, score) will be taken from the highscore list
 	 */
-	
-	public void movePaddleLeft() {
-		if(gamePaddle.getXCoord() > 0) {
-			gamePaddle.movePaddle("left");
-			if(moveBall == false) {
-				gameBall.restBall("left", gamePaddle.getSpeed());
-			}
-		}
-	}
-	
-	public void movePaddleRight() {
-		if(gamePaddle.getXCoord() < (BreakWallConfig.offsetWidth - gamePaddle.getWidth())) {
-			gamePaddle.movePaddle("right");
-			if(moveBall == false) {
-				gameBall.restBall("right", gamePaddle.getSpeed());
-			}
-		}
-	}
-	
 	public void loadGame(String userName) {
 		Document currentDocument = getHighscoreDocument();		
 		Element root = currentDocument.getDocumentElement();
@@ -164,10 +150,18 @@ public class BreakWallModel extends Observable {
 		notifyObservers("loadLevel");
 	}
 	
+	/**
+	 * Public method to load existing brick wall which is stored in the user highscore list.
+	 * Brick infos are restored from the node list.
+	 * 
+	 * @param xmlBrickList NodeList of bricks
+	 */
 	public void loadBrickWall(NodeList xmlBrickList) {
 		brickList = new ArrayList<GameElement>();
 		for (int i = 0; i < xmlBrickList.getLength(); ++i) {
-			Element e = (Element) xmlBrickList.item(i);			
+			Element e = (Element) xmlBrickList.item(i);
+			// stored brick's type is "normal brick"
+			// stability has to be set
 			if(gameXMLInstance.getTagInfo("type", e).equals("BrickNormal")) {
 				int stability = Integer.valueOf((String) gameXMLInstance.getTagInfo("stability", e));
 				int xPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("xPos", e));
@@ -177,6 +171,8 @@ public class BreakWallModel extends Observable {
 				newBrick.setYCoord(yPos);
 				newBrick.setId(Integer.toString(newBrick.getXCoord()) + Integer.toString(newBrick.getYCoord()));
 				brickList.add(newBrick);
+				// stored brick's type is "bonus brick"
+				// bonus type has to be set
 			} else if(gameXMLInstance.getTagInfo("type", e).equals("BrickBonus")) {
 				int xPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("xPos", e));
 				int yPos = Integer.valueOf((String) gameXMLInstance.getTagInfo("yPos", e));
@@ -191,8 +187,10 @@ public class BreakWallModel extends Observable {
 		}
 	}
 	
-	public void playGame() {
-		
+	/**
+	 * Public method to start game loop
+	 */
+	public void playGame() {	
 		setInfoText("Play ...");
 		setChanged();
 		notifyObservers("focusGameElements");			
@@ -201,23 +199,26 @@ public class BreakWallModel extends Observable {
         System.out.println("play");
 	}
 	
+	/**
+	 * Public method to stop game loop
+	 */
 	public void pauseGame() {
 		setInfoText("Pause ...");
 		stopGame();
 		System.out.println("pause");
 	}
-	
+
+	/**
+	 * public method to save a game instance with reference to a user's name.
+	 * Game is saved in a highscore-xml-document. 
+	 */
 	public void saveGame(String userName) {
-		System.out.println("Save user name!");
 		setInfoText("Save Highscore...");
 		stopGame();
-		
 		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
 		newHighscore.addEntry(gameScore.getCurrentScore());		
 		gameXMLInstance.createUserXML(userName, gameWall.getBrickList());
 	}
-	
-
 	
 	public void enterName() {
 		// Eingabefeld fuer Namen
@@ -228,18 +229,27 @@ public class BreakWallModel extends Observable {
 		
 	}
 	
+	/**
+	 * Public method to end game
+	 */
 	public void exitGame() {
 		setInfoText("Exit the Game...");
 		System.exit(0);		
 	}
 	
+	/**
+	 * Public method to invoke visibility of the game menu
+	 */
 	public void menuGame() {
 		setInfoText("Go to menu...");
 		setChanged();
 		notifyObservers("showMenu");
 		stopGame();
 	}
-	
+
+	/**
+	 * Public method to invoke closing of the game menu
+	 */
 	public void backGame() {
 		setInfoText("Go back to Game...");
 		setChanged();
@@ -249,6 +259,9 @@ public class BreakWallModel extends Observable {
 		
 	}
 	
+	/**
+	 * Public method to invoke closing of the highscore list
+	 */
 	public void backMenu() {
 		setInfoText("Go back to Menu...");
 		setChanged();
@@ -285,8 +298,6 @@ public class BreakWallModel extends Observable {
 	
 	
 	public void scoreGame() {
-		// Aktuelle XML-Highscore-Liste generieren
-		//gameXMLInstance.createUserXML(gameWall.getBrickList());
 		//loadGame("Helmut");
 		setInfoText("Go to Highscore...");
 		setChanged();
@@ -295,8 +306,6 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void selectUser() {
-		// Aktuelle XML-Highscore-Liste generieren
-		//gameXMLInstance.createUserXML(gameWall.getBrickList());
 		setInfoText("Go to User List...");
 		setChanged();
 		notifyObservers("showUserSelect");
@@ -317,16 +326,44 @@ public class BreakWallModel extends Observable {
 	    }
 	    return dom;
 	}
-    //if the xml file exists at the current location in the default user directory
-    //then parse the xml data with the parseFile(File file) method      
-    //if (xml.exists() && xml.length() != 0) {
-    //    dom = parseFile(xml);
-    //    insertTableRows(model,dom);
-    //}
 	
+
+	// ***************************************************************//
+	// Methods to manipulate game elements
+	// ***************************************************************//
 	
+	/**
+	 * Method changes x-position of game paddle to move it left
+	 */
+	public void movePaddleLeft() {
+		if(gamePaddle.getXCoord() > 0) {
+			gamePaddle.movePaddle("left");
+			if(moveBall == false) {
+				gameBall.restBall("left", gamePaddle.getSpeed());
+			}
+		}
+	}
+
+	/**
+	 * Method changes x-position of game paddle to move it right
+	 */
+	public void movePaddleRight() {
+		if(gamePaddle.getXCoord() < (BreakWallConfig.offsetWidth - gamePaddle.getWidth())) {
+			gamePaddle.movePaddle("right");
+			if(moveBall == false) {
+				gameBall.restBall("right", gamePaddle.getSpeed());
+			}
+		}
+	}
+
+	/**
+	 * Method sets ball direction for user's first shot.
+	 * Sets whether the ball should rest on the paddle or move.
+	 * 
+	 * @param moveBall set if the ball should move or not 
+	 */
 	public void setBallAction(boolean moveBall) {
-		// Zufällige Ballrichtung beim ersten Wurf festlegen
+		// 
 		int randomDir = randomFromRange(1, 2);
 		System.out.println(randomDir);
 		if(randomDir == 1) {
@@ -337,16 +374,20 @@ public class BreakWallModel extends Observable {
 		this.moveBall = moveBall;
 	}
 	
+	/**
+	 * Method returns whether the ball should rest on the paddle or move
+	 * 
+	 * @return moveBall
+	 */
 	public boolean getBallAction() {
 		return this.moveBall;
 	}
 	
-	public void remove(int index) {
-		breakWallElements.remove(index);
-	}
-	
-	// cheat mode: randomly remove bricks to get through levels faster
-	// press 'e' key
+	/**
+	 * Method for cheating: randomly removes bricks to get through levels faster.
+	 * Removed bricks will not add to users current score.
+	 * Press 'e' key to remove brick.
+	 */
 	public void cheat() {
 		if(gameWall.getBrickList().size() > 0) {
 			int randomBrickIndex = randomFromRange(0, gameWall.getBrickList().size() - 1);
@@ -354,19 +395,67 @@ public class BreakWallModel extends Observable {
 			gameWall.removeFromBrickList(gameWall.getBrickList().get(randomBrickIndex));
 		}
 	}
-	
+
+	/**
+	 * Method returns an ArrayList of game elements:
+	 * bricks, ball, paddle
+	 * 
+	 * @return breakWallElements ArrayList of game elements 
+	 */
 	public ArrayList<GameElement> getElementList() {
 		return this.breakWallElements;
 	}
+
+	/**
+	 * Method returns an ArrayList of movable bonus elements:
+	 * bonus elements
+	 * 
+	 * @return movableBonusObjects ArrayList of game elements  
+	 */
+	public ArrayList<GameElement> getMovableElementsList() {
+		return this.movableBonusObjects;
+	}
 	
-	public void setInfoText(String text) {
+	/**
+	 * Method removes an element from its element list
+	 * when it has been destroyed
+	 */
+	public void removeDestroyedElements() {
+		for(int i = 0; i < breakWallElements.size(); i++) {
+			if(breakWallElements.get(i).getDestroyedState() == true) {
+				breakWallElements.remove(i);
+			}
+		}		
+		for(int j = 0; j < movableBonusObjects.size(); j++) {			
+			if(movableBonusObjects.get(j).getDestroyedState() == true) {
+				movableBonusObjects.remove(j);
+			}
+			
+		}
+	}
+	
+	/**
+	 * Method sets info text which will be displayed on the GUI
+	 * @param text text to be displayed
+	 */
+	private void setInfoText(String text) {
 		this.gameInfoText = text;
 	}
 	
+	/**
+	 * Method to get text to be displayed on the GUI
+	 * 
+	 * @return gameInfoText text to be displayed 
+	 */
 	public String getInfoText() {
 		return this.gameInfoText;
 	}
-	
+
+	/**
+	 * Public method to get text to be displayed on the GUI
+	 * 
+	 * @return gameInfoText text to be displayed 
+	 */
 	public int getScore() {
 		return  gameScore.getCurrentScore();
 	}
@@ -379,31 +468,42 @@ public class BreakWallModel extends Observable {
 		return  BreakWallConfig.lifeCount;
 	}
 	
+	public Brick getActiveBrick() {
+		return activeBrick;
+	}
+	
+	// ***************************************************************//
+	// Methods to detect ball collisions with other game elements
+	// ***************************************************************//
+	
+	/**
+	 * Private method detects if ball touches a wall, changes ball direction
+	 * or subtracts life
+	 */
 	private void collisionDetection() {    	
-		// die Punkte sind definiert als Mitte Oben, Mitte Rechts, Mitte Unten, Mitte Links des Balls
-		// werden für die Kollisionsdetektion an verschiedenen Stellen benötigt
+		// points are defined as middle-top, middle-right, middle-bottom, middle-left of ball
+		// needed for collision detection by several methods
 		ballTop = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), gameBall.getYCoord() + BreakWallConfig.ballOffset);
 		ballBottom = new Point((gameBall.getXCoord() + (gameBall.getWidth() / 2)), (gameBall.getYCoord() - BreakWallConfig.ballOffset + gameBall.getHeight()));
 		ballLeft = new Point(gameBall.getXCoord() +  BreakWallConfig.ballOffset, (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
-		ballRight = new Point((gameBall.getXCoord() - BreakWallConfig.ballOffset + gameBall.getWidth()), (gameBall.getYCoord() + (gameBall.getHeight() / 2)));
-				
-		// der Ball befindet sich innerhalb der linken und rechten Begrenzung des Spielfeldes
+		ballRight = new Point((gameBall.getXCoord() - BreakWallConfig.ballOffset + gameBall.getWidth()), (gameBall.getYCoord() + (gameBall.getHeight() / 2)));		
+		// ball is located within the left and right boundary of the game field
 		if((ballLeft.getX() > 0) && (ballRight.getX() < BreakWallConfig.offsetWidth)) {
-	    // der Ball berührt oder überschreitet die linke und rechte Begrenzung des Spielfeldes
-		// die X-Richtung wird umgekehrt	
+	    // ball touches or passes the left or right boundary of the game field
+		// the x-direction of the ball is being reverted	
 		} else if((ballLeft.getX() <= 0) || (ballRight.getX() >= BreakWallConfig.offsetWidth)) {
 			gameBall.setDirX(-1 * gameBall.getDirX());
 			changeDir = true;
-		}		
-		// der Ball befindet sich innerhalb der oberen und unteren Begrenzung des Spielfeldes
-		if((ballTop.getY() > BreakWallConfig.barHeight) && (ballBottom.getY() < BreakWallConfig.offsetHeight)) { 
-		// der Ball ber?hrt oder ?berschreitet die obere Begrenzung des Spielfeldes
-	    // die Y-Richtung wird umgekehrt
+		}
+		// ball is located within the top and bottom boundary of the game field
+		if((ballTop.getY() > BreakWallConfig.barHeight) && (ballBottom.getY() < BreakWallConfig.offsetHeight)) {
+		// ball touches or passes the top boundary of the game field	
+	    // the y-direction of the ball is being reverted
 		} else if((ballTop.getY() <= BreakWallConfig.barHeight)) {
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			changeDir = true;
-		// der Ball berührt oder unterschreitet die untere Begrenzung des Spielfeldes
-		// Spieler verliert ein Leben oder verliert das Spiel	
+		// ball touches or passes the bottom boundary of the game field	
+		// player loses a life or game is over	
 		} else if(ballBottom.getY() > BreakWallConfig.offsetHeight) {
 			setInfoText("You've lost a life!");
 			gameScore.subtractPoints(BreakWallConfig.penalityPoints);
@@ -425,14 +525,17 @@ public class BreakWallModel extends Observable {
 		detectBrickCollision();
 	}
 	
+	/**
+	 * Private method detects if ball touches the paddle, changes ball direction
+	 */
 	private void detectPaddleCollision() {
 		Rectangle paddleRect = new Rectangle(gamePaddle.getXCoord(), gamePaddle.getYCoord(), gamePaddle.getWidth(), gamePaddle.getHeight() - BreakWallConfig.paddleOffsetTop);
-		// Ball stößt Paddle von oben an
+		// ball touches top boundary of paddle
 		if((paddleRect.contains(ballBottom)) && (changeDir == true)) {					
 			gameBall.setDirY(-1 * gameBall.getDirY());
 			changeDir = false;
 			return;
-		// Ball stößt Paddle von links oder rechts
+		// ball touches left or right boundary of paddle
 		// lässt den Ball wieder nach oben fliegen	
 		} else if((changeDir == true) && (paddleRect.contains(ballLeft)) || (paddleRect.contains(ballRight))) {				    
 			gameBall.setDirY(-1 * gameBall.getDirY());
@@ -442,6 +545,11 @@ public class BreakWallModel extends Observable {
 		}		
 	}
 	
+	/**
+	 * Private method detects if ball touches a brick,
+	 * sets brick destroyed and adds points to user scores,
+	 * changes direction of ball
+	 */
 	private void detectBrickCollision() {
 		currentBrickList = gameWall.getBrickList();
 		GameElement currentBrick;
@@ -450,11 +558,10 @@ public class BreakWallModel extends Observable {
 			currentBrick = currentBrickList.get(j);
 			brickRect = new Rectangle(currentBrick.getXCoord(), currentBrick.getYCoord(), currentBrick.getWidth(), currentBrick.getHeight());
 
-			// Ball stößt Brick von unten oder oben an
+			// ball touches top or bottom boundary of brick
 			if((brickRect.contains(ballTop)) || (brickRect.contains(ballBottom))) {
 				tempBrick = currentBrick.getId();
 				if(!(struckBrick.equals(tempBrick))) {
-					// Cast ist notwendig, um stability setter/ getter zu benutzen
 					Brick tempCurrentBrick = (Brick) currentBrick;
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
@@ -470,11 +577,10 @@ public class BreakWallModel extends Observable {
 				changeDir = true;
 				struckBrick = tempBrick;
 				return;
-			// Ball stößt Brick von links oder rechts an		
+			// ball touches left or right boundary of brick		
 			} else if((brickRect.contains(ballLeft)) || (brickRect.contains(ballRight))) {
 				tempBrick = currentBrick.getId();
 				if(!(struckBrick.equals(tempBrick))) {
-					// Cast ist notwendig, um stability setter/ getter zu benutzen
 					Brick tempCurrentBrick = (Brick) currentBrick;					
 					tempCurrentBrick.setStability(tempCurrentBrick.getStability() - 1);
 					gameScore.addPoints(tempCurrentBrick.getPoints() * scoreFactor);
@@ -494,7 +600,14 @@ public class BreakWallModel extends Observable {
 		}		
 	}
 	
+	/**
+	 * Private method detects the bonus object for a hit brick,
+	 * invokes methods to activate given bonus
+	 * 
+	 * @param activeBrick brick associated with a bonus
+	 */
 	private void activateBonus(Brick activeBrick) {
+		this.activeBrick = activeBrick;
 		if(activeBrick.getBonusObject().getBonusType().equals("BonusBallSpeed")) {
 			BonusBallSpeed tempBonus = (BonusBallSpeed) activeBrick.getBonusObject();
 			int newAccel = tempBonus.setBallSpeed(gameBall.getDirY());
@@ -522,14 +635,11 @@ public class BreakWallModel extends Observable {
 	
 	
 	/**
-	 * Statische Klasse zur Erzeugung einer Zufallszahl
-	 * innerhalb einer Ober- und Untergrenze.
-	 * Ober- und Untergrenze dienen hauptsächlich dazu,
-	 * die 0 als mögliches Ergebnis auszuschließen.
+	 * Static mathod to create a random number within a min. and max. value.
 	 * 
-	 * @param min Untergrenze der möglichen Zufallszahl
-	 * @param max Obergrenze der möglichen Zufallszahl
-	 * @return randomNum die Zufallszahl innerhalb der Grenzen
+	 * @param min mimimum value of random number
+	 * @param max maximum value of random number
+	 * @return randomNum a random number
 	 */
 	public static int randomFromRange(int min, int max) {
 	    Random random = new Random();
@@ -538,17 +648,17 @@ public class BreakWallModel extends Observable {
 	}
 	
 	/**
-	 * Private Klasse zum Scheduling des Game-Loops
-	 * Aktualisiert die Position von Spielelementen in einem festgelegten Zeitrahmen 
+	 * Private class to schedule game loop
+	 * Updates positions of of moving game elements 
 	 * 
 	 * @author Mareike Röncke, Gerrit Schulte
 	 *
 	 */
     private class GameLoopScheduler extends TimerTask {
     	
-    	// bewegt den Ball und prüft auf Kollision
-    	// informiert die Beobachter von Änderungen der Daten
-    	// entfernt ggf. Elemente aus der Element-Liste des Spiels
+    	// moves ball and calls collision check method,
+    	// informs view to update game element positions on game field,
+    	// calls method to remove destroyed elements
         public void run() {
 			if(gameWall.getBrickList().size() == 0) {
 				updateLevel = true;
@@ -574,6 +684,9 @@ public class BreakWallModel extends Observable {
         }
     }
 
+    /**
+     * Public method stops game loop
+     */
     public void stopGame() {
     	setChanged();
     	notifyObservers("stopGame");
