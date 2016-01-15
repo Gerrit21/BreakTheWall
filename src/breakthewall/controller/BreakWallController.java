@@ -6,13 +6,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EventListener;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import breakthewall.BreakWallConfig;
 import breakthewall.model.BreakWallModel;
 
-public class BreakWallController implements KeyListener, ActionListener {
+public class BreakWallController implements KeyListener, ActionListener, DocumentListener{
 	
 	private BreakWallModel gameModel;
 	private String command;
+	private int count;
 
 	public BreakWallController(BreakWallModel gameModel) {
 		this.gameModel = gameModel;
@@ -114,6 +118,24 @@ public class BreakWallController implements KeyListener, ActionListener {
 		
 		
 		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent arg0) {
+		count++;
+		System.out.println(count);
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent arg0) {
+		count++;
+		System.out.println(count);
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent arg0) {
+		count++;
+		System.out.println(count);
 	}
 
 }

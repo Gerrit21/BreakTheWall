@@ -133,7 +133,7 @@ public class BreakWallView extends JFrame implements Observer {
 		
 		// add ActionListener to navigation buttons
 		showEnterName.getButton().addActionListener(controller);
-				
+		showEnterName.getEingabeFeld().getDocument().addDocumentListener(controller);		
 		
 		gameElements.put("mainEnterName", showEnterName);
 		addPanelToGameField(showEnterName, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		

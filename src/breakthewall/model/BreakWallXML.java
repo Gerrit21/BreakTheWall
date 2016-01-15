@@ -54,16 +54,16 @@ public class BreakWallXML {
 		int currentLevel = model.getLevel();
 		int currentLives = model.getLives();
 		
-		System.out.println(UserEingabe.getTextFromTextBox());
-		String namen = UserEingabe.getTextFromTextBox();
-		
-		System.out.println(currentScore);
+//		System.out.println(UserEingabe.getTextFromTextBox());
+//		String namen = UserEingabe.getTextFromTextBox();
+//		
+//		System.out.println(currentScore);
 	
 		doc.appendChild(uuserRoot);
 
 		// User einfuegen:
 		usr1 = createUser(doc,
-				namen,
+				"Hans",
 				currentLevel, currentLives, currentScore, brickList);
 		uuserRoot.appendChild(usr1);
 		usr2 = createUser(doc,

@@ -18,6 +18,7 @@ public class EnterNameView extends JPanel {
 	private JButton buttonEnter;
 	private JTextField eingabeFeld, ausgabeFeld;
 	
+
 	public EnterNameView() {
 		
 		
@@ -35,7 +36,7 @@ public class EnterNameView extends JPanel {
 	    buttonEnter = new JButton ("Enter and Save");
 	    buttonEnter.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 System.out.println(getTextFromTextBox());
+	        	 System.out.println(getTextFromTextField());
 	         }
 	      });
 		EnterUser.add(buttonEnter);
@@ -52,9 +53,13 @@ public class EnterNameView extends JPanel {
 		return buttonEnter;
 	}
 
-	public String getTextFromTextBox() {
+	public String getTextFromTextField() {
 		
 		return eingabeFeld.getText();
+	}
+	
+	public JTextField getEingabeFeld() {
+		return eingabeFeld;
 	}
 
 
