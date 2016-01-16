@@ -57,7 +57,7 @@ public class BreakWallConfig {
 	// image paths
 	public static String paddleImg, ballImg, brickImgNormal,brickImgHard,
 			brickXtraLifeImg, brickPaddleWidthImg, brickBallSpeedImg, brickXtraPointsImg,
-			musicIconPlaying, musicIconPausing;
+			musicIconPlaying, musicIconPausing, backArrow;
 
 	// initial speed of paddle
 	public static int paddleSpeed;

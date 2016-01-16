@@ -10,86 +10,93 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import breakthewall.BreakWallConfig;
+
 import java.awt.*;
 import java.util.ArrayList;
-
-
 
 
 import java.util.List;
 
 
-
-
-
-
 public class HighscoreView extends JPanel  {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 	private JPanel xmlHighscore;
-	private JButton button1;
- 
-	public JScrollPane jScrollPane1;
+	public JScrollPane jScrollPane;
 	public DefaultTableModel model;
-	public JTable jTable1;
-	
+	public JTable highscoreTable;
+	private JButton btnBackMenu;
+	private JLabel lblHighscores;
+	private JPanel panelTable;
 	
 	
 	public HighscoreView(Document highscoreDocument) {
 		
+		// Add Panel - Highscorebar without Scrollpane
 		
 		xmlHighscore = new JPanel();
-		
-        xmlHighscore.setPreferredSize(new Dimension(120, 500));
-        xmlHighscore.setVisible(true);
-        xmlHighscore.setOpaque(false);	
+		xmlHighscore.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, 55));
+	        
+		xmlHighscore.setBackground(new Color(245,245,245,250));
+		xmlHighscore.setLayout(null);
+ 
+        btnBackMenu = new JButton();
+   		btnBackMenu.setActionCommand("BackMenu");
+   		btnBackMenu.setForeground(new Color (250,250,250));
+   		btnBackMenu.setBackground(new Color (250,250,250));
+   		btnBackMenu.setSelectedIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
+   		btnBackMenu.setIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
+   		btnBackMenu.setBounds(10, 11, 50, 33);
+   		xmlHighscore.add(btnBackMenu);	
+   		
+   		lblHighscores = new JLabel("Highscores");
+   		lblHighscores.setForeground(Color.DARK_GRAY);
+   		lblHighscores.setHorizontalAlignment(SwingConstants.CENTER);
+   		lblHighscores.setFont(new Font("Calibri", Font.BOLD, 25));
+   		lblHighscores.setBounds(0, 11, 600, 38);
+   		xmlHighscore.add(lblHighscores);	
 	
-		button1 = new JButton ("BackMenu");		
+		add(xmlHighscore);	
 		
-		xmlHighscore.add(button1);
-	
-				
-		add(xmlHighscore,BorderLayout.CENTER);	
+		// Add Panel - HighscoreTable with Scrollpane
 		
+		panelTable = new JPanel();
+		add(panelTable);
 		
-			model = new DefaultTableModel() {
-	            public boolean isCellEditable(int row, int column) { return false; }
-	        };
-	         
-	        //creates an instance of the table class and sets it up in a scrollpane
-	        jTable1 = new JTable(model);       
-	        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	        jScrollPane1 = new JScrollPane(jTable1);            
-	        add(BorderLayout.CENTER,jScrollPane1);
-	         
-	        //add some columns
-	        model.addColumn("Highscore");
-	        model.addColumn("Name");
-	        model.addColumn("Level");
-	        model.addColumn("Life");
+		model = new DefaultTableModel() {
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
+         
+        //creates an instance of the table class and sets it up in a scrollpane
+        highscoreTable = new JTable(model);       
+        highscoreTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        jScrollPane = new JScrollPane(highscoreTable);  
+        jScrollPane.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth-100, 390));
+        
+        panelTable.add(jScrollPane);
+         
+        //add some columns
+        model.addColumn("Highscore");
+        model.addColumn("Name");
+        model.addColumn("Level");
+        model.addColumn("Life");
 	       
 	        
-	        insertTableRows(model, highscoreDocument);	
-	        
-	        //creates sorted table 
-	        
-	        TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
-	        jTable1.setRowSorter(sorter);
-	        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-	         
-	        int columnIndexToSort = 0;
-	        
-	        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
-	        sorter.setSortKeys(sortKeys);
-	        sorter.sort();
-	        
-	        
-	        
-	        
-	 
+        insertTableRows(model, highscoreDocument);	
+        
+        //creates sorted table 
+        
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(highscoreTable.getModel());
+        highscoreTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+         
+        int columnIndexToSort = 0;
+        
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
 	        
 	} 
      
@@ -124,7 +131,7 @@ public class HighscoreView extends JPanel  {
     }
 	
 	public JButton getButton() {
-		return button1;
+		return btnBackMenu;
 	}
 
 	

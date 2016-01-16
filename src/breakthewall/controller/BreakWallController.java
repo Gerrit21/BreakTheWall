@@ -112,6 +112,9 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();
 		}
+		if(command.equals("BackSaveMenu")) {
+			gameModel.backMenuAfterSave();
+		}
 		if(command.equals("Enter and Save")) {
 			gameModel.saveGame(name);
 			gameModel.backMenuAfterSave();

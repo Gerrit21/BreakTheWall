@@ -11,6 +11,7 @@
 <brickBallSpeedImg data-type="String">/breakthewall/media/images/brick_green.png</brickBallSpeedImg>
 <musicIconPlaying data-type="String">/breakthewall/media/images/music_playing.png</musicIconPlaying>
 <musicIconPausing data-type="String">/breakthewall/media/images/music_pausing.png</musicIconPausing>
+<backArrow data-type="String">/breakthewall/media/images/ArrowBack.png</backArrow>
 <paddleSpeed data-type="Integer">10</paddleSpeed><penalityPoints data-type="Integer">50</penalityPoints><pointsNormal data-type="Integer">20</pointsNormal>
 <initialBallXDir data-type="Integer">1</initialBallXDir>
 <initialBallYDir data-type="Integer">-2</initialBallYDir><bonusFactor data-type="Integer">3</bonusFactor>

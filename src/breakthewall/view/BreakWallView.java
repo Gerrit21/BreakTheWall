@@ -132,7 +132,10 @@ public class BreakWallView extends JFrame implements Observer {
 		showEnterName = new EnterNameView();
 		
 		// add ActionListener to navigation buttons
-		showEnterName.getButton().addActionListener(controller);
+		ArrayList<JButton> navigationButtonsSave = showEnterName.getButtonList();
+		for(int i = 0; i < navigationButtonsSave.size(); i++) {
+			navigationButtonsSave.get(i).addActionListener(controller);
+		}
 		showEnterName.getEingabeFeld().getDocument().addDocumentListener(controller);		
 		
 		gameElements.put("mainEnterName", showEnterName);
@@ -151,7 +154,7 @@ public class BreakWallView extends JFrame implements Observer {
 	
 	public void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
 		newComp.setBounds(xCoord, yCoord, width, height);
-		newComp.setOpaque(true);
+		newComp.setOpaque(false);
 		// layerCount: Bildebene des Elements
 		// der Hintergrund hat die Ebene 0
 		gamePane.add(newComp, new Integer(layerCount), 0);

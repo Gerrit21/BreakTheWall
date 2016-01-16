@@ -2,7 +2,9 @@ package breakthewall.view;
 
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
+import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
 
 import java.awt.*;
@@ -13,77 +15,69 @@ import java.util.ArrayList;
 
 public class MenuView extends JPanel  {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JPanel menup;
-	private JButton bu1;
-	private JButton bu2;
-	private JButton bu2b;
-	private JButton bu3;
-	private JButton bu4;
+	private JPanel menuPanel;
+	private JButton btnHighscores;
+	private JButton btnSave;
+	private JButton btnLoad;
+	private JButton btnBack;
+	private JButton btnExit;
+	private JLabel lblMENU;
 	private ArrayList<JButton> navigationButtonsMenu;
-	private JLabel lab1;
 	
-	
-	private TextField scorecount;
 
-	
-	
 	public MenuView() {
-		
-		navigationButtonsMenu = new ArrayList<JButton>();
-		menup = new JPanel();
-		
-        menup.setPreferredSize(new Dimension(120, 500));
-        menup.setVisible(true);
-        menup.setOpaque(false);	
-		
-		lab1 = new JLabel ("Current Score");
 	
-		bu1 = new JButton ("Highscores");		
+	    menuPanel = new JPanel();
 		
-		bu2 = new JButton ("Save");
+	    menuPanel.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
+	    menuPanel.setVisible(true);
+	    
+	    navigationButtonsMenu = new ArrayList<JButton>();
 		
-		bu2b = new JButton ("Load");
+        menuPanel.setBackground(new Color(245,245,245,240));
+        menuPanel.setLayout(null);
+        
+        lblMENU = new JLabel("MENU");
+		lblMENU.setForeground(Color.DARK_GRAY);
+		lblMENU.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMENU.setFont(new Font("Calibri", Font.BOLD, 25));
+		lblMENU.setBounds(248, 68, 104, 33);
+		menuPanel.add(lblMENU);
 		
-		bu3 = new JButton ("Back");
+		btnHighscores = new JButton("Highscores");
+		btnHighscores.setBounds(248, 120, 104, 33);
+		menuPanel.add(btnHighscores);
 		
-		bu4 = new JButton ("Exit");
+		btnSave = new JButton("Save");
+		btnSave.setBounds(248, 164, 104, 33);
+		menuPanel.add(btnSave);
 		
-		scorecount = new TextField(" 1234 ");
-		scorecount.setEditable(false);
-		scorecount.setFocusable(false);
+		btnLoad = new JButton("Load");
+		btnLoad.setBounds(248, 208, 104, 33);
+		menuPanel.add(btnLoad);
 		
-		navigationButtonsMenu.add(bu1);
-		navigationButtonsMenu.add(bu2);
-		navigationButtonsMenu.add(bu2b);
-		navigationButtonsMenu.add(bu3);
-		navigationButtonsMenu.add(bu4);
+		btnBack = new JButton("Back");
+		btnBack.setBounds(248, 252, 104, 33);
+		menuPanel.add(btnBack);
 		
-		menup.add(lab1);
-		menup.add(scorecount);
-
-		menup.add(bu1);
-		menup.add(bu2);
-		menup.add(bu2b);
-		menup.add(bu3);
-		menup.add(bu4);
-				
-		add(menup,BorderLayout.CENTER);	
+		btnExit = new JButton("Exit");
+		btnExit.setForeground(Color.WHITE);
+		btnExit.setBackground(Color.DARK_GRAY);
+		btnExit.setBounds(248, 340, 104, 33);
+		menuPanel.add(btnExit);
+		
+		navigationButtonsMenu.add(btnHighscores);
+		navigationButtonsMenu.add(btnSave);
+		navigationButtonsMenu.add(btnLoad);
+		navigationButtonsMenu.add(btnBack);
+		navigationButtonsMenu.add(btnExit);
+		
+		add(menuPanel);	
 	
 	}
 	
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtonsMenu;
 	}
-
-	public void updateScoreView(int score) {
-		scorecount.setText(Integer.toString(score));
-	}
-
-	
-	
 	
 }

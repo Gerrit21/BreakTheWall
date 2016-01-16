@@ -14,6 +14,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import breakthewall.BreakWallConfig;
+
 import java.util.*;
 import java.text.SimpleDateFormat;
  
@@ -24,20 +26,26 @@ public class UserLoadView extends JPanel implements ActionListener {
     JLabel result;
     String currentPattern;
     private String[] Namen;
-    private JButton button1;
-    private JButton button2;
+    private JButton btnLoadGame;
+    private JButton btnBackMenu;
     private JPanel patternPanel;
+    private JLabel lblLoadName;
+    private JComboBox patternList;
     private ArrayList<JButton> navigationButtonsLoad;
     
  
     public UserLoadView(Document highscoreDocument) {
        
-    	
+    	patternPanel = new JPanel();
+    	patternPanel.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
+        
+    	patternPanel.setBackground(new Color(245,245,245,250));
+    	patternPanel.setLayout(null);
+	    
     	navigationButtonsLoad = new ArrayList<JButton>();
+	    
     	
-    	setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        
-        
+    	
         getNameXML(highscoreDocument);
         
         String[] patternExamples = getNamen();
@@ -45,53 +53,43 @@ public class UserLoadView extends JPanel implements ActionListener {
         currentPattern = patternExamples[0];
         
        
+        //Lay out everything.
+    	
+		lblLoadName = new JLabel("Select your username");
+		lblLoadName.setForeground(Color.GRAY);
+		lblLoadName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLoadName.setBounds(231, 139, 138, 14);
+		patternPanel.add(lblLoadName);
         
-        //Set up the UI for selecting a pattern.
-        JLabel patternLabel1 = new JLabel("Select your Username");
-       
- 
-        JComboBox patternList = new JComboBox(patternExamples);
+        patternList = new JComboBox(patternExamples);
+        patternList.setBounds(231, 164, 138, 33);
         patternList.setEditable(true);
         patternList.addActionListener(this);
- 
-        //Create the UI for displaying result.
-        JLabel resultLabel = new JLabel("Auswahl",
-                                        JLabel.LEADING); //== LEFT
-        result = new JLabel(" ");
-        result.setForeground(Color.black);
-        result.setBorder(BorderFactory.createCompoundBorder(
-             BorderFactory.createLineBorder(Color.black),
-             BorderFactory.createEmptyBorder(5,5,5,5)
-        ));
- 
-        //Lay out everything.
-        patternPanel = new JPanel();
-        patternPanel.setPreferredSize(new Dimension(0, 0));
-        
-        button1 = new JButton ("BackMenu");	
-        patternPanel.add(button1);
-        button2 = new JButton ("Load Game");
-        patternPanel.add(button2);
-        
-    	navigationButtonsLoad.add(button1);
-		navigationButtonsLoad.add(button2);
-        
-        patternPanel.add(patternLabel1);
         patternPanel.add(patternList);
- 
-        JPanel resultPanel = new JPanel();
-        resultPanel.add(resultLabel);
-        resultPanel.add(result);
- 
- 
-        add(patternPanel,BorderLayout.CENTER);
-        add(resultPanel,BorderLayout.CENTER);
+		
+		btnLoadGame = new JButton("Load Game");
+//		btnLoadGame.setForeground(Color.WHITE);
+//		btnLoadGame.setBackground(Color.DARK_GRAY);
+		btnLoadGame.setBounds(231, 208, 138, 33);
+		patternPanel.add(btnLoadGame);
+		
+		btnBackMenu = new JButton();
+		btnBackMenu.setActionCommand("BackMenu");
+		btnBackMenu.setForeground(new Color (250,250,250));
+		btnBackMenu.setBackground(new Color (250,250,250));
+		btnBackMenu.setSelectedIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
+		btnBackMenu.setIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
+		btnBackMenu.setBounds(10, 11, 50, 33);
+		patternPanel.add(btnBackMenu);
         
-      
+    	navigationButtonsLoad.add(btnLoadGame);
+		navigationButtonsLoad.add(btnBackMenu);
         
-        setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        add(patternPanel);
+       
+       
         
-        ausgeben();
+      //  ausgeben();
         
       
         
@@ -108,7 +106,7 @@ public class UserLoadView extends JPanel implements ActionListener {
  
     
     public void ausgeben() {
-    	 result.setText(currentPattern);
+    	// result.setText(currentPattern);
     	 //System.out.println(currentPattern);
          
     }
