@@ -20,6 +20,7 @@ public class MenuView extends JPanel  {
 	private JButton btnSave;
 	private JButton btnLoad;
 	private JButton btnBack;
+	private JButton btnNewGame;
 	private JButton btnExit;
 	private JLabel lblMENU;
 	private ArrayList<JButton> navigationButtonsMenu;
@@ -45,32 +46,40 @@ public class MenuView extends JPanel  {
 		menuPanel.add(lblMENU);
 		
 		btnHighscores = new JButton("Highscores");
-		btnHighscores.setBounds(248, 120, 104, 33);
+		btnHighscores.setBounds(248, 164, 104, 33);
 		menuPanel.add(btnHighscores);
 		
 		btnSave = new JButton("Save");
-		btnSave.setBounds(248, 164, 104, 33);
+		btnSave.setBounds(248, 208, 104, 33);
 		menuPanel.add(btnSave);
 		
 		btnLoad = new JButton("Load");
-		btnLoad.setBounds(248, 208, 104, 33);
+		btnLoad.setBounds(248, 252, 104, 33);
 		menuPanel.add(btnLoad);
 		
 		btnBack = new JButton("Back");
-		btnBack.setBounds(248, 252, 104, 33);
+		btnBack.setBounds(248, 296, 104, 33);
+		btnBack.setSelectedIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
+		btnBack.setIcon(new ImageIcon(this.getClass().getResource(BreakWallConfig.backArrow)));
 		menuPanel.add(btnBack);
+		
+		btnNewGame = new JButton("New Game");
+		btnNewGame.setBounds(248, 120, 104, 33);
+		menuPanel.add(btnNewGame);
 		
 		btnExit = new JButton("Exit");
 		btnExit.setForeground(Color.WHITE);
 		btnExit.setBackground(Color.DARK_GRAY);
-		btnExit.setBounds(248, 340, 104, 33);
+		btnExit.setBounds(248, 360, 104, 33);
 		menuPanel.add(btnExit);
+		
 		
 		navigationButtonsMenu.add(btnHighscores);
 		navigationButtonsMenu.add(btnSave);
 		navigationButtonsMenu.add(btnLoad);
 		navigationButtonsMenu.add(btnBack);
 		navigationButtonsMenu.add(btnExit);
+		navigationButtonsMenu.add(btnNewGame);
 		
 		add(menuPanel);	
 	

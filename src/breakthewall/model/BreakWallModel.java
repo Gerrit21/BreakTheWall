@@ -273,7 +273,6 @@ public class BreakWallModel extends Observable {
 		setChanged();
 		notifyObservers("quitMenu");
 		playGame();
-		System.out.println("Menu remove");
 		
 	}
 	
@@ -321,6 +320,16 @@ public class BreakWallModel extends Observable {
 		setChanged();
 		notifyObservers("showHighscore");
 		stopGame();
+	}
+	
+	public void restartNewGame() {
+		
+		System.out.println("Start New Game");
+		setInfoText("New Game...");
+		setChanged();
+		notifyObservers("startNewGame");
+		startNewGame();
+		
 	}
 	
 	public void selectUser() {

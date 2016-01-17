@@ -95,10 +95,10 @@ public class BreakWallView extends JFrame implements Observer {
 		}		
 		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
 		gameInfo = new JLabel("game hints");
-		gameInfo.setBackground(new Color(139, 223, 113));
+		gameInfo.setBackground(new Color(139, 223, 113,255));
 		gameInfo.setBorder(BorderFactory.createLineBorder(new Color(100, 158, 82)));
 		addPanelToGameField(gameInfo, 0, (BreakWallConfig.offsetHeight - 42), BreakWallConfig.offsetWidth + 10, 20);
-		
+		gameInfo.setOpaque(true);
 	}
 
 	/**
@@ -378,7 +378,12 @@ public class BreakWallView extends JFrame implements Observer {
 			System.out.println("EnterName remove");
 		}	
 		
-		
+		if(gameObject.equals("startNewGame")) {			
+			clearGameField();
+			buildGameLayout();
+			System.out.println("New Game!");
+			
+		}
 		
 		if(gameObject.equals("showPlayButton")) {			
 			panelbar.setMusicButton(true);

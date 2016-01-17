@@ -27,6 +27,7 @@ public class BreakWallXML {
 	public File xml = null;
 	public Document dom = null;
 	private BreakWallModel model;
+	private boolean booleanNameDuplicate;
 	
 	public BreakWallXML() {
 		
@@ -65,23 +66,43 @@ public class BreakWallXML {
 		        e.printStackTrace();
 		    }
 
-		    doc.getDocumentElement().normalize();
+	    doc.getDocumentElement().normalize();
 
-		    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+	    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 		
 	
 		
-		// Search breakwall-elements:
-		NodeList nList = doc.getElementsByTagName("breakwall");
-		// Search breakwall-elements and add:
-		for (int i=0; i<nList.getLength(); i++) {
-			Element el = (Element) nList.item(i);
-			
-			el.appendChild(createUser(doc,
-						userName,
-						currentLevel, currentLives, currentScore, brickList));
-			
-		} // for
+		 // Search user-elements:
+		NodeList nList = doc.getElementsByTagName("name");
+		 			
+		 
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+		        Element eElement = (Element) nList.item(temp);
+		        int count = 1;
+				// Text-Konten ermitteln:
+				Text textNode = (Text) eElement.getFirstChild();
+				// Text-Knoten lesen:
+				
+				if (textNode.getData().equals(userName)) {
+					count++;
+					System.out.println(userName + " already exists " + Integer.toString(count));
+					
+					NodeList bwList = doc.getElementsByTagName("breakwall");
+					bwList.item(0).appendChild(createUser(doc,
+									userName + Integer.toString(count),
+									currentLevel, currentLives, currentScore, brickList));
+					booleanNameDuplicate = true;	
+				}			
+		}
+		
+		if(booleanNameDuplicate==false){
+			NodeList bwList = doc.getElementsByTagName("breakwall");
+			bwList.item(0).appendChild(createUser(doc,
+							userName,
+							currentLevel, currentLives, currentScore, brickList));
+			System.out.println(userName + " Jihaaaa ");
+		}
 		
 
 		
