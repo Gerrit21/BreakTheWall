@@ -23,10 +23,10 @@ public class BreakWall {
 	 * 
 	 * @param initialLevel sets the initial level to start the game
 	 */
-	public static BreakWall getInstance(int initialLevel) {
+	public static BreakWall getInstance() {
 		if (gameInstance == null) {
 			BreakWallConfigXML.setGeneralConfigurations();
-			gameInstance = new BreakWall(initialLevel);
+			gameInstance = new BreakWall();
 		}
 		return gameInstance;
 	}
@@ -36,8 +36,8 @@ public class BreakWall {
 	 * 
 	 * @param initialLevel sets the initial level to start the game
 	 */
-	private BreakWall(int initialLevel) {		
-		BreakWallModel newModel = new BreakWallModel(initialLevel);
+	private BreakWall() {		
+		BreakWallModel newModel = new BreakWallModel();
 		BreakWallController newController = new BreakWallController(newModel);
 		new BreakWallView(newModel, newController);
 	}
