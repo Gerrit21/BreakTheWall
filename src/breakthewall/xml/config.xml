@@ -19,7 +19,8 @@
 	<pointsBonus data-type="Integer">20</pointsBonus><stabilityNormal data-type="Integer">1</stabilityNormal>
 	<stabilityHard data-type="Integer">3</stabilityHard>
 	<backgroundMusic data-type="ArrayList&lt;String&gt;"><mediaPath data-type="String">/breakthewall/media/sound/Bensound-Cute.wav</mediaPath>
-		<mediaPath data-type="String">/breakthewall/media/sound/Bellevue-Gates.wav</mediaPath></backgroundMusic></common>
+		<mediaPath data-type="String">/breakthewall/media/sound/Bellevue-Gates.wav</mediaPath></backgroundMusic>
+	<brickXtraPointsImg data-type="String">/breakthewall/media/images/brick_n.png</brickXtraPointsImg></common>
 <level number="1">
 <lifeCount data-type="Integer">3</lifeCount>
 <bgImagePath data-type="String">/breakthewall/media/images/bg_1.png</bgImagePath>
