@@ -48,7 +48,7 @@ public class BreakWallModel extends Observable {
 	private int scoreFactor = 1;
 	private boolean moveBall, changeDir, musicIsPlaying, buttonClick;
 	private boolean updateLevel = false;
-	private String gameInfoText;
+	private String gameInfoText = "";
 	
 	/**
 	 * Constructor initiates instantiation of game elements
