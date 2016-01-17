@@ -101,7 +101,6 @@ public class BreakWallXML {
 			bwList.item(0).appendChild(createUser(doc,
 							userName,
 							currentLevel, currentLives, currentScore, brickList));
-			System.out.println(userName + " Jihaaaa ");
 		}
 		
 
