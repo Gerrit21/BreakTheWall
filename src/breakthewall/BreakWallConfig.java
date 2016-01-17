@@ -27,7 +27,7 @@ public class BreakWallConfig {
 	public static final int offsetWidth = gameFieldWidth - 15;
 	public static final int offsetHeight = gameFieldHeight - 5;
 	public static final int wallWidth = gameFieldWidth - 60;
-	public static final int barWidth = 590;
+	public static final int barWidth = 600;
 	public static final int barHeight = 40;
 	
 	// start position of paddle

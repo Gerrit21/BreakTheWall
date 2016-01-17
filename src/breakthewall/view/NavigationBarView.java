@@ -18,68 +18,104 @@ public class NavigationBarView extends JPanel  {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel p;
-	public JButton b1;
-	private JButton b2;
-	private JButton b3;
+	private JPanel panel;
+	public JButton btnMenu;
+	private JButton btnMute;
+	private JButton btnPause;
 	
 	private ArrayList<JButton> navigationButtons;
-	private JLabel lab1;
-	private JLabel lab2;
-	private JLabel lab3;
+	private JLabel lblLife;
+	private JLabel lblLevel;
+	private JLabel lblScore;
+	private JLabel lblBreakthewall;
 	
-	private TextField scorecount;
-	private TextField levelcount;
-	private TextField lifecount; 
-	private int counter = 0;
+	private JTextField txtScoreCount;
+	private JTextField txtLevelCount;
+	private JTextField txtLifeCount;
 	
 	
 	public NavigationBarView() {
 		
+		
 		navigationButtons = new ArrayList<JButton>();
-		p = new JPanel();
-		p.setBackground(Color.GRAY);
-        p.setPreferredSize(new Dimension(590, 40));
-        p.setVisible(true);
-        p.setOpaque(false);	
 		
-		lab1 = new JLabel ("Score");
-		lab2 = new JLabel ("Level");
-		lab3 = new JLabel ("Life");
-		b1 = new JButton ("Pause");
-		b1.setPreferredSize(new Dimension(75, 25));
+		panel = new JPanel();
+	
+		add(panel);
+		
+		panel.setLayout(null);
+		panel.setPreferredSize(new Dimension(600, 498));
+		
+		
+		lblScore = new JLabel("Score");
+		lblScore.setBackground(SystemColor.activeCaptionBorder);
+		lblScore.setFont(new Font("Calibri", Font.BOLD, 14));
+		lblScore.setBounds(2, 0, 42, 30);
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblScore);
+		
+		txtScoreCount = new JTextField();
+		txtScoreCount.setFont(new Font("Calibri", Font.BOLD, 14));
+		txtScoreCount.setHorizontalAlignment(SwingConstants.CENTER);
+		txtScoreCount.setBounds(44, 0, 48, 30);
+		txtScoreCount.setText("12354");
+		panel.add(txtScoreCount);
+		txtScoreCount.setColumns(10);
+		
+		lblLevel = new JLabel("Level");
+		lblLevel.setBackground(new Color(245, 245, 245));
+		lblLevel.setFont(new Font("Calibri", Font.BOLD, 14));
+		lblLevel.setBounds(92, 0, 42, 30);
+		lblLevel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLevel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.add(lblLevel);
+		
+		txtLevelCount = new JTextField();
+		txtLevelCount.setFont(new Font("Calibri", Font.BOLD, 14));
+		txtLevelCount.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLevelCount.setBounds(134, 0, 40, 31);
+		txtLevelCount.setText("1");
+		panel.add(txtLevelCount);
+		txtLevelCount.setColumns(10);
+		
+		lblLife = new JLabel("Life");
+		lblLife.setFont(new Font("Calibri", Font.BOLD, 14));
+		lblLife.setBounds(173, 0, 40, 30);
+		lblLife.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblLife);
+		
+		txtLifeCount = new JTextField();
+		txtLifeCount.setFont(new Font("Calibri", Font.BOLD, 14));
+		txtLifeCount.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLifeCount.setBounds(211, 0, 40, 31);
+		txtLifeCount.setText("3");
+		panel.add(txtLifeCount);
+		txtLifeCount.setColumns(10);
+		
+		lblBreakthewall = new JLabel("BREAK THE WALL");
+		lblBreakthewall.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBreakthewall.setFont(new Font("Calibri", Font.BOLD, 16));
+		lblBreakthewall.setBounds(251, 1, 159, 30);
+		panel.add(lblBreakthewall);
+		
+		btnPause = new JButton("Pause");
+		btnPause.setBounds(411, 0, 70, 30);
+		panel.add(btnPause);
+		
 		Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPlaying));
-		b2 = new JButton(musicIcon);
-		b2.setActionCommand("MuteMusic");
-		b3 = new JButton ("Menu");
-		scorecount = new TextField(" 1234 ");
-		scorecount.setEditable(false);
-		scorecount.setFocusable(false);
-		levelcount = new TextField(" 1 ");
-		levelcount.setFocusable(false);
-		levelcount.setEditable(false);
-		lifecount = new TextField(" 2 ");
-		lifecount.setFocusable(false);
-		lifecount.setEditable(false);
+		btnMute = new JButton(musicIcon);
+		btnMute.setActionCommand("MuteMusic");
+		btnMute.setBounds(482, 0, 40, 30);
+		panel.add(btnMute);
 		
-		navigationButtons.add(b1);
-		navigationButtons.add(b2);
-		navigationButtons.add(b3);
-	
+		btnMenu = new JButton("Menu");
+		btnMenu.setBounds(523, 0, 65, 30);
+		panel.add(btnMenu);
 		
-		p.add(lab1);
-		p.add(scorecount);
-		p.add(lab2);
-		p.add(levelcount);
-		p.add(lab3);
-		p.add(lifecount);
-		p.add(b1);
-		p.add(b2);
-		p.add(b3);
-	
-				
-		add(p,BorderLayout.NORTH);	
-	
+
+		navigationButtons.add(btnPause);
+		navigationButtons.add(btnMute);
+		navigationButtons.add(btnMenu);
 	}
 	
 	public ArrayList<JButton> getButtonList() {
@@ -87,33 +123,33 @@ public class NavigationBarView extends JPanel  {
 	}
 	
 	public void setPlayPauseButton(String buttonText) {
-			b1.setText(buttonText);		
+		btnPause.setText(buttonText);		
 	}
 	
 	public void setMusicButton(boolean isPlaying) {
 		System.out.println(isPlaying);
 		if(isPlaying == true) {
 			Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPlaying));			
-			b2.setIcon(musicIcon);
-			b2.setActionCommand("MuteMusic");			
+			btnMute.setIcon(musicIcon);
+			btnMute.setActionCommand("MuteMusic");			
 		} else {
 			Icon musicIcon = new ImageIcon(this.getClass().getResource(BreakWallConfig.musicIconPausing));
-			b2.setIcon(musicIcon);
-			b2.setActionCommand("PlayMusic");
+			btnMute.setIcon(musicIcon);
+			btnMute.setActionCommand("PlayMusic");
 		}
 
 	}
 	
-	public void updateScoreView(int scoree) {
-		scorecount.setText(Integer.toString(scoree));
+	public void updateScoreView(int score) {
+		txtScoreCount.setText(Integer.toString(score));
 	}
 	
 	public void updateLevelView(int level) {
-		levelcount.setText(Integer.toString(level));
+		txtLevelCount.setText(Integer.toString(level));
 	}
 	
 	public void updateLifeView(int lives) {
-		lifecount.setText(Integer.toString(lives));
+		txtLifeCount.setText(Integer.toString(lives));
 	}
 	
 }
