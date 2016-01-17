@@ -1,6 +1,7 @@
 package breakthewall.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.view.EnterNameView;
@@ -39,51 +41,49 @@ public class BreakWallXML {
 	 * 
 	 * @param doc Neu erstelltes XML-Dokument.
 	 * @return Modifiziertes XML-Dokument.
+	 * @throws ParserConfigurationException 
 	 */
-	public void createUserXML(String userName, ArrayList<GameElement> brickList) {		
-		Element xml;
-		Element doctype;
-		Element uuserRoot;
-		Element usr1, usr2;
-		EnterNameView UserEingabe = new EnterNameView(); 
-		Document doc = getXMLDocument();
-		
-		uuserRoot = doc.createElement("breakwall");
+	public void createUserXML(String userName, ArrayList<GameElement> brickList) throws ParserConfigurationException {		
+	
 		
 		int currentScore = model.getScore();
 		int currentLevel = model.getLevel();
 		int currentLives = model.getLives();
 		
-//		System.out.println(UserEingabe.getTextFromTextBox());
-//		String namen = UserEingabe.getTextFromTextBox();
-//		
-//		System.out.println(currentScore);
-	
-		doc.appendChild(uuserRoot);
+		
+		File XmlFile = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = null;
+		    try {
+		        doc = dBuilder.parse(XmlFile);
+		    } catch (SAXException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		    } catch (IOException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		    }
 
-		// User einfuegen:
-		usr1 = createUser(doc,
-				userName,
-				currentLevel, currentLives, currentScore, brickList);
-		uuserRoot.appendChild(usr1);
+		    doc.getDocumentElement().normalize();
+
+		    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 		
+	
 		
-		// Highscore ersetzen:
-		// Neuer Textknoten:
-		Text newTextNode = doc.createTextNode("5555");
-		
-		// highscore-Elemente im Dokument suchen:
-		NodeList nList = doc.getElementsByTagName("highscore");
-		// Alle highscore-Elemente durchsuchen:
+		// Search breakwall-elements:
+		NodeList nList = doc.getElementsByTagName("breakwall");
+		// Search breakwall-elements and add:
 		for (int i=0; i<nList.getLength(); i++) {
 			Element el = (Element) nList.item(i);
-			// Text-Knoten ermitteln:
-			Text oldTextNode = (Text) el.getFirstChild();
-			// Text-Knoten ggf. ersetzen:
-			if (oldTextNode.getData().equals("4321")) {
-				el.replaceChild(newTextNode, oldTextNode);
-			} // if
+			
+			el.appendChild(createUser(doc,
+						userName,
+						currentLevel, currentLives, currentScore, brickList));
+			
 		} // for
+		
+
 		
 		
 		writeXMLDocment(doc, System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
@@ -184,6 +184,7 @@ public class BreakWallXML {
 		return brickWallInfo; 
 	}
 	
+	
 	public Document parseFile(String fileRef) {
 		xml = new File(System.getProperty("user.dir") + File.separator + fileRef);
         // if the xml file exists at the current location in the default user directory
@@ -203,6 +204,7 @@ public class BreakWallXML {
         } catch (Exception e) { e.printStackTrace(); }  
         return dom;
     }
+	
 	
 	/**
 	 * Schreibt das XML-Dokument in eine Datei.
@@ -224,11 +226,6 @@ public class BreakWallXML {
 			Source source = new DOMSource(doc);
 			Result result = new StreamResult(file);
 
-			// NEU
-			// Eigenschaften setzen
-			//transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-1");
-			// transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//W3C//DTD SVG 1.1//EN");
-			//transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "breakwall");
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			
 			// Dokument in Datei speichern:
@@ -238,45 +235,21 @@ public class BreakWallXML {
 			e1.printStackTrace();
 		} // catch
 	} // writeXMLDocument
-
-	/**
-	 * Erstellung eines neuen XML-Dokuments als Instanz der Klasse <tt>Document</tt>.
-	 * @return <tt>Document</tt>-Objekt als Repr&auml;sentant eines XML-Dokuments.
-	 */
-	public Document getXMLDocument() {
-		Document document = null;
-		
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-
-			// XML-Dokument erstellen
-			document = builder.newDocument();
-			document.setXmlStandalone(true);
-		}
-		catch (ParserConfigurationException e) {
-			System.err.println("Fehler beim Erstellen "
-					+" des XML-Dokuments!");
-			e.printStackTrace();
-		} // catch
-		
-		return document;
-	} // getXMLDocument
 	
-    public Object getTagInfo(String tagName, Element elem) {    
-        NodeList list = elem.getElementsByTagName(tagName);
-        for (int i = 0; i < list.getLength(); ++i) {
-            Node node = (Node) list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Node child = (Node) node.getFirstChild();
-                return child.getTextContent().trim();
-            }
-             
-            return null;
-        }
-     
-        return null;
-    }
+	
+	 public Object getTagInfo(String tagName, Element elem) {    
+	        NodeList list = elem.getElementsByTagName(tagName);
+	        for (int i = 0; i < list.getLength(); ++i) {
+	            Node node = (Node) list.item(i);
+	            if (node.getNodeType() == Node.ELEMENT_NODE) {
+	                Node child = (Node) node.getFirstChild();
+	                return child.getTextContent().trim();
+	            }
+	             
+	            return null;
+	        }
+	     
+	        return null;
+	    }
 
 }

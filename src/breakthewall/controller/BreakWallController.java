@@ -9,6 +9,7 @@ import java.util.EventListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.xml.parsers.ParserConfigurationException;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.model.BreakWallModel;
@@ -116,7 +117,12 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 			gameModel.backMenuAfterSave();
 		}
 		if(command.equals("Enter and Save")) {
-			gameModel.saveGame(name);
+			try {
+				gameModel.saveGame(name);
+			} catch (ParserConfigurationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			gameModel.backMenuAfterSave();
 		}
 		

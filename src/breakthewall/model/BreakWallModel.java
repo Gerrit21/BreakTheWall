@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -208,7 +209,7 @@ public class BreakWallModel extends Observable {
 		System.out.println("pause");
 	}
 	
-	public void saveGame(String userName) {
+	public void saveGame(String userName) throws ParserConfigurationException {
 		System.out.println("Save user name!");
 		setInfoText("Save Highscore...");
 		stopGame();
