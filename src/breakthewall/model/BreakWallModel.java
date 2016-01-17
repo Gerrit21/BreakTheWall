@@ -21,8 +21,8 @@ import breakthewall.remote.RemoteHighscoreClient;
 import breakthewall.view.BreakWallView;
 
 /**
- * Main model class
- * Class to coordinate all game element instances
+ * Main model class to coordinate all game element instances.
+ * Is an Observable which informs its Observers of model data changes.
  * 
  * @author Mareike Röncke, Gerrit Schulte
  * @version 1.0, October 2015.
@@ -95,9 +95,9 @@ public class BreakWallModel extends Observable {
 	 */
 	public void startNewGame() {
 		currentLevel = 1;
-		currentLives = BreakWallConfig.lifeCount;
-		musicIsPlaying = false;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
+		currentLives = BreakWallConfig.lifeCount;
+		musicIsPlaying = false;		
 		gameScore = new BreakWallScore(0);
 		gameXMLInstance = new BreakWallXML(this);
 		gameWall = new BrickWall();
@@ -129,9 +129,10 @@ public class BreakWallModel extends Observable {
 	 */
 	public void startExistingLevel() {
 		System.out.println("Load existing Game");
+		BreakWallConfig.setLevelDifficulty(currentLevel);
+		currentLives = BreakWallConfig.lifeCount;
 		updateLevel = false;
 		scoreFactor = 1;
-		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameWall = new BrickWall();
 		gameWall.setBrickList(brickList);
 		initGameElements();
@@ -646,7 +647,7 @@ public class BreakWallModel extends Observable {
 			setInfoText("Bonus: Change paddle width!");
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusXtraLife")) {
 			setInfoText("Bonus: Add Xtra Life!");
-			BreakWallConfig.lifeCount++;
+			currentLives++;
 		} else if(activeBrick.getBonusObject().getBonusType().equals("BonusXtraPoints")) {			
 			GameElement movableBonus = (GameElement) activeBrick.getBonusObject();
 			movableBonus.setXCoord(((BrickBonus) activeBrick).getXCoord());
