@@ -23,7 +23,11 @@ import org.w3c.dom.Document;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
+import breakthewall.model.Bonus;
+import breakthewall.model.BonusXtraPoints;
 import breakthewall.model.BreakWallModel;
+import breakthewall.model.Brick;
+import breakthewall.model.BrickBonus;
 import breakthewall.model.GameElement;
 
 /**
@@ -39,8 +43,9 @@ public class BreakWallView extends JFrame implements Observer {
 	private BreakWallController controller;
 	private static final long serialVersionUID = 1L;
 	private JLayeredPane gamePane;
-	Map<String, JPanel> gameElements;
+	Map<String, JComponent> gameElements;
 	ArrayList<GameElement> displayableElements;
+	ArrayList<GameElement> movableElements;
 	private int layerCount = 0;
 	private NavigationBarView panelbar;
 	private MenuView pauseMenu;
@@ -62,7 +67,7 @@ public class BreakWallView extends JFrame implements Observer {
 		this.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
 		this.setResizable(false);
 		gamePane = new JLayeredPane();
-		gameElements = new HashMap<String, JPanel>();
+		gameElements = new HashMap<String, JComponent>();
 		this.add(gamePane, BorderLayout.CENTER);
 		gamePane.setBounds(0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		this.setLocationRelativeTo(getParent());
@@ -206,13 +211,13 @@ public class BreakWallView extends JFrame implements Observer {
 	 */
 	
 	public void relocateElement(String elementId, int xCoord, int yCoord) {
-		JPanel redrawnElement = gameElements.get(elementId);
+		JComponent redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
 		redrawnElement.setLocation(xCoord, yCoord);
 	}
 	
 	public void redrawElement(String elementId, int xCoord, int yCoord, int width, int height) {
-		JPanel redrawnElement = gameElements.get(elementId);
+		JComponent redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
 		redrawnElement.setBounds(xCoord, yCoord, width, height);
 	}
@@ -234,6 +239,27 @@ public class BreakWallView extends JFrame implements Observer {
 				}
 
 			}
+			
+			movableElements = currentModel.getMovableElementsList();
+			for(int i = 0; i < movableElements.size(); i++) {				
+				if(gameElements.get(movableElements.get(i).getId()) != null) {
+					if(movableElements.get(i).getDestroyedState() == false) {
+						redrawElement(movableElements.get(i).getId(), movableElements.get(i).getXCoord(), movableElements.get(i).getYCoord(), movableElements.get(i).getWidth(), movableElements.get(i).getHeight());
+					} else {
+						removeElementFromGameField(movableElements.get(i).getId());
+					}
+				} else { 
+					BonusXtraPoints activeBonus = (BonusXtraPoints) movableElements.get(i);
+					JLabel pointsLabel = new JLabel("+ " + Integer.toString(activeBonus.getBonusPoints()));
+					pointsLabel.setOpaque(false);
+					pointsLabel.setOpaque(true);
+					pointsLabel.setBackground(new Color(0,0,0,0));
+					addPanelToGameField(pointsLabel, activeBonus.getXCoord(), activeBonus.getYCoord(), 30, 10);
+					gameElements.put(activeBonus.getId(), pointsLabel);
+				}
+
+			}
+			
 			editGameInfo(currentModel.getInfoText());
 			panelbar.updateScoreView(currentModel.getScore());
 			panelbar.updateLevelView(currentModel.getLevel());

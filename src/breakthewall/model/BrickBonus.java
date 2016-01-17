@@ -43,13 +43,15 @@ public class BrickBonus implements GameElement, Brick {
 	 * Der Bonus-Typ für eine Bonus-Brick-Instanz wird zufällig erstellt
 	 */
 	private void setRandomBonus() {
-		int randomInt = BreakWallModel.randomFromRange(1, 3);
+		int randomInt = BreakWallModel.randomFromRange(1, 4);
 		if(randomInt == 1) {
 			randomBonus = new BonusXtraLife();
 		} else if(randomInt == 2) {
 			randomBonus = new BonusBallSpeed();
-		} else {
+		} else if(randomInt == 3) {
 			randomBonus = new BonusPaddleWidth();
+		} else {
+			randomBonus = new BonusXtraPoints();
 		}
 	}
 

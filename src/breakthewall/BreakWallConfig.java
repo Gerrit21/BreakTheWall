@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Variables are partly retrieved from xml data.
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class BreakWallConfig {
 	
