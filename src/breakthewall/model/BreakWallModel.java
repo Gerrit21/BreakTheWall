@@ -44,7 +44,7 @@ public class BreakWallModel extends Observable {
 	private String struckBrick = "";
 	private String tempBrick = "";
 	private Timer timer;
-	private int constantPaddleWidth, currentLevel;
+	private int constantPaddleWidth, currentLevel, currentLives;
 	private int scoreFactor = 1;
 	private boolean moveBall, changeDir, musicIsPlaying, buttonClick;
 	private boolean updateLevel = false;
@@ -54,16 +54,8 @@ public class BreakWallModel extends Observable {
 	 * Constructor initiates instantiation of game elements
 	 * starts game loop
 	 */
-	public BreakWallModel(int initialLevel) {		
-		currentLevel = initialLevel;
-		musicIsPlaying = false;
-		BreakWallConfig.setLevelDifficulty(currentLevel);
-		gameScore = new BreakWallScore(0);
-		gameXMLInstance = new BreakWallXML(this);
-		gameWall = new BrickWall();
-		initGameElements();
-		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
-		playGame();
+	public BreakWallModel() {		
+		startNewGame();
 	}
 	
 	// ***************************************************************//
@@ -96,6 +88,22 @@ public class BreakWallModel extends Observable {
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
 		}							
+	}
+	
+	/**
+	 * Public method to initiate a new game
+	 */
+	public void startNewGame() {
+		currentLevel = 1;
+		currentLives = BreakWallConfig.lifeCount;
+		musicIsPlaying = false;
+		BreakWallConfig.setLevelDifficulty(currentLevel);
+		gameScore = new BreakWallScore(0);
+		gameXMLInstance = new BreakWallXML(this);
+		gameWall = new BrickWall();
+		initGameElements();
+		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
+		playGame();		
 	}
 	
 	/**
@@ -474,7 +482,7 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public int getLives() {
-		return  BreakWallConfig.lifeCount;
+		return  this.currentLives;
 	}
 	
 	public Brick getActiveBrick() {
@@ -517,8 +525,8 @@ public class BreakWallModel extends Observable {
 			setInfoText("You've lost a life!");
 			gameScore.subtractPoints(BreakWallConfig.penalityPoints);
 			scoreFactor = 1;
-			if(BreakWallConfig.lifeCount > 1) {
-				BreakWallConfig.lifeCount -= 1;			
+			if(currentLives > 1) {
+				currentLives -= 1;			
 				gameBall.setXCoord(gamePaddle.getXCoord() + (gamePaddle.getWidth() / 2));
 				gameBall.setYCoord(gamePaddle.getYCoord() - gameBall.getHeight());
 				gameBall.setDirY(BreakWallConfig.initialBallYDir);			
