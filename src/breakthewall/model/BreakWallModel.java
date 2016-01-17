@@ -110,6 +110,7 @@ public class BreakWallModel extends Observable {
 	 * Public method to initiate every new level after the first level
 	 */
 	public void startNewLevel() {
+		stopGame();
 		System.out.println("Start new Level");
 		updateLevel = false;
 		currentLevel++;
@@ -205,10 +206,10 @@ public class BreakWallModel extends Observable {
 	 */
 	public void playGame() {	
 		setInfoText("Play ...");
-		setChanged();
-		notifyObservers("focusGameElements");			
         timer = new Timer();
         timer.scheduleAtFixedRate(new GameLoopScheduler(), 500, 10);
+		setChanged();
+		notifyObservers("focusGameElements");			
         System.out.println("play");
 	}
 	
@@ -723,8 +724,7 @@ public class BreakWallModel extends Observable {
         			notifyObservers("initLevel");
     			} else {
     				setInfoText("You have archieved " + gameScore.getCurrentScore() + " Points! Congrats!");
-    			}    			
-    			stopGame();
+    			}    			    			
     		}
         	
         }
