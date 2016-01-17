@@ -23,19 +23,17 @@ import org.w3c.dom.Document;
 
 import breakthewall.BreakWallConfig;
 import breakthewall.controller.BreakWallController;
-import breakthewall.model.Bonus;
 import breakthewall.model.BonusXtraPoints;
 import breakthewall.model.BreakWallModel;
-import breakthewall.model.Brick;
-import breakthewall.model.BrickBonus;
 import breakthewall.model.GameElement;
 
 /**
- * Klasse zur Stapelung von Bildelementen auf dem Spielfeld.
- * Enth�lt Methoden, um Bild-Elemente zu erzeugen und zu aktualisieren.
+ * Class which places game elements on the game field GUI.
+ * Also contains methods to move and remove existing elements.
+ * Class observes changes in the model (main model class is BreakWallModel).
  * 
- * @author Mareike R�ncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
  */
 public class BreakWallView extends JFrame implements Observer {
 	
@@ -43,6 +41,9 @@ public class BreakWallView extends JFrame implements Observer {
 	private BreakWallController controller;
 	private static final long serialVersionUID = 1L;
 	private JLayeredPane gamePane;
+	// Hash Map to store and retrieve elements on the game field
+	// every element which should be displayed has to be add to the Hash Map
+	// The first parameter is meant to be the "ID" of the element
 	Map<String, JComponent> gameElements;
 	ArrayList<GameElement> displayableElements;
 	ArrayList<GameElement> movableElements;
@@ -56,9 +57,8 @@ public class BreakWallView extends JFrame implements Observer {
 	
 	
 	/*
-	 * Konstruktoraufruf initialisiert das Spielfenster
-	 */
-	
+	 * Constructor call initializes the game field GUI
+	 */	
 	public BreakWallView(Observable gameModel, BreakWallController controller) {
 		this.gameModel = gameModel;
 		gameModel.addObserver(this);		
@@ -66,6 +66,8 @@ public class BreakWallView extends JFrame implements Observer {
 		this.addKeyListener(controller);
 		this.setPreferredSize(new Dimension(BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight));
 		this.setResizable(false);
+		// the JLayeredPane stacks JComponents on top of each other
+		// JCoponents can later be retrieved via their layer index
 		gamePane = new JLayeredPane();
 		gameElements = new HashMap<String, JComponent>();
 		this.add(gamePane, BorderLayout.CENTER);
@@ -79,26 +81,31 @@ public class BreakWallView extends JFrame implements Observer {
 		buildGameLayout();
 	}
 
-	public void buildGameLayout() {
-		// f�gt eine Hintergrundbild hinzu
+	/**
+	 * Private method to add initial game elements to the GUI
+	 */
+	private void buildGameLayout() {
+		// add background image
 		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		panelbar = new NavigationBarView();
 		// add ActionListener to navigation buttons
 		ArrayList<JButton> navigationButtons = panelbar.getButtonList();
 		for(int i = 0; i < navigationButtons.size(); i++) {
 			navigationButtons.get(i).addActionListener(controller);
-		}
-		
+		}		
 		addPanelToGameField(panelbar, 0, 0, BreakWallConfig.barWidth, BreakWallConfig.barHeight);
-
-		gameInfo = new JLabel("Spielhinweise");
+		gameInfo = new JLabel("game hints");
 		gameInfo.setBackground(new Color(139, 223, 113));
 		gameInfo.setBorder(BorderFactory.createLineBorder(new Color(100, 158, 82)));
 		addPanelToGameField(gameInfo, 0, (BreakWallConfig.offsetHeight - 42), BreakWallConfig.offsetWidth + 10, 20);
 		
 	}
-	
-	public void buildMenuLayout() {		
+
+	/**
+	 * Private method to add the main menu panel to the GUI.
+	 * Overlaps the game GUI.
+	 */
+	private void buildMenuLayout() {		
 		pauseMenu = new MenuView();
 		// add ActionListener to navigation buttons
 		ArrayList<JButton> navigationMenuButtons = pauseMenu.getButtonList();
@@ -109,7 +116,12 @@ public class BreakWallView extends JFrame implements Observer {
 		addPanelToGameField(pauseMenu, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
-	public void buildHighscoreLayout(Document highscoreDocument) {		
+	/**
+	 * Private method to add the highscore list panel to the GUI.
+	 * Overlaps the game and main menu GUI.
+	 * @param highscoreDocument contains player highscore info.
+	 */
+	private void buildHighscoreLayout(Document highscoreDocument) {		
 		showHighscore = new HighscoreView(highscoreDocument);
 		
 		// add ActionListener to navigation buttons
@@ -133,7 +145,11 @@ public class BreakWallView extends JFrame implements Observer {
 		addPanelToGameField(showUserLoad, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
-	public void buildEnterNameLayout() {		
+	/**
+	 * Private method to add the menu to enter the user name.
+	 * Overlaps the main menu GUI.
+	 */
+	private void buildEnterNameLayout() {		
 		showEnterName = new EnterNameView();
 		
 		// add ActionListener to navigation buttons
@@ -147,21 +163,38 @@ public class BreakWallView extends JFrame implements Observer {
 		addPanelToGameField(showEnterName, 0, 0, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 	}
 	
-	public void editGameInfo(String newText) {
+	/**
+	 * Sets the text to the game info bar on the bottom of the game field GUI.
+	 * @param newText Text that should be shown inside the bar
+	 */
+	private void editGameInfo(String newText) {
 		gameInfo.setText(newText);
 	}
 	
-	public void clearGameField() {
+	/**
+	 * Private method to remove all game elements from the game field
+	 * and from the hash map that stores the game elements.
+	 */
+	private void clearGameField() {
 		gamePane.removeAll();
 		gameElements.clear();
 		layerCount = 0;
 	}
 	
-	public void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
+	/**
+	 * Adds a JComponent to the game field, respectively to the JLayeredPane
+	 * 
+	 * @param newComp	JComponent that should be added
+	 * @param xCoord	component's future x-position on the game field
+	 * @param yCoord	component's future y-position on the game field
+	 * @param width		width of the component
+	 * @param height	height of the component
+	 */
+	private void addPanelToGameField(JComponent newComp, int xCoord, int yCoord, int width, int height) {
 		newComp.setBounds(xCoord, yCoord, width, height);
 		newComp.setOpaque(false);
-		// layerCount: Bildebene des Elements
-		// der Hintergrund hat die Ebene 0
+		// layerCount: layer index of the new element
+		// background element has layer index 0
 		gamePane.add(newComp, new Integer(layerCount), 0);
 		layerCount++;
 		gamePane.validate();
@@ -169,18 +202,19 @@ public class BreakWallView extends JFrame implements Observer {
 	}
 	
 	/**
-	 * F�gt ein Bildelement einem JPanel und dieses dem Spielfeld hinzu.
-	 * Bildelemente werden auf dem Spielfeld gestapelt.
-	 * Die Element-Referenz wird in der HashMap gameElements gespeichert,
-	 * um sie ggf. aktualisieren zu k�nnen
+	 * Private methods takes an image reference,
+	 * sets image as background to a JPanels and stacks the Panel
+	 * on top of the game field (the layered pane).
+	 * Element references are stored in a hash map together with the new panel.
+	 * References may be used as IDs to retrieve the element on the game field.
 	 * 
-	 * @param imgPath Bildpfad des zu zeichnenden Elements
-	 * @param xCoord x-Position des zu zeichnenden Elements
-	 * @param yCoord y-Position des zu zeichnenden Elements
-	 * @param width Breite des zu zeichnenden Elements
-	 * @param height H�he des zu zeichnenden Elements
+	 * @param imgPath image path of the new game element
+	 * @param xCoord future x-position of the new game element
+	 * @param yCoord future y-position of the new game element
+	 * @param width width of the new element
+	 * @param height height of the new element
 	 */
-	public void addElementToGameField(String imgPath, String id, int xCoord, int yCoord, int width, int height) {
+	private void addElementToGameField(String imgPath, String id, int xCoord, int yCoord, int width, int height) {
 		JPanel newPanel = new JPanel();
 		newPanel.setLayout(null);
 		ImgPanel newImage = new ImgPanel(imgPath);
@@ -188,40 +222,58 @@ public class BreakWallView extends JFrame implements Observer {
 		newPanel.add(newImage);
 		newPanel.setBounds(xCoord, yCoord, width, height);
 		newPanel.setOpaque(false);
-		// layerCount: Bildebene des Elements
-		// der Hintergrund hat die Ebene 0
+		// layerCount: layer index of the new element
+		// background element has layer index 0
 		gamePane.add(newPanel, new Integer(layerCount), 0);
 		layerCount++;
 		gamePane.validate();
 	}
 	
-	public void removeElementFromGameField(String elementId) {
+	/**
+	 * Private method removes an element from the game field (the layered pane)
+	 * Retrieves the layer index of the element via hash map
+	 * @param elementId	the ID of the element to be removed
+	 */
+	private void removeElementFromGameField(String elementId) {
 		int removeIndex = gamePane.getIndexOf(gameElements.get(elementId));
 		gamePane.remove(removeIndex);
 		gamePane.revalidate();
 		gamePane.repaint();
 	}
 	
-	/**
-	 * Ver�ndert die Position eines vorhandenen Elements auf dem Spielfeld.
+ 	/**
+	 * Changes the position of an existing game field element
+	 * Retrieves the element via its id
 	 * 
-	 * @param imgPath Bildpfad des zu verschiebenden Elements
-	 * @param xCoord neue x-Position des Elements
-	 * @param yCoord neue y-Position des Elements
+	 * @param elementId ID of element to be moved
+	 * @param xCoord	new x-position of the element
+	 * @param yCoord	new y-position of the element
 	 */
-	
-	public void relocateElement(String elementId, int xCoord, int yCoord) {
+	private void relocateElement(String elementId, int xCoord, int yCoord) {
 		JComponent redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
 		redrawnElement.setLocation(xCoord, yCoord);
 	}
 	
-	public void redrawElement(String elementId, int xCoord, int yCoord, int width, int height) {
+	/**
+	 * Changes the position of an existing game field element
+	 * and changes the width and height of the element.
+	 * Retrieves the element via its id
+	 * @param elementId ID of element to be moved
+	 * @param xCoord	new x-position of the element
+	 * @param yCoord	new y-position of the element
+	 * @param width		new width of the element
+	 * @param height	new height of the element
+	 */
+	private void redrawElement(String elementId, int xCoord, int yCoord, int width, int height) {
 		JComponent redrawnElement = gameElements.get(elementId);
 		redrawnElement.setLayout(null);
 		redrawnElement.setBounds(xCoord, yCoord, width, height);
 	}
 	
+	/**
+	 * Observer method which is called when the game model has changed
+	 */
 	@Override
 	public void update(Observable gameModel, Object gameObject) {
 		if(gameObject.equals("updateGameElements")) {
@@ -339,31 +391,28 @@ public class BreakWallView extends JFrame implements Observer {
 	}
 
 	/**
-	 * ֦fentliche Klasse zur Erzeugung eines Images aus einer URL.
-	 * Bei nicht vorhandenem Bild unter der URL wird eine Fehlerinfo ausgegeben. 
-	 * @author Mareike R?e, Gerrit Schulte
-	 * @param e Instanz der Klasse, die das Bild erzeugen will
-	 * @param ref String-Referenz des Bildpfades
-	 * @return newImg Image-Instanz
+	 * Public static method to create an image from a given URL.
+	 * Returns an exception when no image is found under the given url. 
+	 * @param e instance of the class that want to create an image
+	 * @param ref string reference of the image path
+	 * @return newImg new instance of the image
 	 */
 	public static Image getImageByURL(Object e, String ref) {
 		Image newImg = null;
 		try {
 			newImg = new ImageIcon(e.getClass().getResource(ref)).getImage();
 		} catch(NullPointerException e1) {
-			System.out.println("Das Bild kann unter dem angegebenen Pfad nicht gefunden werden: " + ref);
+			System.out.println("Image could not be found using the path: " + ref);
 			e1.printStackTrace();
 		}
-		
 		return newImg;
 	}
 	
 	/**
-	 * Private Klasse zur Erzeugung eines Objekts vom Typ ImgPanel. 
-	 * @author Mareike R�ncke, Gerrit Schulte
+	 * Private class to create an image object of type ImgPanel 
+	 * @author Mareike Röncke, Gerrit Schulte
 	 *
 	 */
-	
 	private class ImgPanel extends JPanel {
 
 		private static final long serialVersionUID = 1L;
@@ -372,9 +421,8 @@ public class BreakWallView extends JFrame implements Observer {
 		private int y;
 		
 		/*
-		 *  Konstruktoren erzeugen ein Objekt vom Typ Image
+		 *  Konstruktoren creates an object of type image
 		 */
-
 		  public ImgPanel(String imgRef) {
 			try {
 			    newImg = new ImageIcon(getImageByURL(this, imgRef)).getImage();
