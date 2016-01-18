@@ -4,12 +4,6 @@ import java.util.ArrayList;
 
 import breakthewall.BreakWallConfig;
 
-/**
- * Klasse zur Erstellung einer Brick-Wand, bestehend aus verschiedenen Brick-Typen.
- * 
- * @author Mareike R�ncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
- */
 public class BrickWall {
 	
 	// private BreakWallView gameField;
@@ -22,7 +16,7 @@ public class BrickWall {
 	
 	/*
 	 * Konstruktor ruft die Methode zur Erzeugung der Brick-Wand auf.
-	 * Diese wird in das �bergebene Spielfeld gezeichnet.
+	 * Diese wird in das bergebene Spielfeld gezeichnet.
 	 */
 	
 	public BrickWall() {		
@@ -37,7 +31,7 @@ public class BrickWall {
 	/**
 	 * Ruft die Methode getRandomBrick() zur Erzeugung eines Bricks auf und 
 	 * zeichnet diesen Brick in das Spielfeld.
-	 * Die Begrenzungen f�r die Brick-Wand sind in der Klasse BreakWallData definiert.
+	 * Die Begrenzungen fr die Brick-Wand sind in der Klasse BreakWallData definiert.
 	 */
 	
 	public void buildWall() {
@@ -52,14 +46,14 @@ public class BrickWall {
 				setBrickX(getBrickX() + randomBrick.getWidth() + 10);
 			}
 			setBrickY(getBrickY() + randomBrick.getHeight() + 10);
-			// versetzt die Brick-Zeilen in zuf�lligem Abstand vom Rand
+			// versetzt die Brick-Zeilen in zuflligem Abstand vom Rand
 			setBrickX(BreakWallModel.randomFromRange(1, 3) * 15);
 		}
 	}
 	
 	/**
-	 * �ber eine Random-Funktion wird zuf�llig einer von 3 Brick-Typen erzeugt.
-	 * Die Wahrscheinlichkeit f�r einen Typen ist in der Klasse BreakWallData definiert.
+	 * ber eine Random-Funktion wird zufllig einer von 3 Brick-Typen erzeugt.
+	 * Die Wahrscheinlichkeit fr einen Typen ist in der Klasse BreakWallData definiert.
 	 */
 	
 	private void setRandomBrick() {
@@ -107,4 +101,5 @@ public class BrickWall {
 	public int getBrickY() {
 		return this.brickY;
 	}
+
 }

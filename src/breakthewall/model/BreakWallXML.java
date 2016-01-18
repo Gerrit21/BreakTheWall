@@ -28,6 +28,7 @@ public class BreakWallXML {
 	public Document dom = null;
 	private BreakWallModel model;
 	private boolean booleanNameDuplicate;
+	private int userNameCount;
 	
 	public BreakWallXML() {
 		
@@ -74,29 +75,28 @@ public class BreakWallXML {
 		
 		 // Search user-elements:
 		NodeList nList = doc.getElementsByTagName("name");
-		 			
+		userNameCount = 1; 			
 		 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
 		        Element eElement = (Element) nList.item(temp);
-		        int count = 1;
 				// Text-Konten ermitteln:
 				Text textNode = (Text) eElement.getFirstChild();
 				// Text-Knoten lesen:
 				
-				if (textNode.getData().equals(userName)) {
-					count++;
-					System.out.println(userName + " already exists " + Integer.toString(count));
-					
-					NodeList bwList = doc.getElementsByTagName("breakwall");
-					bwList.item(0).appendChild(createUser(doc,
-									userName + Integer.toString(count),
-									currentLevel, currentLives, currentScore, brickList));
+				if (textNode.getData().contains(userName)) {
+					userNameCount++;
+					System.out.println(userName + " already exists " + userNameCount);
 					booleanNameDuplicate = true;	
 				}			
 		}
 		
-		if(booleanNameDuplicate==false){
+		if(booleanNameDuplicate == true) {
+			NodeList bwList = doc.getElementsByTagName("breakwall");
+			bwList.item(0).appendChild(createUser(doc,
+							userName + Integer.toString(userNameCount),
+							currentLevel, currentLives, currentScore, brickList));			
+		} else {
 			NodeList bwList = doc.getElementsByTagName("breakwall");
 			bwList.item(0).appendChild(createUser(doc,
 							userName,

@@ -30,7 +30,7 @@ public class UserLoadView extends JPanel implements ActionListener {
     private JButton btnBackMenu;
     private JPanel patternPanel;
     private JLabel lblLoadName;
-    private JComboBox patternList;
+    private JComboBox<String[]> patternList;
     private ArrayList<JButton> navigationButtonsLoad;
     
  
@@ -157,7 +157,10 @@ public class UserLoadView extends JPanel implements ActionListener {
 		Namen = Names;
 	}	
     
-    
+    public JComboBox<String[]> getDropdownMenu() {
+		return patternList;
+    	
+    }
     
     
 }    

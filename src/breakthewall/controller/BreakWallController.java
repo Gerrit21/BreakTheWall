@@ -2,6 +2,8 @@ package breakthewall.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.EventListener;
@@ -14,11 +16,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import breakthewall.BreakWallConfig;
 import breakthewall.model.BreakWallModel;
 
-public class BreakWallController implements KeyListener, ActionListener, DocumentListener{
+/**
+ * Controller class to handle events occurring on the game field.
+ * Implements Listener interfaces to react to key taps, button clicks
+ * and entered text.
+ * Calls model methods to update the model's data.
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
+public class BreakWallController implements KeyListener, ActionListener, DocumentListener, ItemListener {
 	
 	private BreakWallModel gameModel;
 	private String command;
-	private String name;
+	private String newName;
+	private String loadedName;
 
 	public BreakWallController(BreakWallModel gameModel) {
 		this.gameModel = gameModel;
@@ -31,6 +43,10 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	public void initExistingLevel() {		
 		gameModel.startExistingLevel();		
 	}
+	
+	// ***************************************************************//
+	// KeyListener Methods
+	// ***************************************************************//
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -70,9 +86,13 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 		
 	}
 
+	// ***************************************************************//
+	// ActionListener Methods
+	// ***************************************************************//
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		command = e.getActionCommand();
+		command = e.getActionCommand();		
 		if(command.equals("Pause")) {
 			gameModel.setPlayPause(true);
 			gameModel.pauseGame();			
@@ -108,7 +128,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 			gameModel.selectUser();
 		}	
 		if(command.equals("Load Game")) {
-			gameModel.loadUser("Helmut");
+			gameModel.loadUser(loadedName);
 		}
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();
@@ -117,7 +137,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 			gameModel.backMenuAfterSave();
 		}
 		if(command.equals("Enter and Save")) {
-			gameModel.saveGame(name);
+			gameModel.saveGame(newName);
 			gameModel.backMenuAfterSave();
 		}
 		
@@ -128,17 +148,19 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 		
 		
 	}
+	
+	// ***************************************************************//
+	// DocumentListener Methods
+	// ***************************************************************//
 
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
 	}
 
 	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-		System.out.println("Änderung:");
+	public void insertUpdate(DocumentEvent textInputEvent) {
 		try {
-			name = arg0.getDocument().getText(0, arg0.getDocument().getLength()); 
-			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
+			newName = textInputEvent.getDocument().getText(0, textInputEvent.getDocument().getLength()); 
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -146,15 +168,22 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	}
 
 	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-		System.out.println("Änderung rückgängig:");
+	public void removeUpdate(DocumentEvent textInputEvent) {
 		try {
-			name = arg0.getDocument().getText(0, arg0.getDocument().getLength());
-			System.out.println(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
+			newName = textInputEvent.getDocument().getText(0, textInputEvent.getDocument().getLength());
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	// ***************************************************************//
+	// ItemListener Methods
+	// ***************************************************************//
+
+	@Override
+	public void itemStateChanged(ItemEvent changedItemEvent) {
+		loadedName = (String) changedItemEvent.getItem();
 	}
 
 }

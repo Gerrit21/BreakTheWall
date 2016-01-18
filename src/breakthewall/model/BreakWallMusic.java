@@ -60,6 +60,10 @@ public class BreakWallMusic extends Thread {
 		this.play = play;		
 	}
 	
+	public void stopMusic() {
+		audioClip.close();
+	}
+	
 	public void run() {
 		Date startTime = new Date();
 		Date currentTime = new Date();

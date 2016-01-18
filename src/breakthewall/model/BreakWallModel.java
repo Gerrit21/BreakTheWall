@@ -54,7 +54,8 @@ public class BreakWallModel extends Observable {
 	 * Constructor initiates instantiation of game elements
 	 * starts game loop
 	 */
-	public BreakWallModel() {		
+	public BreakWallModel() {
+		musicThread = null;
 		startNewGame();
 	}
 	
@@ -96,7 +97,11 @@ public class BreakWallModel extends Observable {
 	public void startNewGame() {
 		currentLevel = 1;
 		BreakWallConfig.setLevelDifficulty(currentLevel);
-		currentLives = BreakWallConfig.lifeCount;
+		currentLives = BreakWallConfig.lifeCount;		
+		if(musicThread != null) {
+			musicObj.stopMusic();		
+			musicThread.interrupt();
+		}
 		musicIsPlaying = false;		
 		gameScore = new BreakWallScore(0);
 		gameXMLInstance = new BreakWallXML(this);
@@ -152,13 +157,14 @@ public class BreakWallModel extends Observable {
 
 		for (int i = 0; i < list.getLength(); ++i) {
 			Element e = (Element) list.item(i);
-			if(gameXMLInstance.getTagInfo("name", e).equals(userName)) {
+			String name = (String) gameXMLInstance.getTagInfo("name", e);		
+			if(name.equals(userName)) {
 				currentLevel = Integer.parseInt(gameXMLInstance.getTagInfo("level", e).toString());
-				BreakWallConfig.lifeCount = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
+				currentLives = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
 				gameScore.setCurrentScore(Integer.parseInt(gameXMLInstance.getTagInfo("highscore", e).toString()));
-				loadBrickWall(e.getElementsByTagName("brick"));			
+				loadBrickWall(e.getElementsByTagName("brick"));	
 			}
-		}
+		}		
 		BreakWallConfigXML.setLevelConfigurations(currentLevel);
 		setChanged();
 		notifyObservers("loadLevel");

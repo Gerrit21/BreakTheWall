@@ -66,6 +66,8 @@ public class BrickBonus implements GameElement, Brick {
 			randomBonus = new BonusBallSpeed();
 		} else if(bonusRef.equals("BonusPaddleWidth")) {
 			randomBonus = new BonusPaddleWidth();
+		} else if(bonusRef.equals("BonusXtraPoints")) {
+			randomBonus = new BonusXtraLife();
 		}		
 	}
 	
