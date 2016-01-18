@@ -1,8 +1,8 @@
 package breakthewall.remote;
 
-public interface RemoteHighscore {
-	
-	public HighscoreEntry[] getHighscore();
-    public void addEntry(int score);
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
+public interface RemoteHighscore extends Remote {
+    String sayHello() throws RemoteException;
 }
