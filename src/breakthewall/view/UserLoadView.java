@@ -64,7 +64,7 @@ public class UserLoadView extends JPanel implements ActionListener {
         
         patternList = new JComboBox(patternExamples);
         patternList.setBounds(231, 164, 138, 33);
-        patternList.setEditable(true);
+        patternList.setEditable(false);
         patternList.addActionListener(this);
         patternPanel.add(patternList);
 		
@@ -118,7 +118,7 @@ public class UserLoadView extends JPanel implements ActionListener {
     	
     	ArrayList<String> aList = new ArrayList<String>();
     	PleaseChoose = "Please Choose";
-    	aList.add(leer);
+    	aList.add(PleaseChoose);
         Element root = doc.getDocumentElement();
         NodeList list = doc.getElementsByTagName("user");
         for (int i = 0; i < list.getLength(); ++i) {
