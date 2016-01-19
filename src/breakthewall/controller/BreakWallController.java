@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.EventListener;
 
 import javax.swing.event.DocumentEvent;
@@ -137,7 +138,12 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 			gameModel.backMenuAfterSave();
 		}
 		if(command.equals("Enter and Save")) {
-			gameModel.saveGame(newName);
+			try {
+				gameModel.saveGame(newName);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			gameModel.backMenuAfterSave();
 		}
 		

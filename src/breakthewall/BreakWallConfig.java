@@ -18,6 +18,7 @@ public class BreakWallConfig {
 	// XML documents and paths
 	// Path for xml data
 	public static final String highscorePath = "src/breakthewall/xml/";
+	public static final String highscoreNetworkPath = "src/breakthewall/remoteXML/";
 	public static final String configXML = "config.xml";
 	public static final String highscoreXML = "highscore.xml";
 	

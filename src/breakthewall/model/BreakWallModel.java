@@ -2,6 +2,7 @@ package breakthewall.model;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -108,7 +109,15 @@ public class BreakWallModel extends Observable {
 		gameWall = new BrickWall();
 		initGameElements();
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
-		playGame();		
+		playGame();	
+		
+		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
+		try {
+			newHighscore.overrideLocalHighscore();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	
 	/**
@@ -244,18 +253,21 @@ public class BreakWallModel extends Observable {
 	/**
 	 * public method to save a game instance with reference to a user's name.
 	 * Game is saved in a highscore-xml-document. 
+	 * @throws IOException 
 	 */
-	public void saveGame(String userName) {
+	public void saveGame(String userName) throws IOException {
 		setInfoText("Save Highscore...");
 		stopGame();
-		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
-		newHighscore.addEntry(gameScore.getCurrentScore());		
+			
 		try {
 			gameXMLInstance.createUserXML(userName, gameWall.getBrickList());
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
+		newHighscore.overrideNetworkHighscore();	
 	}
 	
 	public void enterName() {
