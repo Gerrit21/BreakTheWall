@@ -32,6 +32,7 @@ public class UserLoadView extends JPanel implements ActionListener {
     private JLabel lblLoadName;
     private JComboBox<String[]> patternList;
     private ArrayList<JButton> navigationButtonsLoad;
+	private String PleaseChoose;
     
  
     public UserLoadView(Document highscoreDocument) {
@@ -116,18 +117,24 @@ public class UserLoadView extends JPanel implements ActionListener {
     	
     	
     	ArrayList<String> aList = new ArrayList<String>();
+    	PleaseChoose = "Please Choose";
+    	aList.add(leer);
         Element root = doc.getDocumentElement();
         NodeList list = doc.getElementsByTagName("user");
         for (int i = 0; i < list.getLength(); ++i) {
+        	
         	 NodeList name = root.getElementsByTagName("name");
         	 Element line = (Element) name.item(i);
+        	
              aList.add (getCharacterDataFromElement(line));
+             
         }    
         
  //		ArrayList to Array konvertieren
         
         String NameList[] = new String[aList.size()];              
 		for(int j =0;j<aList.size();j++){
+			
 		  NameList[j] = aList.get(j);
 		}
 		
