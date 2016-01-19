@@ -134,8 +134,15 @@ public class BreakWallModel extends Observable {
 	 * Public method to initiate an existing level from a loaded game
 	 */
 	public void startExistingLevel() {
+		stopGame();
 		System.out.println("Load existing Game");
 		BreakWallConfig.setLevelDifficulty(currentLevel);
+		currentLives = BreakWallConfig.lifeCount;		
+		if(musicThread != null) {
+			musicObj.stopMusic();		
+			musicThread.interrupt();
+		}
+		musicIsPlaying = false;
 		currentLives = BreakWallConfig.lifeCount;
 		updateLevel = false;
 		scoreFactor = 1;
@@ -154,20 +161,26 @@ public class BreakWallModel extends Observable {
 		Document currentDocument = getHighscoreDocument();		
 		Element root = currentDocument.getDocumentElement();
 		NodeList list = root.getElementsByTagName("user");
+		Boolean hasUserName = false;
 
 		for (int i = 0; i < list.getLength(); ++i) {
 			Element e = (Element) list.item(i);
 			String name = (String) gameXMLInstance.getTagInfo("name", e);		
 			if(name.equals(userName)) {
+				hasUserName = true;
 				currentLevel = Integer.parseInt(gameXMLInstance.getTagInfo("level", e).toString());
 				currentLives = Integer.parseInt(gameXMLInstance.getTagInfo("life", e).toString());
 				gameScore.setCurrentScore(Integer.parseInt(gameXMLInstance.getTagInfo("highscore", e).toString()));
 				loadBrickWall(e.getElementsByTagName("brick"));	
 			}
-		}		
-		BreakWallConfigXML.setLevelConfigurations(currentLevel);
-		setChanged();
-		notifyObservers("loadLevel");
+		}
+		if(hasUserName) {
+			BreakWallConfigXML.setLevelConfigurations(currentLevel);
+			setChanged();
+			notifyObservers("loadLevel");			
+		} else {
+			setInfoText("Please choose a user name from the name list.");
+		}
 	}
 	
 	/**

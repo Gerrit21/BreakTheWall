@@ -14,8 +14,8 @@ import breakthewall.BreakWallConfig;
 
 import java.awt.*;
 import java.util.ArrayList;
-
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -88,7 +88,7 @@ public class HighscoreView extends JPanel  {
         
         //creates sorted table 
         
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(highscoreTable.getModel());
+        /**TableRowSorter<TableModel> sorter = new TableRowSorter<>(highscoreTable.getModel());
         highscoreTable.setRowSorter(sorter);
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
          
@@ -96,16 +96,55 @@ public class HighscoreView extends JPanel  {
         
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
         sorter.setSortKeys(sortKeys);
-        sorter.sort();
+        sorter.sort();**/
 	        
 	} 
+	
+	public int[] sortRow(NodeList list, String rowToSort) {
+		int[] sortedHighscoreValues = new int[list.getLength()];
+		int[] unsortedHighscoreValues = new int[list.getLength()];
+		int[] highscoreIndices = new int[list.getLength()];
+		for (int i = 0; i < list.getLength(); i++) {
+            Element e = (Element) list.item(i);
+            if (e.getNodeType() == Element.ELEMENT_NODE) {            	  
+            	int listValue = Integer.parseInt((String) getArticleInfo(rowToSort,e));
+            	unsortedHighscoreValues[i] = listValue;             
+            }		
+		}
+	    for(int i = 0; i < unsortedHighscoreValues.length; i++) {
+	    	sortedHighscoreValues[i] = unsortedHighscoreValues[i];
+		}
+		Arrays.sort(sortedHighscoreValues);
+		int sortedCount = sortedHighscoreValues.length - 1;
+		int index = 0;
+		int count = 0;
+		int tempValue = 1000000000;
+		while(sortedCount > 0) {
+			count = 0;
+			while(count < unsortedHighscoreValues.length) {
+				if(sortedHighscoreValues[sortedCount] == unsortedHighscoreValues[count]) {
+					if(tempValue == sortedHighscoreValues[sortedCount]) {
+						sortedCount--;
+						index++;
+					}
+					highscoreIndices[index] = count;					
+					tempValue = sortedHighscoreValues[sortedCount];
+				}
+				count++;				
+			}
+			sortedCount--;
+			index++;
+		}	
+		return highscoreIndices;
+	}
      
     public void insertTableRows(DefaultTableModel tableModel,Document doc) {            
         Element root = doc.getDocumentElement();
         NodeList list = root.getElementsByTagName("user");
-        for (int i = 0; i < list.getLength(); ++i) {
-            Element e = (Element) list.item(i);
-            if (e.getNodeType() == Element.ELEMENT_NODE) {
+        int[] highscoreIndices = sortRow(list, "highscore");
+        for (int i = 0; i < list.getLength(); i++) {
+            Element e = (Element) list.item(highscoreIndices[i]);
+            if (e.getNodeType() == Element.ELEMENT_NODE) {            	  
                 Object[] row = { getArticleInfo("highscore",e), getArticleInfo("name",e),getArticleInfo("level",e),getArticleInfo("life",e)};
                 tableModel.addRow(row);             
             }

@@ -398,7 +398,7 @@ public class BreakWallView extends JFrame implements Observer {
 
 	/**
 	 * Public static method to create an image from a given URL.
-	 * Returns an exception when no image is found under the given url. 
+	 * Returns an exception when no image is found under the given URL. 
 	 * @param e instance of the class that want to create an image
 	 * @param ref string reference of the image path
 	 * @return newImg new instance of the image
