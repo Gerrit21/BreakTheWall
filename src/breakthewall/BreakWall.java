@@ -40,6 +40,7 @@ public class BreakWall {
 		BreakWallModel newModel = new BreakWallModel();
 		BreakWallController newController = new BreakWallController(newModel);
 		new BreakWallView(newModel, newController);
+		newModel.playGame();
 	}
 
 }

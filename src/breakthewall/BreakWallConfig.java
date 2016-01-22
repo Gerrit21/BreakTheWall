@@ -17,15 +17,15 @@ public class BreakWallConfig {
 	
 	// XML documents and paths
 	// Path for xml data
-	public static final String highscorePath = "src/breakthewall/xml/";
-	public static final String highscoreNetworkPath = "src/breakthewall/remoteXML/";
+	public static final String xmlPath = "src\\breakthewall\\xml\\";
+	public static final String highscoreNetworkPath = "src\\breakthewall\\remote\\xml\\";
 	public static final String configXML = "config.xml";
 	public static final String highscoreXML = "highscore.xml";
 	
 	// width and height of game field
 	public static final int gameFieldWidth = 600;
 	public static final int gameFieldHeight = 498;
-	public static final int offsetWidth = gameFieldWidth - 15;
+	public static final int offsetWidth = gameFieldWidth - 5;
 	public static final int offsetHeight = gameFieldHeight - 5;
 	public static final int wallWidth = gameFieldWidth - 60;
 	public static final int barWidth = 600;
@@ -46,6 +46,9 @@ public class BreakWallConfig {
 	// level count
 	// is automatically retrieved from existing levels in config.xml
 	public static int levelCount = 0;
+	
+	// boolean to decide whether to save highscore.xml on a remote server or locally
+	public static boolean useRemoteHighscoreList;
 	
 	// ****************************************************
 	// ****************************************************
@@ -70,7 +73,7 @@ public class BreakWallConfig {
 	public static int stabilityNormal, stabilityHard;
 	
 	// points for different kinds of bricks
-	public static int pointsNormal, pointsBonus; 
+	public static int pointsNormal, pointsBonus, maxExtraPoints; 
 	
 	// multiply factor for brick points
 	// when ball speed is multiplied

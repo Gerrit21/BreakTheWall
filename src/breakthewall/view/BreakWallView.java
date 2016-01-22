@@ -85,9 +85,9 @@ public class BreakWallView extends JFrame implements Observer {
 	 * Private method to add initial game elements to the GUI
 	 */
 	private void buildGameLayout() {
-		// add background image
-		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);
 		panelbar = new NavigationBarView();
+		// add background image
+		addElementToGameField(BreakWallConfig.bgImagePath, "background", 0, 40, BreakWallConfig.gameFieldWidth, BreakWallConfig.gameFieldHeight);		
 		// add ActionListener to navigation buttons
 		ArrayList<JButton> navigationButtons = panelbar.getButtonList();
 		for(int i = 0; i < navigationButtons.size(); i++) {
@@ -105,7 +105,7 @@ public class BreakWallView extends JFrame implements Observer {
 	 * Private method to add the main menu panel to the GUI.
 	 * Overlaps the game GUI.
 	 */
-	private void buildMenuLayout() {		
+	private void buildMenuLayout() {
 		pauseMenu = new MenuView();
 		// add ActionListener to navigation buttons
 		ArrayList<JButton> navigationMenuButtons = pauseMenu.getButtonList();
@@ -167,7 +167,9 @@ public class BreakWallView extends JFrame implements Observer {
 	 * @param newText Text that should be shown inside the bar
 	 */
 	private void editGameInfo(String newText) {
-		gameInfo.setText(newText);
+		if(gameInfo != null) {
+			gameInfo.setText(newText);	
+		}		
 	}
 	
 	/**
@@ -274,125 +276,122 @@ public class BreakWallView extends JFrame implements Observer {
 	 * Observer method which is called when the game model has changed
 	 */
 	@Override
-	public void update(Observable gameModel, Object gameObject) {
-		if(gameModel != null) {		
-			if(gameObject.equals("updateGameElements")) {
-				BreakWallModel currentModel = (BreakWallModel) gameModel;
-				displayableElements = currentModel.getElementList();
-				for(int i = 0; i < displayableElements.size(); i++) {			
-					if(gameElements.get(displayableElements.get(i).getId()) != null) {
-						if(displayableElements.get(i).getDestroyedState() == false) {
-							redrawElement(displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
-						} else {
-							removeElementFromGameField(displayableElements.get(i).getId());
-						}
+	public void update(Observable gameModel, Object gameObject) {		
+		if(gameObject.equals("updateGameElements")) {
+			BreakWallModel currentModel = (BreakWallModel) gameModel;
+			displayableElements = currentModel.getElementList();
+			for(int i = 0; i < displayableElements.size(); i++) {
+				if(gameElements.get(displayableElements.get(i).getId()) != null) {
+					if(displayableElements.get(i).getDestroyedState() == false) {
+						redrawElement(displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
 					} else {
-						addElementToGameField(displayableElements.get(i).getImage(), displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
+						removeElementFromGameField(displayableElements.get(i).getId());
 					}
-	
+				} else {
+					addElementToGameField(displayableElements.get(i).getImage(), displayableElements.get(i).getId(), displayableElements.get(i).getXCoord(), displayableElements.get(i).getYCoord(), displayableElements.get(i).getWidth(), displayableElements.get(i).getHeight());
 				}
-				
-				movableElements = currentModel.getMovableElementsList();
-				for(int i = 0; i < movableElements.size(); i++) {				
-					if(gameElements.get(movableElements.get(i).getId()) != null) {
-						if(movableElements.get(i).getDestroyedState() == false) {
-							redrawElement(movableElements.get(i).getId(), movableElements.get(i).getXCoord(), movableElements.get(i).getYCoord(), movableElements.get(i).getWidth(), movableElements.get(i).getHeight());
-						} else {
-							removeElementFromGameField(movableElements.get(i).getId());
-						}
-					} else { 
-						BonusXtraPoints activeBonus = (BonusXtraPoints) movableElements.get(i);
-						JLabel pointsLabel = new JLabel("+ " + Integer.toString(activeBonus.getBonusPoints()));
-						pointsLabel.setOpaque(false);
-						pointsLabel.setOpaque(true);
-						pointsLabel.setBackground(new Color(0,0,0,0));
-						addPanelToGameField(pointsLabel, activeBonus.getXCoord(), activeBonus.getYCoord(), 30, 10);
-						gameElements.put(activeBonus.getId(), pointsLabel);
+
+			}
+			
+			movableElements = currentModel.getMovableElementsList();
+			for(int i = 0; i < movableElements.size(); i++) {				
+				if(gameElements.get(movableElements.get(i).getId()) != null) {
+					if(movableElements.get(i).getDestroyedState() == false) {
+						redrawElement(movableElements.get(i).getId(), movableElements.get(i).getXCoord(), movableElements.get(i).getYCoord(), movableElements.get(i).getWidth(), movableElements.get(i).getHeight());
+					} else {
+						removeElementFromGameField(movableElements.get(i).getId());
 					}
-	
+				} else { 
+					BonusXtraPoints activeBonus = (BonusXtraPoints) movableElements.get(i);
+					JLabel pointsLabel = new JLabel("+ " + Integer.toString(activeBonus.getBonusPoints()));
+					pointsLabel.setOpaque(false);
+					pointsLabel.setOpaque(true);
+					pointsLabel.setBackground(new Color(0,0,0,0));
+					addPanelToGameField(pointsLabel, activeBonus.getXCoord(), activeBonus.getYCoord(), 30, 10);
+					gameElements.put(activeBonus.getId(), pointsLabel);
 				}
-				editGameInfo(currentModel.getInfoText());
-				
-				panelbar.updateScoreView(currentModel.getScore());
-				panelbar.updateLevelView(currentModel.getLevel());
-				panelbar.updateLifeView(currentModel.getLives());
-				//pauseMenu.updateScoreMenuView(currentModel.getScore());
+
+			}				
+			panelbar.updateScoreView(currentModel.getScore());
+			panelbar.updateLevelView(currentModel.getLevel());
+			panelbar.updateLifeView(currentModel.getLives());
+			editGameInfo(currentModel.getInfoText());		
+		}
+		if(gameObject.equals("focusGameElements")) {
+			panelbar.setPlayPauseButton("Pause");
+			this.requestFocus();
+		}
+		if(gameObject.equals("stopGame")) {
+			panelbar.setPlayPauseButton("Play");
+		}	
+		if(gameObject.equals("playGame")) {
+			panelbar.setPlayPauseButton("Pause");
+		}		
+		if(gameObject.equals("initLevel")) {
+			clearGameField();
+			controller.initNewLevel();
+		}
+		if(gameObject.equals("updateLevel")) {
+			buildGameLayout();
+		}
+		if(gameObject.equals("loadLevel")) {
+			clearGameField();
+			controller.initExistingLevel();
+			buildGameLayout();
+		}		
+		if(gameObject.equals("showMenu")) {
+			buildMenuLayout();	
+		}
+		if(gameObject.equals("quitMenu")) {		
+			removeElementFromGameField("mainMenu");
+		}	
+		
+		if(gameObject.equals("showHighscore")) {
+			Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
+			buildHighscoreLayout(highscoreDocument);			
+		}	
+		
+		if(gameObject.equals("showUserSelect")) {
+			Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
+			buildUserSelectLayout(highscoreDocument);			
+		}
+		
+		if(gameObject.equals("loadUserGame")) {
+			clearGameField();
+			buildGameLayout();
+			// removeElementFromGameField("mainHighscore");
+			// removeElementFromGameField("mainMenu");
 			
-			}
-			if(gameObject.equals("focusGameElements")) {
-				panelbar.setPlayPauseButton("Pause");
-				this.requestFocus();
-			}
-			if(gameObject.equals("stopGame")) {
-				panelbar.setPlayPauseButton("Play");
-			}	
-			if(gameObject.equals("playGame")) {
-				panelbar.setPlayPauseButton("Pause");
-			}		
-			if(gameObject.equals("initLevel")) {
-				clearGameField();
-				controller.initNewLevel();
-			}
-			if(gameObject.equals("updateLevel")) {
-				buildGameLayout();
-			}
-			if(gameObject.equals("loadLevel")) {
-				clearGameField();
-				controller.initExistingLevel();
-				buildGameLayout();
-			}		
-			if(gameObject.equals("showMenu")) {
-				buildMenuLayout();	
-			}
-			if(gameObject.equals("quitMenu")) {		
-				removeElementFromGameField("mainMenu");
-			}	
+		}
+		
+		if(gameObject.equals("showEnterName")) {
+			buildEnterNameLayout();			
+		}	
+		
+		if(gameObject.equals("quitHighscore")) {		
+			removeElementFromGameField("mainHighscore");
+			System.out.println("Highscore remove");
+		}	
+		
+		if(gameObject.equals("quitEnterName")) {		
+			removeElementFromGameField("mainEnterName");
+			System.out.println("EnterName remove");
+		}	
+		
+		if(gameObject.equals("startNewGame")) {			
+			clearGameField();
+			buildGameLayout();
+			System.out.println("New Game!");
 			
-			if(gameObject.equals("showHighscore")) {
-				Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
-				buildHighscoreLayout(highscoreDocument);			
-			}	
-			
-			if(gameObject.equals("showUserSelect")) {
-				Document highscoreDocument = ((BreakWallModel) gameModel).getHighscoreDocument();
-				buildUserSelectLayout(highscoreDocument);			
-			}
-			
-			if(gameObject.equals("loadUserGame")) {
-				removeElementFromGameField("mainHighscore");
-				removeElementFromGameField("mainMenu");
-				
-			}
-			
-			if(gameObject.equals("showEnterName")) {
-				buildEnterNameLayout();			
-			}	
-			
-			if(gameObject.equals("quitHighscore")) {		
-				removeElementFromGameField("mainHighscore");
-				System.out.println("Highscore remove");
-			}	
-			
-			if(gameObject.equals("quitEnterName")) {		
-				removeElementFromGameField("mainEnterName");
-				System.out.println("EnterName remove");
-			}	
-			
-			if(gameObject.equals("startNewGame")) {			
-				clearGameField();
-				buildGameLayout();
-				System.out.println("New Game!");
-				
-			}
-			
-			if(gameObject.equals("showPlayButton")) {			
-				panelbar.setMusicButton(true);
-				this.requestFocus();
-			}
-			if(gameObject.equals("showMuteButton")) {			
-				panelbar.setMusicButton(false);
-				this.requestFocus();
-			}
+		}
+		
+		if(gameObject.equals("showPlayButton")) {			
+			panelbar.setMusicButton(true);
+			this.requestFocus();
+		}
+		if(gameObject.equals("showMuteButton")) {			
+			panelbar.setMusicButton(false);
+			this.requestFocus();
 		}
 	}
 

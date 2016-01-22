@@ -27,7 +27,7 @@ public class BreakWallConfigXML {
 	 */
 	public static Document getConfigDocument() {
 		if(configDoc == null) {
-			File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.configXML);
+			File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.xmlPath + BreakWallConfig.configXML);
 			if (xml.exists() && xml.length() != 0) {
 		    	configDoc = handleXMLInstance.parseFile(xml);
 		    }
@@ -99,6 +99,8 @@ public class BreakWallConfigXML {
 			} catch(NumberFormatException e1) {
 				System.out.println("Error in config-data! Check attribute value of: " + valueKey);
 			}
+		} else if(valueType.equals("Boolean")) {
+			tempNewValue = Boolean.parseBoolean(newValue);
 		}
 		try {
 			// set new value of config parameter
