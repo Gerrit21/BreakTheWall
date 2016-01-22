@@ -33,14 +33,24 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	private String newName;
 	private String loadedName;
 
+	/**
+	 * Constructor takes the game model as parameter
+	 * @param gameModel	instance of game model
+	 **/
 	public BreakWallController(BreakWallModel gameModel) {
 		this.gameModel = gameModel;
 	}
 	
+	/**
+	 * Public method is called when the user starts a new game via the main menu
+	**/
 	public void initNewLevel() {		
 		gameModel.startNewLevel();		
 	}
-	
+
+	/**
+	 * Public method is called when the user loads an existing game
+	**/
 	public void initExistingLevel() {		
 		gameModel.startExistingLevel();		
 	}
@@ -51,25 +61,27 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// entspricht der Leertaste
+		// key code for space key
+		// starts the ball movement
 		if(e.getKeyCode() == 32) {
 			if(gameModel.getBallAction() == false) {
 				gameModel.setBallAction(true);
 			}
 		}
-		// entspricht der linken Pfeiltaste
+		
+		// key code for left arrow key
 		if(e.getKeyCode() == 37) {
-			// bewege das Paddle nach links
 			gameModel.movePaddleLeft();
 		}
-		// entspricht der rechten Pfeiltaste
+		
+		// key code for right arrow key
 		if(e.getKeyCode() == 39) {
-			// bewege das Paddle nach rechts
 			gameModel.movePaddleRight();								
 		}
 		
+		// key code for 'e' key
 		if(e.getKeyCode() == 69) {
-			// cheating: remove random brick
+			// cheating key: remove random brick
 			gameModel.cheat();								
 		}
 		
@@ -77,13 +89,11 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -92,6 +102,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	// ***************************************************************//
 	
 	@Override
+	// events for when a button has been clicked in the GUI
 	public void actionPerformed(ActionEvent e) {
 		command = e.getActionCommand();		
 		if(command.equals("Pause")) {
@@ -107,52 +118,60 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 		if(command.equals("Save")) {
 			gameModel.enterName();
 		}
+		
 		if(command.equals("Exit")) {
 			gameModel.exitGame();
 		}
+		
 		if(command.equals("MuteMusic")) {
 			gameModel.setMusicPlaying(false);
 		}
+		
 		if(command.equals("PlayMusic")) {
 			gameModel.setMusicPlaying(true);
-		}		
+		}
+		
 		if(command.equals("Menu")) {
 			gameModel.menuGame();
 		}	
+		
 		if(command.equals("Back")) {
 			gameModel.backGame();
-		}	
+		}
+		
 		if(command.equals("Highscores")) {
 			gameModel.scoreGame();
-		}	
+		}
+		
 		if(command.equals("Load")) {
 			gameModel.selectUser();
-		}	
+		}
+		
 		if(command.equals("Load Game")) {
 			gameModel.loadUser(loadedName);
 		}
+		
 		if(command.equals("BackMenu")) {
 			gameModel.backMenu();
 		}
+		
 		if(command.equals("BackSaveMenu")) {
 			gameModel.backMenuAfterSave();
 		}
+		
 		if(command.equals("Enter and Save")) {
 			try {
 				gameModel.saveGame(newName);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			gameModel.backMenuAfterSave();
 		}
 		
 		if(command.equals("New Game")) {
+			System.out.println("start new button");
 			gameModel.restartNewGame();
-		}
-		
-		
-		
+		}			
 	}
 	
 	// ***************************************************************//
@@ -166,9 +185,10 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	@Override
 	public void insertUpdate(DocumentEvent textInputEvent) {
 		try {
+			// stores the name update from the "save name"-input-field
+			// when text is inserted
 			newName = textInputEvent.getDocument().getText(0, textInputEvent.getDocument().getLength()); 
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -176,9 +196,10 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 	@Override
 	public void removeUpdate(DocumentEvent textInputEvent) {
 		try {
+			// stores the name update from the "save name"-input-field
+			// when text is removed
 			newName = textInputEvent.getDocument().getText(0, textInputEvent.getDocument().getLength());
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -189,6 +210,7 @@ public class BreakWallController implements KeyListener, ActionListener, Documen
 
 	@Override
 	public void itemStateChanged(ItemEvent changedItemEvent) {
+		// stores the selected name from the load-game dropdown field in the load menu
 		loadedName = (String) changedItemEvent.getItem();
 	}
 
