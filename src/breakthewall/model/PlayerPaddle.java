@@ -4,10 +4,10 @@ import breakthewall.BreakWallConfig;
 import breakthewall.view.BreakWallView;
 
 /**
- * Runnable-Klasse zur Erstellung des Paddles.
+ * Class to create the paddle object
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class PlayerPaddle implements GameElement {
 		
@@ -21,15 +21,18 @@ public class PlayerPaddle implements GameElement {
 	private boolean isDestroyed = false;
 
 	public PlayerPaddle() {
+		// the id of the paddle image is the paddle image reference
 		this.id = imagePath;
 		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
 		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);		
 	}
 	
 	/**
-	 * Bewegt das Paddle auf dem Spielfeld in Geschwindigkeit speed
-	 * nach links und rechts, bis die Grenzen des Spielfelds erreicht sind.
-	 * @param direction Bewegungsrichtung, durch Tastendruck übergeben
+	 * Public methods moves the paddle on the x-axis of the game field.
+	 * "left" means that the x-value decreases down to zero, 
+	 * "right" means that the x-value increases up the the game field width. 
+	 * 
+	 * @param direction direction of the paddle movement, controlled by arrow keys
 	 */
 	public void movePaddle(String direction) {
 		int currentX = getXCoord(); 
@@ -40,10 +43,18 @@ public class PlayerPaddle implements GameElement {
 		}
 	}
 	
+	/**
+	 * Public method to set the current speed of the paddle
+	 * 
+	 * @param speed new speed of the paddle
+	 */
 	public void setSpeed(int speed) {
 		this.speed =speed;
 	}
 	
+	/**
+	 * @return the current speed of the paddle
+	 */
 	public int getSpeed() {
 		return this.speed;
 	}

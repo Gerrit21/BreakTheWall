@@ -15,19 +15,6 @@ public class BonusBallSpeed implements Bonus {
 	private String bonusType = this.getClass().getSimpleName();
 	private int newBallSpeed;
 	
-	@Override
-	public String getBonusType() {
-		return bonusType;
-	}
-
-	/**
-	 * @ return imagePath image path of image associated with this bonus
-	 */
-	@Override
-	public String getImage() {
-		return this.imagePath;
-	}
-	
 	/** 
 	 * Public method returns double speed of ball 
 	 * 
@@ -37,6 +24,16 @@ public class BonusBallSpeed implements Bonus {
 	public int setBallSpeed(int ballSpeed) {
 		newBallSpeed = ballSpeed * 2;
 		return newBallSpeed;
+	}
+	
+	@Override
+	public String getBonusType() {
+		return bonusType;
+	}
+
+	@Override
+	public String getImage() {
+		return this.imagePath;
 	}
 
 }

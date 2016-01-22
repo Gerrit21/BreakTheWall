@@ -4,12 +4,11 @@ import breakthewall.BreakWallConfig;
 import breakthewall.view.BreakWallView;
 
 /**
- * Klasse zur Erstellung eines normalen Bricks.
- * Über die Variable stability kann die Härte eines normalen Bricks
- * variiert werden.
+ * Class to create normal bricks without bonus objects.
+ * Using the variable "stability", the hardness of the new brick can be set.
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class BrickNormal implements GameElement, Brick {
 
@@ -19,10 +18,12 @@ public class BrickNormal implements GameElement, Brick {
 	private boolean isDestroyed = false;
 
 	/**
-	 *  Konstruktor für variierend harte Bricks.
-	 *  @param stability Für den Brick zu setzende Stabilität
+	 *  Constructor takes the stability of the new brick as a parameter
+	 *  
+	 *  @param stability hardness of the new normal brick
 	 */
 	public BrickNormal(int stability) {
+		// brick image varies, depending on the hardness of the brick
 		if(stability == 1) {
 			imagePath = BreakWallConfig.brickImgNormal;
 		} else {
@@ -34,6 +35,7 @@ public class BrickNormal implements GameElement, Brick {
 		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
+	@Override
 	public boolean hasBonusObject() {
 		return false;
 	}

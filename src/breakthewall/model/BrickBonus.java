@@ -4,11 +4,12 @@ import breakthewall.BreakWallConfig;
 import breakthewall.view.BreakWallView;
 
 /**
- * Klasse zur Erzeugung eines Bricks mit Bonus-Objekt
- * Es wird einer von verschiedenen Typen von Bonus-Objekten zufällig erzeugt
+ * Class to create bricks with bonus objects.
+ * One of several types of bonus objects is randomly created
+ * when bonus brick is created.
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class BrickBonus implements GameElement, Brick {
 	
@@ -16,12 +17,11 @@ public class BrickBonus implements GameElement, Brick {
 	private String imagePath;
 	private String id = "";
 	private int stability = BreakWallConfig.stabilityNormal;
-	private boolean isDestroyed = false;
-	
+	private boolean isDestroyed = false;	
 	private Bonus randomBonus;
 	
-	/*
-	 * Bei Konstruktoraufruf wird dem Bonus-Brick ein zufälliger Bonus hinzugefügt
+	/**
+	 * Constructor call creates a random bonus for the brick
 	 */
 	public BrickBonus() {
 		setRandomBonus();
@@ -31,6 +31,11 @@ public class BrickBonus implements GameElement, Brick {
 		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
+	/**
+	 * Constructor call creates a bonus brick with the specified bonus
+	 * 
+	 * @param bonusRef String reference of the specified bonus object
+	 */
 	public BrickBonus(String bonusRef) {
 		setBonusObject(bonusRef);
 		this.points = BreakWallConfig.pointsBonus;
@@ -40,7 +45,7 @@ public class BrickBonus implements GameElement, Brick {
 	}
 	
 	/**
-	 * Der Bonus-Typ für eine Bonus-Brick-Instanz wird zufällig erstellt
+	 * Bonus type of bonus brick instance is randomly created by this private method
 	 */
 	private void setRandomBonus() {
 		int randomInt = BreakWallModel.randomFromRange(1, 4);
@@ -54,12 +59,13 @@ public class BrickBonus implements GameElement, Brick {
 			randomBonus = new BonusXtraPoints();
 		}
 	}
-
-	public Bonus getBonusObject() {
-		return randomBonus;
-	}
 	
-	public void setBonusObject(String bonusRef) {
+	/**
+	 * Private methods sets the bonus of the brick object to a given type
+	 * 
+	 * @param bonusRef the given type of bonus object
+	 */
+	private void setBonusObject(String bonusRef) {
 		if(bonusRef.equals("BonusXtraLife")) {
 			randomBonus = new BonusXtraLife();
 		} else if(bonusRef.equals("BonusBallSpeed")) {
@@ -71,6 +77,13 @@ public class BrickBonus implements GameElement, Brick {
 		}		
 	}
 	
+	
+	@Override
+	public Bonus getBonusObject() {
+		return randomBonus;
+	}
+	
+	@Override
 	public boolean hasBonusObject() {
 		return true;
 	}

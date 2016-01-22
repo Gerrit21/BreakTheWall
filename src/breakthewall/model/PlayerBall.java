@@ -4,10 +4,10 @@ import breakthewall.BreakWallConfig;
 import breakthewall.view.BreakWallView;
 
 /**
- * Runnable-Klasse zur Erstellung eines Spielballs.
+ * Class to create the ball object
  * 
  * @author Mareike Röncke, Gerrit Schulte
- * @version 1.0, Oktober 2015.
+ * @version 1.0, October 2015.
  */
 public class PlayerBall implements GameElement {
 	
@@ -24,25 +24,25 @@ public class PlayerBall implements GameElement {
 	private boolean isDestroyed = false;
 	
 	public PlayerBall() {
+		// the id of the ball image is the ball image reference
 		this.id = imagePath;
 		this.width = BreakWallView.getImageByURL(this, imagePath).getWidth(null);
 		this.height = BreakWallView.getImageByURL(this, imagePath).getHeight(null);
 	}
 	
 	/**
-	 * Methode, um den Ball auf dem Spielfeld zu bewegen.
+	 * Public method to move ball along the x- and y-axis
 	 */
-	
 	public void moveBall() {
 		setXCoord(xCoord + directionX);
 		setYCoord(yCoord + directionY);		
 	}
 	
 	/**
-	 * Methode, um den Ball synchron zum Paddle zu bewegen
+	 * Public method to move the ball when it rests on the paddle.
 	 * 
-	 * Ermöglicht es, denn Ball erst auf Befehl (z.B. Tastendruck) "abzufeuern"
-	 * @param direction Aktuelle Bewegungsrichtung des Paddles
+	 * @param direction current direction of paddle movement
+	 * @param speed current speed of paddle movement
 	 */
 	public void restBall(String direction, int speed) {		 
 		if(direction == "left") {			
@@ -52,36 +52,68 @@ public class PlayerBall implements GameElement {
 		}
 	}
 
+	/**
+	 * Public method to set the current speed of the ball
+	 * 
+	 * @param speed new speed of the ball
+	 */
 	public void setSpeed(int speed) {
 		this.speed =speed;
 		setDirX(directionX * speed);
 		setDirY(directionY * speed);
 	}
 	
+	/**
+	 * @return the current speed of the ball
+	 */
 	public int getSpeed() {
 		return this.speed;
 	}
 	
+	/**
+	 * Public method sets the x-axis-direction of the ball.
+	 * 
+	 * @param directionX the new x-axis-direction of the ball
+	 */
 	public void setDirX(int directionX) {
 		this.directionX = directionX;
 	}
 	
+	/**
+	 * @return directionX the x-axis-direction of the ball
+	 */
 	public int getDirX() {
 		return this.directionX;
 	}
-	
+
+	/**
+	 * Public method set the y-axis-direction of the ball.
+	 * 
+	 * @param directionY the new y-axis-direction of the ball
+	 */
 	public void setDirY(int directionY) {
 		this.directionY = directionY;
 	}
 	
+	/**
+	 * @return directionY the y-axis-direction of the ball
+	 */
 	public int getDirY() {
 		return this.directionY;
 	}	
 	
+	/**
+	 * @return isMoving whether the ball is moving on the game field (true) or resting on the paddle (false)
+	 */
 	public boolean getState() {
 		return this.isMoving;
 	}
 	
+	/**
+	 * Public methods sets whether the ball is moving on the game field (true) or resting on the paddle (false)
+	 * 
+	 * @param isMoving moving on the game field (true) or resting on the paddle (false)
+	 */
 	public void setState(boolean isMoving) {
 		this.isMoving = isMoving;
 	}

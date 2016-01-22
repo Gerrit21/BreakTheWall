@@ -26,17 +26,11 @@ public class BonusPaddleWidth implements Bonus {
 		return tempSize;
 	}
 
-	/**
-	 * @ return imagePath image path of image associated with this bonus
-	 */
 	@Override
 	public String getImage() {
 		return this.imagePath;
 	}
 
-	/**
-	 * @ return bonusType simple name of this class
-	 */
 	@Override
 	public String getBonusType() {
 		return this.getClass().getSimpleName();

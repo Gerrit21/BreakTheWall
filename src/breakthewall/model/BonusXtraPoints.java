@@ -17,16 +17,35 @@ public class BonusXtraPoints implements Bonus, GameElement {
 	private int xCoord, yCoord, height, width;
 	private boolean isDestroyed = false;
 	
-	public int setBonusPoints() {
-		bonusPoints = BreakWallModel.randomFromRange(1, 20);
-		return bonusPoints;
-	}
-	
-	public int getBonusPoints() {
+	/**
+	 * Constructor calls method to define the value of the bonus extra points
+	 * for this instance
+	 */
+	public BonusXtraPoints() {
 		setBonusPoints();
+	}
+	
+	/**
+	 * Public methods sets random extra points between 1
+	 * and a max. value, which is defined in the config.xml
+	 */
+	public void setBonusPoints() {
+		bonusPoints = BreakWallModel.randomFromRange(1, BreakWallConfig.maxExtraPoints);
+	}
+	
+	/**
+	 * @return bonusPoints the value of bonus points for this object
+	 */
+	public int getBonusPoints() {
 		return bonusPoints;
 	}
 	
+	/**
+	 * This method moves the bonus on the y-axis
+	 * to give the impression it is falling down
+	 * 
+	 * @param speed	the pixel value to be added to the current y-position
+	 */
 	public void moveBonus(int speed) {
 		yCoord = yCoord + speed;
 	}
