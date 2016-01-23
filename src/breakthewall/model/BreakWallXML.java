@@ -2,6 +2,8 @@ package breakthewall.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import breakthewall.BreakWallConfig;
@@ -22,10 +25,17 @@ import javax.xml.transform.*; // TransformerFactory, Transformer
 import javax.xml.transform.dom.*; // DOMSource
 import javax.xml.transform.stream.*; // StreamResult
 
+/**
+ *
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 public class BreakWallXML {
 	
 	public File xml = null;
 	public Document dom = null;
+	private Document doc;
 	private BreakWallModel model;
 	private boolean booleanNameDuplicate;
 	private int userNameCount;
@@ -36,6 +46,8 @@ public class BreakWallXML {
 	
 	public BreakWallXML(BreakWallModel model) {
 		this.model = model;
+		doc = null;
+		
 	}
 	
 	/**
@@ -47,16 +59,13 @@ public class BreakWallXML {
 	 */
 	public void createUserXML(String userName, ArrayList<GameElement> brickList) throws ParserConfigurationException {		
 	
-		
 		int currentScore = model.getScore();
 		int currentLevel = model.getLevel();
 		int currentLives = model.getLives();
-		
-		
-		File XmlFile = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
+				
+		File XmlFile = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.xmlPath + BreakWallConfig.highscoreXML);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = null;
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();		
 		    try {
 		        doc = dBuilder.parse(XmlFile);
 		    } catch (SAXException e) {
@@ -69,9 +78,7 @@ public class BreakWallXML {
 
 	    doc.getDocumentElement().normalize();
 
-	    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-		
-	
+	    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());	
 		
 		 // Search user-elements:
 		NodeList nList = doc.getElementsByTagName("name");
@@ -106,7 +113,7 @@ public class BreakWallXML {
 
 		
 		
-		writeXMLDocment(doc, System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
+		writeXMLDocment(doc, System.getProperty("user.dir") + File.separator + BreakWallConfig.xmlPath + BreakWallConfig.highscoreXML);
 		System.out.println("Datei '" + BreakWallConfig.highscoreXML + "' wurde erzeugt.");
 	} // generateXML
 	
@@ -225,6 +232,13 @@ public class BreakWallXML {
         return dom;
     }
 	
+    public Document getHighscoreDocument() {
+    	return this.doc;
+    }
+    
+    public void setHighscoreDocument(Document doc) {
+    	this.doc = doc;
+    }
 	
 	/**
 	 * Schreibt das XML-Dokument in eine Datei.
@@ -233,7 +247,6 @@ public class BreakWallXML {
 	 * @param filename Name der zu schreibenden XML-Datei.
 	 */
 	public void writeXMLDocment(Document doc, String filename) {
-		System.out.println(filename);
 		File file = new File(filename);
 
 		try {
@@ -255,6 +268,29 @@ public class BreakWallXML {
 			e1.printStackTrace();
 		} // catch
 	} // writeXMLDocument
+	
+	public void writeXMLDocument(String xmlString, String filename) {
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+	    DocumentBuilder builder;  
+	    try  
+	    {  
+	        builder = factory.newDocumentBuilder();  
+	        Document document = builder.parse(new InputSource(new StringReader(xmlString)));
+	        writeXMLDocment(document, filename);
+	    } catch (Exception e) {  
+	        e.printStackTrace();  
+	    } 
+	}
+	
+	public String getStringFromDocument(Document doc) throws TransformerException {
+	    DOMSource domSource = new DOMSource(doc);
+	    StringWriter writer = new StringWriter();
+	    StreamResult result = new StreamResult(writer);
+	    TransformerFactory tf = TransformerFactory.newInstance();
+	    Transformer transformer = tf.newTransformer();
+	    transformer.transform(domSource, result);
+	    return writer.toString();
+	}
 	
 	
 	 public Object getTagInfo(String tagName, Element elem) {    
