@@ -3,6 +3,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
@@ -34,6 +36,7 @@ public class BreakWallModel extends Observable {
 	private PlayerBall gameBall;
 	private BreakWallMusic musicObj;
 	private Thread musicThread;
+	private RemoteHighscoreClient gameClient;
 	private Point ballTop, ballBottom, ballLeft, ballRight;
 	private BrickWall gameWall;
 	private ArrayList<GameElement> brickList;
@@ -57,6 +60,9 @@ public class BreakWallModel extends Observable {
 	 */
 	public BreakWallModel() {
 		musicThread = null;
+		if(BreakWallConfig.useRemoteHighscoreList == true) {
+			gameClient = new RemoteHighscoreClient();
+		}
 		startNewGame();
 	}
 	
@@ -78,6 +84,7 @@ public class BreakWallModel extends Observable {
 			musicIsPlaying = true;					
 		}	
 		breakWallElements = new ArrayList<GameElement>();
+		System.out.println("elements: " + breakWallElements.size());
 		movableBonusObjects = new ArrayList<GameElement>(); 
 		gamePaddle = new PlayerPaddle();	
 		gameBall = new PlayerBall();	
@@ -89,14 +96,14 @@ public class BreakWallModel extends Observable {
 		// create brick wall, add it to a list of game elements
 		for(int i = 0; i < gameWall.getBrickList().size(); i++) {
 			breakWallElements.add(gameWall.getBrickList().get(i));
-		}							
+		}	
 	}
 	
 	/**
 	 * Public method to initiate a new game
 	 */
-	public void startNewGame() {
-		currentLevel = 1;
+	public void startNewGame() {		
+		currentLevel = 1;		
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		currentLives = BreakWallConfig.lifeCount;		
 		if(musicThread != null) {
@@ -107,17 +114,14 @@ public class BreakWallModel extends Observable {
 		gameScore = new BreakWallScore(0);
 		gameXMLInstance = new BreakWallXML(this);
 		gameWall = new BrickWall();
-		initGameElements();
 		setInfoText("Press Arrow-Keys to navigate the paddle left and right. Press Space-Key to start the game.");
-		playGame();	
-		
-		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
-		try {
-			newHighscore.overrideLocalHighscore();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		initGameElements();
+		if(BreakWallConfig.useRemoteHighscoreList == true) {
+			System.out.println("Mind that you have to establish a server connection to use a remote highscore list.");
+			setLocalHighscoreList();
+		}
+		setChanged();
+		notifyObservers("showPlayButton");
 	}
 	
 	/**
@@ -132,10 +136,10 @@ public class BreakWallModel extends Observable {
 		// set new level difficulty
 		BreakWallConfig.setLevelDifficulty(currentLevel);
 		gameWall = new BrickWall();
+		setInfoText("You've entered Level " + currentLevel + "!");
 		initGameElements();
 		setChanged();
 		notifyObservers("updateLevel");
-		setInfoText("You've entered Level " + currentLevel + "!");
 		playGame();
 	}
 
@@ -155,11 +159,14 @@ public class BreakWallModel extends Observable {
 		currentLives = BreakWallConfig.lifeCount;
 		updateLevel = false;
 		scoreFactor = 1;
+		breakWallElements.removeAll(getElementList());
 		gameWall = new BrickWall();
 		gameWall.setBrickList(brickList);
-		initGameElements();
 		setInfoText("You may start at Level " + currentLevel + "!");
+		initGameElements();
 		playGame();
+		setChanged();
+		notifyObservers("showPlayButton");
 	}
 	
 	/**
@@ -257,33 +264,45 @@ public class BreakWallModel extends Observable {
 	 */
 	public void saveGame(String userName) throws IOException {
 		setInfoText("Save Highscore...");
-		stopGame();
-			
+		stopGame();	
 		try {
 			gameXMLInstance.createUserXML(userName, gameWall.getBrickList());
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		RemoteHighscoreClient newHighscore = new RemoteHighscoreClient();
-		newHighscore.overrideNetworkHighscore();	
-	}
-	
-	public void enterName() {
-		// Eingabefeld fuer Namen
-		
-		setInfoText("Enter your Name...");
-		setChanged();
-		notifyObservers("showEnterName");
-		
+		if(BreakWallConfig.useRemoteHighscoreList == true) {
+			setRemoteHighscoreListLock(false);
+			setRemoteHighscoreList();	
+		}
 	}
 	
 	/**
-	 * Public method to end game
+	 * public method notifies the observer that the user clicked the "Save"-button.
+	 * The observer may show the the enter-name-menu
+	 */
+	public void enterName() {	
+		if(BreakWallConfig.useRemoteHighscoreList == true) {
+			if(!getRemoteHighscoreListLock()) {
+				setLocalHighscoreList();
+				setRemoteHighscoreListLock(true);
+				// Eingabefeld fuer Namen
+				setChanged();
+				notifyObservers("showEnterName");
+			} else {
+				System.out.println("The remote highscore list is currently in use. Please try saving the game later.");
+				
+			}
+		} else {			
+			// Eingabefeld fuer Namen
+			setChanged();
+			notifyObservers("showEnterName");			
+		}		
+	}
+	
+	/**
+	 * Public method to exit the game
 	 */
 	public void exitGame() {
-		setInfoText("Exit the Game...");
 		System.exit(0);		
 	}
 	
@@ -291,17 +310,16 @@ public class BreakWallModel extends Observable {
 	 * Public method to invoke visibility of the game menu
 	 */
 	public void menuGame() {
-		setInfoText("Go to menu...");
 		setChanged();
 		notifyObservers("showMenu");
 		stopGame();
 	}
 
 	/**
-	 * Public method to invoke closing of the game menu
+	 * Public method to invoke closing of the game menu.
+	 * The GUI shows the original game field.
 	 */
 	public void backGame() {
-		setInfoText("Go back to Game...");
 		setChanged();
 		notifyObservers("quitMenu");
 		playGame();
@@ -312,7 +330,6 @@ public class BreakWallModel extends Observable {
 	 * Public method to invoke closing of the highscore list
 	 */
 	public void backMenu() {
-		setInfoText("Go back to Menu...");
 		setChanged();
 		notifyObservers("quitHighscore");
 		
@@ -320,9 +337,10 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void backMenuAfterSave() {
-		setInfoText("Go back to Menu...");
+		playGame();
 		setChanged();
 		notifyObservers("quitEnterName");
+		pauseGame();		
 		
 	}
 	
@@ -354,14 +372,14 @@ public class BreakWallModel extends Observable {
 		stopGame();
 	}
 	
-	public void restartNewGame() {
-		
+	public void restartNewGame() {		
+		stopGame();
+		startNewGame();
+		playGame();
 		System.out.println("Start New Game");
 		setInfoText("New Game...");
 		setChanged();
-		notifyObservers("startNewGame");
-		startNewGame();
-		
+		notifyObservers("startNewGame");		
 	}
 	
 	public void selectUser() {
@@ -372,6 +390,7 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void loadUser(String name) {
+		setLocalHighscoreList();
 		setChanged();
 		notifyObservers("loadUserGame");		
 		loadGame(name);
@@ -379,14 +398,47 @@ public class BreakWallModel extends Observable {
 	
 	public Document getHighscoreDocument() {
 		dom = null;		
-		File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.highscorePath + BreakWallConfig.highscoreXML);
+		File xml = new File(System.getProperty("user.dir") + File.separator + BreakWallConfig.xmlPath + BreakWallConfig.highscoreXML);
 	    if (xml.exists() && xml.length() != 0) {
 	    	dom = gameXMLInstance.parseFile(xml);
 	    }
 	    return dom;
 	}
 	
+	public void setLocalHighscoreList() {
+		try {
+			gameClient.setLocalHighscore();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
+	}
+	
+	public void setRemoteHighscoreList() {
+		try {
+			gameClient.setNetworkHighscore();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setRemoteHighscoreListLock(boolean lock) {
+		try {
+			gameClient.setRemoteHighscoreListLock(lock);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public boolean getRemoteHighscoreListLock() {
+		boolean isLocked = false;
+		try {
+			isLocked = gameClient.getRemoteHighscoreListLock();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return isLocked;
+	}
 	// ***************************************************************//
 	// Methods to manipulate game elements
 	// ***************************************************************//
@@ -519,14 +571,23 @@ public class BreakWallModel extends Observable {
 		return  gameScore.getCurrentScore();
 	}
 	
+	/**
+	 * @return currentLevel	the current level the user is playing
+	 **/	
 	public int getLevel() {
 		return  this.currentLevel;
 	}
 	
+	/**
+	 * @return currentLives life count of the current user
+	 **/	
 	public int getLives() {
 		return  this.currentLives;
 	}
-	
+
+	/**
+	 * @return activeBrick the least brick that has been hit by the ball
+	 **/
 	public Brick getActiveBrick() {
 		return activeBrick;
 	}
