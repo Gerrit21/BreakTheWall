@@ -30,6 +30,10 @@ public class HighscoreView extends JPanel  {
 	private JLabel lblHighscores;
 	private JPanel panelTable;
 	
+	/*
+	 * Constructor. 
+	 * Add JButton, jScrollPane, JTable and JLabel to JPanels
+	 */	
 	
 	public HighscoreView(Document highscoreDocument) {
 		
@@ -40,6 +44,8 @@ public class HighscoreView extends JPanel  {
 	        
 		xmlHighscore.setBackground(new Color(245,245,245,250));
 		xmlHighscore.setLayout(null);
+		
+		//Layout everything.
  
         btnBackMenu = new JButton();
    		btnBackMenu.setActionCommand("BackMenu");
@@ -69,6 +75,7 @@ public class HighscoreView extends JPanel  {
         };
          
         //creates an instance of the table class and sets it up in a scrollpane
+        
         highscoreTable = new JTable(model);       
         highscoreTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
@@ -78,6 +85,7 @@ public class HighscoreView extends JPanel  {
         panelTable.add(jScrollPane);
          
         //add some columns
+        
         model.addColumn("Highscore");
         model.addColumn("Name");
         model.addColumn("Level");
@@ -87,18 +95,12 @@ public class HighscoreView extends JPanel  {
         insertTableRows(model, highscoreDocument);	
         
         //creates sorted table 
-        
-        /**TableRowSorter<TableModel> sorter = new TableRowSorter<>(highscoreTable.getModel());
-        highscoreTable.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-         
-        int columnIndexToSort = 0;
-        
-        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
-        sorter.setSortKeys(sortKeys);
-        sorter.sort();**/
-	        
+             
 	} 
+	
+	/**
+	 * public int[] to sort by "highscore" value 
+	 */
 	
 	public int[] sortRow(NodeList list, String rowToSort) {
 		int[] sortedHighscoreValues = new int[list.getLength()];
@@ -138,6 +140,10 @@ public class HighscoreView extends JPanel  {
 		return highscoreIndices;
 	}
      
+	/**
+	 * public method insert data into jTable 
+	 */
+	
     public void insertTableRows(DefaultTableModel tableModel,Document doc) {            
         Element root = doc.getDocumentElement();
         NodeList list = root.getElementsByTagName("user");
@@ -153,7 +159,11 @@ public class HighscoreView extends JPanel  {
         tableModel.fireTableStructureChanged(); 
         tableModel.fireTableDataChanged();
     }
-     
+    
+    /**
+	 * public Object to look for xml data  
+	 */
+	
     public Object getArticleInfo(String tagName, Element elem) {    
         NodeList list = elem.getElementsByTagName(tagName);
         for (int i = 0; i < list.getLength(); ++i) {
@@ -169,6 +179,10 @@ public class HighscoreView extends JPanel  {
         return null;
     }
 	
+    /**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
+    
 	public JButton getButton() {
 		return btnBackMenu;
 	}

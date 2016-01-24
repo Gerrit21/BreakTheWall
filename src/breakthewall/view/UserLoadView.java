@@ -20,7 +20,7 @@ import java.util.*;
 import java.text.SimpleDateFormat;
  
 
-public class UserLoadView extends JPanel implements ActionListener {
+public class UserLoadView extends JPanel  {
    
 	
     JLabel result;
@@ -34,6 +34,11 @@ public class UserLoadView extends JPanel implements ActionListener {
     private ArrayList<JButton> navigationButtonsLoad;
 	private String PleaseChoose;
     
+	
+	/*
+	 * Constructor. 
+	 * Add JButtons, JTextFields, JCombobox and JLabels to JPanel
+	 */	
  
     public UserLoadView(Document highscoreDocument) {
        
@@ -46,15 +51,13 @@ public class UserLoadView extends JPanel implements ActionListener {
     	navigationButtonsLoad = new ArrayList<JButton>();
 	    
     	
-    	
         getNameXML(highscoreDocument);
         
         String[] patternExamples = getNamen();
  
         currentPattern = patternExamples[0];
         
-       
-        //Lay out everything.
+        //Layout everything.
     	
 		lblLoadName = new JLabel("Select your username");
 		lblLoadName.setForeground(Color.GRAY);
@@ -65,12 +68,9 @@ public class UserLoadView extends JPanel implements ActionListener {
         patternList = new JComboBox(patternExamples);
         patternList.setBounds(231, 164, 138, 33);
         patternList.setEditable(false);
-        patternList.addActionListener(this);
         patternPanel.add(patternList);
 		
 		btnLoadGame = new JButton("Load Game");
-//		btnLoadGame.setForeground(Color.WHITE);
-//		btnLoadGame.setBackground(Color.DARK_GRAY);
 		btnLoadGame.setBounds(231, 208, 138, 33);
 		patternPanel.add(btnLoadGame);
 		
@@ -87,31 +87,13 @@ public class UserLoadView extends JPanel implements ActionListener {
 		navigationButtonsLoad.add(btnBackMenu);
         
         add(patternPanel);
-       
-       
-        
-      //  ausgeben();
-        
-      
-        
-        
-        
-    } //constructor
- 
-    public void actionPerformed(ActionEvent e) {
-        JComboBox cb = (JComboBox)e.getSource();
-        String newSelection = (String)cb.getSelectedItem();
-        currentPattern = newSelection;
-        ausgeben();
-    }
- 
-    
-    public void ausgeben() {
-    	// result.setText(currentPattern);
-    	 //System.out.println(currentPattern);
          
-    }
-    
+    } 
+ 
+
+	/**
+	 * public method to fill JCombobox via highscore.xml
+	 */
     
     public void getNameXML(Document doc) { 
     	
@@ -141,6 +123,9 @@ public class UserLoadView extends JPanel implements ActionListener {
         setNamen(NameList);
     }
      
+    /**
+	 * public static String to look for xml data  
+	 */
     
     public static String getCharacterDataFromElement(Element e) {
         Node child = e.getFirstChild();
@@ -151,18 +136,33 @@ public class UserLoadView extends JPanel implements ActionListener {
         return "";
       }
 	
-
+    /**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
+    
     public ArrayList<JButton> getButtonList() {
 		return navigationButtonsLoad;
 	}
-
+    
+    /**
+	 * @return the current NameList from highscoreXML
+	 */
+    
 	public String[] getNamen() {
 		return Namen;
 	}
 
+	/**
+	 * set the current NameList
+	 */
+	
 	public void setNamen(String[] Names) {
 		Namen = Names;
 	}	
+	
+	/**
+	 * public method to call in MVC
+	 */
     
     public JComboBox<String[]> getDropdownMenu() {
 		return patternList;

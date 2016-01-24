@@ -25,7 +25,12 @@ public class MenuView extends JPanel  {
 	private JLabel lblMENU;
 	private ArrayList<JButton> navigationButtonsMenu;
 	
-
+	/*
+	 * Constructor. 
+	 * Add different (Menu) JButtons and JLabel to JPanel. 
+	 * Add all Buttons to ArrayList<JButton>
+	 */	
+	
 	public MenuView() {
 	
 	    menuPanel = new JPanel();
@@ -37,6 +42,8 @@ public class MenuView extends JPanel  {
 		
         menuPanel.setBackground(new Color(245,245,245,240));
         menuPanel.setLayout(null);
+        
+		//Layout everything.
         
         lblMENU = new JLabel("MENU");
 		lblMENU.setForeground(Color.DARK_GRAY);
@@ -84,6 +91,10 @@ public class MenuView extends JPanel  {
 		add(menuPanel);	
 	
 	}
+	
+	/**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
 	
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtonsMenu;

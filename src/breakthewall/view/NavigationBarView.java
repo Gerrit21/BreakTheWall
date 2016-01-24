@@ -10,13 +10,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-
-
 public class NavigationBarView extends JPanel  {
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	public JButton btnMenu;
@@ -34,6 +30,12 @@ public class NavigationBarView extends JPanel  {
 	private JTextField txtLifeCount;
 	
 	
+	/*
+	 * Constructor. 
+	 * Add JButtons, JTextFields, and JLabels to JPanel
+	 */	
+	
+	
 	public NavigationBarView() {
 		
 		
@@ -46,6 +48,7 @@ public class NavigationBarView extends JPanel  {
 		panel.setLayout(null);
 		panel.setPreferredSize(new Dimension(600, 498));
 		
+		//Layout everything.
 		
 		lblScore = new JLabel("Score");
 		lblScore.setBackground(SystemColor.activeCaptionBorder);
@@ -118,13 +121,25 @@ public class NavigationBarView extends JPanel  {
 		navigationButtons.add(btnMenu);
 	}
 	
+	/**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
+	
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtons;
 	}
 	
+	/**
+	 * public method to call in MVC and to change String
+	 */
+	
 	public void setPlayPauseButton(String buttonText) {
 		btnPause.setText(buttonText);		
 	}
+	
+	/**
+	 * public method to call in MVC and to change MuteMusic and PlayMusic
+	 */
 	
 	public void setMusicButton(boolean isPlaying) {
 		System.out.println(isPlaying);
@@ -140,13 +155,25 @@ public class NavigationBarView extends JPanel  {
 
 	}
 	
+	/**
+	 * public method to call in MVC and to change Score
+	 */
+	
 	public void updateScoreView(int score) {
 		txtScoreCount.setText(Integer.toString(score));
 	}
 	
+	/**
+	 * public method to call in MVC and to change Level
+	 */
+	
 	public void updateLevelView(int level) {
 		txtLevelCount.setText(Integer.toString(level));
 	}
+	
+	/**
+	 * public method to call in MVC and to change Lives
+	 */
 	
 	public void updateLifeView(int lives) {
 		txtLifeCount.setText(Integer.toString(lives));

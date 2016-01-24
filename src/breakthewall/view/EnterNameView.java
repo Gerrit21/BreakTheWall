@@ -21,7 +21,11 @@ public class EnterNameView extends JPanel {
 	private JLabel lblEnterName;
 	private ArrayList<JButton> navigationButtonsSave;
 	
-
+	/*
+	 * Constructor. 
+	 * Add JButton, JTextField and JLabel to JPanel
+	 */	
+	
 	public EnterNameView() {
 		
 		enterUser = new JPanel();
@@ -31,6 +35,8 @@ public class EnterNameView extends JPanel {
 	    enterUser.setLayout(null);
 	    
 	    navigationButtonsSave = new ArrayList<JButton>();
+	    
+		//Layout everything.
 		
 	    lblEnterName = new JLabel("Enter your Name");
 	    lblEnterName.setForeground(Color.GRAY);
@@ -39,8 +45,6 @@ public class EnterNameView extends JPanel {
 		enterUser.add(lblEnterName);
 		
 		btnEnterSave = new JButton("Enter and Save");
-//		btnEnterSave.setForeground(Color.WHITE);
-//		btnEnterSave.setBackground(Color.DARK_GRAY);
 		btnEnterSave.setBounds(231, 208, 138, 33);
 		enterUser.add(btnEnterSave);
 		
@@ -66,6 +70,10 @@ public class EnterNameView extends JPanel {
 		add(enterUser);	
 	} 
 	
+	
+	/**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
   
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtonsSave;

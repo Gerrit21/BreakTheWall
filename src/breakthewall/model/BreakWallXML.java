@@ -51,10 +51,10 @@ public class BreakWallXML {
 	}
 	
 	/**
-	 * Erzeugt ein XML-Dokument
+	 * Adds XML-Data to highscore.xml
 	 * 
-	 * @param doc Neu erstelltes XML-Dokument.
-	 * @return Modifiziertes XML-Dokument.
+	 * @param doc existing XML-Document.
+	 * @return modified XML-Dokument.
 	 * @throws ParserConfigurationException 
 	 */
 	public void createUserXML(String userName, ArrayList<GameElement> brickList) throws ParserConfigurationException {		
@@ -80,16 +80,16 @@ public class BreakWallXML {
 
 	    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());	
 		
-		 // Search user-elements:
+		// Search user-elements for exisiting names:
 		NodeList nList = doc.getElementsByTagName("name");
 		userNameCount = 1; 			
 		 
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 
 		        Element eElement = (Element) nList.item(temp);
-				// Text-Konten ermitteln:
+				// Searching for Element:
 				Text textNode = (Text) eElement.getFirstChild();
-				// Text-Knoten lesen:
+				// Read:
 				
 				if (textNode.getData().contains(userName)) {
 					userNameCount++;
@@ -98,12 +98,16 @@ public class BreakWallXML {
 				}			
 		}
 		
+		// Name already exists? Then add count to name
 		if(booleanNameDuplicate == true) {
 			NodeList bwList = doc.getElementsByTagName("breakwall");
 			bwList.item(0).appendChild(createUser(doc,
 							userName + Integer.toString(userNameCount),
 							currentLevel, currentLives, currentScore, brickList));			
-		} else {
+		} 
+		
+		// else: Write new Name
+		else {
 			NodeList bwList = doc.getElementsByTagName("breakwall");
 			bwList.item(0).appendChild(createUser(doc,
 							userName,
@@ -111,18 +115,17 @@ public class BreakWallXML {
 		}
 		
 
-		
-		
 		writeXMLDocment(doc, System.getProperty("user.dir") + File.separator + BreakWallConfig.xmlPath + BreakWallConfig.highscoreXML);
 		System.out.println("Datei '" + BreakWallConfig.highscoreXML + "' wurde erzeugt.");
-	} // generateXML
+	}
 	
 	/** 
-	 * @param doc XML-Dokument, in das eine User eingef&uuml;gt werden soll.
-	 * @param name Spitzname.
-	 * @param Level Levelnummer.
-	 * @param life Life.
-	 * @param highscore Highscore.
+	 * @param doc XML-Dokument, to insert a User.
+	 * @param name
+	 * @param Level
+	 * @param life
+	 * @param highscore
+	 * @param bricklist
 	 * @return <tt>user></tt>-Element.
 	 */
 	protected Element createUser(Document doc,
@@ -132,26 +135,26 @@ public class BreakWallXML {
 		
 		Element usr = doc.createElement("user");
 		
-		// Name: Inhalt befindet sich in #PCDATA:
+		// Name:
 		Element elName = doc.createElement("name");
 		txtName = doc.createTextNode(name);
 		elName.appendChild(txtName);
 		elName.setNodeValue(name);
 		
 		
-		// Level ist #PCDATA:
+		// Level
 		Element elLevel = doc.createElement("level");
 		txtLevel = doc.createTextNode(Integer.toString(Level));
 		elLevel.appendChild(txtLevel);
 		
 		
-		// Life: Inhalt befindet sich in #PCDATA:
+		// Life:
 		Element elLife = doc.createElement("life");
 		txtLife = doc.createTextNode(Integer.toString(life));
 		elLife.appendChild(txtLife);
 		
 		
-		// Highscore: Inhalt befindet sich in #PCDATA:
+		// Highscore:
 		Element elHighscore = doc.createElement("highscore");
 		txtHighscore = doc.createTextNode(Integer.toString(highscore));
 		elHighscore.appendChild(txtHighscore);
@@ -162,7 +165,12 @@ public class BreakWallXML {
 		usr.appendChild(elHighscore);
 		usr.appendChild(brickWallInfo(doc, brickList));
 		return usr;
-	} // createUser
+	} 
+	
+	
+	/**
+	 * public Element to manage and save brickcount, position, stability, bonus, ...
+	 */
 	
 	public Element brickWallInfo(Document doc, ArrayList<GameElement> brickList) {
 		Element brickWallInfo, brickWallBrick, brickWallType;
@@ -241,10 +249,10 @@ public class BreakWallXML {
     }
 	
 	/**
-	 * Schreibt das XML-Dokument in eine Datei.
+	 * Writes XML-Document File.
 	 * 
-	 * @param doc XML-Dokument.
-	 * @param filename Name der zu schreibenden XML-Datei.
+	 * @param doc XML-Document.
+	 * @param filename Name of new XML-File.
 	 */
 	public void writeXMLDocment(Document doc, String filename) {
 		File file = new File(filename);
