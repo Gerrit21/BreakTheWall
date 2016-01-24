@@ -10,6 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * Class which places different JComponents to a JPanel.
+ * Enables the navigation of Menu or Submenu. 
+ * Input field for typing name.
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 
 public class EnterNameView extends JPanel {
 	
@@ -72,17 +80,25 @@ public class EnterNameView extends JPanel {
 	
 	
 	/**
-	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 * public method to call in MVC
 	 */
   
 	public ArrayList<JButton> getButtonList() {
 		return navigationButtonsSave;
 	}
 
+	/**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
+	
 	public String getTextFromTextField() {
 		
 		return eingabeFeld.getText();
 	}
+	
+	/**
+	 * public method to call in BreakWallView and to add ActionListener for MVC
+	 */
 	
 	public JTextField getEingabeFeld() {
 		return eingabeFeld;

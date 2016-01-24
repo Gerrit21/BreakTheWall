@@ -19,6 +19,15 @@ import breakthewall.BreakWallConfig;
 import java.util.*;
 import java.text.SimpleDateFormat;
  
+/**
+ * Class which places different JComponents to a JPanel.
+ * Enables the navigation of Menu or Submenu. 
+ * JComboBox to choose and load name/score.
+ * Also contains methods to deliver XML-Data.
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 
 public class UserLoadView extends JPanel  {
    

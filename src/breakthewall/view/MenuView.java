@@ -10,7 +10,13 @@ import breakthewall.controller.BreakWallController;
 import java.awt.*;
 import java.util.ArrayList;
 
-
+/**
+ * Class which places different JComponents to a JPanel.
+ * Enables the navigation of Main-Menu. 
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 
 
 public class MenuView extends JPanel  {

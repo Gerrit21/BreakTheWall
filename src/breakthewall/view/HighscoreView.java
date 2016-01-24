@@ -18,6 +18,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class which places different JComponents to a JPanel.
+ * Enables the navigation of Menu or Submenu. 
+ * Table to compare different highscores.
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 
 public class HighscoreView extends JPanel  {
 	

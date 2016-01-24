@@ -9,6 +9,14 @@ import breakthewall.controller.BreakWallController;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Class which places different JComponents to a JPanel (top PanelBar).
+ * Enables the navigation to Main-Menu, to Play/Mute Music or to Play/Pause Game.
+ * Shows Game Information.
+ * 
+ * @author Mareike Röncke, Gerrit Schulte
+ * @version 1.0, October 2015.
+ */
 
 public class NavigationBarView extends JPanel  {
 	
