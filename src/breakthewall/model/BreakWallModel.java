@@ -383,6 +383,9 @@ public class BreakWallModel extends Observable {
 	}
 	
 	public void selectUser() {
+		if(BreakWallConfig.useRemoteHighscoreList == true) {
+			setLocalHighscoreList();
+		}
 		setInfoText("Go to User List...");
 		setChanged();
 		notifyObservers("showUserSelect");
@@ -626,7 +629,7 @@ public class BreakWallModel extends Observable {
 		// player loses a life or game is over	
 		} else if(ballBottom.getY() > BreakWallConfig.offsetHeight) {
 			setInfoText("You've lost a life!");
-			gameScore.subtractPoints(BreakWallConfig.penalityPoints);
+			gameScore.subtractPoints(BreakWallConfig.penaltyPoints);
 			scoreFactor = 1;
 			if(currentLives > 1) {
 				currentLives -= 1;			

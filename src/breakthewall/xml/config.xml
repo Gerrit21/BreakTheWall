@@ -12,7 +12,7 @@
 <musicIconPlaying data-type="String">/breakthewall/media/images/music_playing.png</musicIconPlaying>
 <musicIconPausing data-type="String">/breakthewall/media/images/music_pausing.png</musicIconPausing>
 <backArrow data-type="String">/breakthewall/media/images/ArrowBack.png</backArrow>
-<paddleSpeed data-type="Integer">10</paddleSpeed><penalityPoints data-type="Integer">50</penalityPoints><pointsNormal data-type="Integer">10</pointsNormal>
+<paddleSpeed data-type="Integer">10</paddleSpeed><pointsNormal data-type="Integer">10</pointsNormal>
 <initialBallXDir data-type="Integer">1</initialBallXDir>
 <initialBallYDir data-type="Integer">-2</initialBallYDir><bonusFactor data-type="Integer">3</bonusFactor>
 <ballSpeed data-type="Integer">1</ballSpeed>
@@ -22,7 +22,8 @@
 		<mediaPath data-type="String">/breakthewall/media/sound/Bellevue-Gates.wav</mediaPath></backgroundMusic>
 	<brickXtraPointsImg data-type="String">/breakthewall/media/images/brick_n.png</brickXtraPointsImg>
 	<maxExtraPoints data-type="Integer">30</maxExtraPoints>
-	<useRemoteHighscoreList data-type="Boolean">true</useRemoteHighscoreList></common>
+	<useRemoteHighscoreList data-type="Boolean">true</useRemoteHighscoreList>
+	<penaltyPoints data-type="Integer">50</penaltyPoints></common>
 <level number="1">
 <lifeCount data-type="Integer">3</lifeCount>
 <bgImagePath data-type="String">/breakthewall/media/images/bg_1.png</bgImagePath>

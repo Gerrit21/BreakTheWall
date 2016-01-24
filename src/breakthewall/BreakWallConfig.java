@@ -79,7 +79,7 @@ public class BreakWallConfig {
 	// when ball speed is multiplied
 	public static int bonusFactor;
 	// penalty if ball hits the bottom
-	public static int penalityPoints;
+	public static int penaltyPoints;
 	
 	// music and sounds
 	public static ArrayList<String> backgroundMusic = new ArrayList<String>();

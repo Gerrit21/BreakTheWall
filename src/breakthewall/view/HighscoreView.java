@@ -101,8 +101,7 @@ public class HighscoreView extends JPanel  {
 	       
 	        
         insertTableRows(model, highscoreDocument);	
-        
-        //creates sorted table 
+         
              
 	} 
 	
